@@ -1,0 +1,301 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+*, *:after, *::before {
+    box-sizing: border-box;
+}
+
+/* CSS reset END */
+/*  */
+body {
+    font-family: "Trebuchet MS", "monospace";
+    font-size: 1em;
+}
+.intro-area {
+    background-image: url(../asset/bg-index.jpg);
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.intro-area>h2 {
+    color: #ffffff;
+    font-size: 5em;
+    text-shadow: black 0.1em 0.1em 0.2em;
+}
+
+main {
+    padding: 50px 100px 100px 100px;
+    color: #292a27;
+    background: #ECE9E6;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+main>h1 {
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    flex: 100%;
+    margin-bottom: 50px;
+}
+
+main>form {
+    padding: 0px 0px 30px 0px;
+    width: 40%;
+    background-color: #ffffff;
+    border: .1em solid #292a27;
+    letter-spacing: 2px;
+}
+
+main>form>h2 {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+main>form>.filter {
+    margin-bottom: 20px;
+}
+
+main>form>.filter>button {
+    width: 50%;
+    padding: 20px 0px;
+    background-color: darkgray;
+    border: none;
+    cursor: pointer;
+    border-bottom: .1em solid #292a27;
+    border-right: .05em solid #292a27;
+    letter-spacing: 2px;
+    outline: none;
+}
+
+main>form>.filter>button:nth-child(2) {
+    border-right: none;
+    border-left: .05em solid #292a27;
+}
+
+main>form>.filter>button.current {
+    border-bottom: none;
+    background-color: #ffffff;
+}
+
+main>form input[type="text"],
+main>form input[type="password"] {
+    display: block;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 10px 30px;
+    border-radius: 2px;
+    border: none;
+    border: 1px solid #292a27;
+}
+
+main>form .control {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+main>form .control a {
+    text-decoration: none;
+    color: slategrey;
+}
+
+main>form #send,
+main>form #sign-up {
+    display: block;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 10px 0;
+    letter-spacing: 4px;
+    border: none;
+    border: 1px solid #292a27
+}
+
+main>form #send:disabled,
+main>form #sign-up:disabled {
+    cursor: not-allowed;
+}
+
+main>form .sign-in-with-account {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: auto;
+    padding: 10px 0;
+}
+
+main>form .separator-wrap {
+    display: flex;
+}
+
+main>form .separator-wrap>.separator-line {
+    width: 38%;
+    background-color: #cccccc;
+    height: 1px;
+    border: none;
+}
+
+main>form .sign-in-with-account button {
+    width: 45%;
+    padding: 10px 5px;
+    background-color: #FFFFFF;
+    border: 1px solid #292a27;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 2px;
+}
+
+main>form .sign-in-with-account img {
+    width: 24px;
+    margin-right: 5px;
+}
+
+main>#web-map {
+    width: 40%;
+    letter-spacing: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+main>#web-map li {
+    width: 100%;
+    height: 120px;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: black 0.1em 0.1em 0.2em;
+}
+
+main>#web-map #classic-cocktail {
+    background-image: url(../asset/bg-classic.jpg);
+    background-position: bottom;
+    background-size: cover;
+}
+
+main>#web-map #explore-taiwan-bar {
+    background-image: url(../asset/bg-bar.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+main>#web-map #bartending-video {
+    background-image: url(../asset/bg-bartender.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+main>#web-map li a {
+    text-decoration: none;
+    font-size: 2em;
+    color: #ffffff;
+}
+
+footer {
+    background-color: #292a27;
+    color: #ffffff;
+    padding: 50px 100px;
+    font-size: .8em;
+}
+
+
+footer>.view {
+    display: flex;
+    align-items: center;
+}
+
+footer>.view .link {
+    display: flex;
+    
+}
+
+footer>.view .social {
+    margin-left: auto;
+}
+
+footer>.view .link .item{
+    margin-left: 5px;
+}
+
+footer>.view .social img,
+footer>.view .copyright {
+    margin-left: 10px;
+}
+
+footer>.view .link .item {
+    padding: 0 10px;
+    border-right: 1px solid #ffffff;
+}
+
+footer>.view .social img {
+    width: 30px;
+}
+
+footer>.view .copyright {
+    font-size: .6em;
+}
