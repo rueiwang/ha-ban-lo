@@ -34,6 +34,7 @@ module.exports = {
         "no-labels": "off",
         "no-unused-expressions" : "off",
         "no-unused-vars": "warn",
-        "max-len": ["error", { "code": 150 }]
+        "max-len": ["error", { "code": 150 }],
+        "no-alert": "off"
   },
 };
