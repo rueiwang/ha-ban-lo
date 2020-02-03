@@ -17,6 +17,7 @@ class Firebase {
   constructor() {
     app.initializeApp(config);
     this.auth = app.auth();
+    this.account = app.auth;
     this.db = app.firestore();
   }
 
@@ -25,6 +26,8 @@ class Firebase {
   doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
 
   doSignInWithEmailAndPassword = (email, password) => this.auth.signInWithEmailAndPassword(email, password);
+
+  doSignInWithAccount = (provider) => this.auth.signInWithPopup(provider);
 
   doSignOut = () => this.auth.signOut();
 
