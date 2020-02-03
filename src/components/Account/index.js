@@ -3,21 +3,23 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import { ifAuth } from '../AuthUser';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
-import AuthUserContext from '../AuthUser';
+import Navigation from '../Navigation';
 
-const AccountPage = () => (
-  <div>
-    <h1>會員頁面</h1>
-    <AuthUserContext.Consumer>
-      {(authUser) => (authUser
-        ? <Account />
-        : '未登入')}
-    </AuthUserContext.Consumer>
-  </div>
-);
+
+const AccountPage = (props) => {
+  console.log(props)
+  return (<div>
+    <Navigation />
+    <h1>
+    {props.authUser ? `hi ${props.authUser.displayName}` : '未登入'}
+    </h1>
+    {props.authUser ? <Account /> : ''}
+  </div>)
+};
 
 class AccountPageBase extends Component {
   constructor(props) {
@@ -43,4 +45,4 @@ const Account = compose(
   withFirebase
 )(AccountPageBase);
 
-export default AccountPage;
+export default ifAuth(AccountPage);

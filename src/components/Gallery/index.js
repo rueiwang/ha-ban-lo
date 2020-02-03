@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
+import queryString from 'query-string';
 import './gallery.css';
 
+import Loading from '../Loading';
+import Navigation from '../Navigation';
 import Footer from '../Footer';
 
+import { ifAuth } from '../AuthUser';
 import { withFirebase } from '../Firebase';
+import * as ROUTES from '../../constants/routes';
 
 
 class GalleryPage extends Component {
@@ -12,18 +19,25 @@ class GalleryPage extends Component {
     this.state = {
       filter: 'All',
       recipes: [],
-      count: 20,
       isLoading: false,
-      next: null
+      next: null,
+      searchTarget: null
     };
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.setSearchTarget = this.setSearchTarget.bind(this);
   }
 
   componentDidMount() {
-    // const { firebase } = this.props;
-    // window.addEventListener('scroll', this.handleScroll);
-    // this.getData();
+    // 抓 query 做搜尋，怎麼觸發?
+    // const searchTarget = queryString.parse(this.props.location.search);
+    // console.log(searchTarget)
+    // this.setState({
+    //   searchTarget: searchTarget.cocktailName
+    // })
+
+    window.addEventListener('scroll', this.handleScroll);
+    this.getData();
   }
 
   componentWillUnmount() {
@@ -35,7 +49,6 @@ class GalleryPage extends Component {
     const {
       recipes,
       filter,
-      count,
       isLoading,
       next
     } = this.state;
@@ -55,7 +68,6 @@ class GalleryPage extends Component {
               {
                 recipes: [...newAry],
                 isLoading: false,
-                count: prevState.count + 20,
                 next: lastVisible
               }
             ));
@@ -71,7 +83,6 @@ class GalleryPage extends Component {
               {
                 recipes: [...recipes, ...newAry],
                 isLoading: false,
-                count: prevState.count + 20,
                 next: lastVisible
               }
             ));
@@ -80,8 +91,22 @@ class GalleryPage extends Component {
     }
   }
 
+  setSearchTarget(cocktailName) {
+    const { firebase } = this.props;
+    const newAry = []
+    firebase.searchCocktailByName(cocktailName)
+      .then((docSnapshot) => {
+        docSnapshot.forEach((doc) => {
+          newAry.push(doc.data());
+        });
+        this.setState({
+          recipes: [...newAry]
+        });
+      })
+  }
+
   handleScroll() {
-    const { count, filter, next } = this.state;
+    const { filter, next } = this.state;
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1) {
       if (next.exists === false) {
         alert('已顯示全部酒譜!');
@@ -94,8 +119,10 @@ class GalleryPage extends Component {
   }
 
   changeFilter(e) {
+    this.setState({
+      isLoading: true
+    });
     const { firebase } = this.props;
-    const { filter } = this.state;
     const category = e.target.textContent;
     if (category === 'All') {
       this.setState({
@@ -105,15 +132,26 @@ class GalleryPage extends Component {
       this.getData();
       return;
     }
-    const ingredientsDetails = firebase.db.collection('all_cocktail_recipe').where('');
+    const newAry = [];
+    firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
+      .get()
+      .then((docSnapshot) => {
+        docSnapshot.forEach((doc) => {
+          newAry.push(doc.data());
+        });
+        this.setState((prevState) => (
+          {
+            recipes: [...newAry],
+            isLoading: false,
+            filter: category
+          }
+        ));
+      })
   }
 
   renderItem() {
     const { recipes } = this.state;
     const itemAry = [];
-    if (recipes.length < 12) {
-      return <h1>LOADING</h1>;
-    }
     for (let i = 0; i < recipes.length; i += 1) {
       itemAry.push(<Item recipe={recipes[i]} />);
     }
@@ -121,42 +159,13 @@ class GalleryPage extends Component {
   }
 
   render() {
-    const { filter } = this.state;
+    const { authUser } = this.props;
+    const { filter, isLoading, searchTarget } = this.state;
     return (
       <>
+        {isLoading ? <Loading /> : ''}
         <header className="gallery-header">
-          <nav>
-            <h1>
-              <a href="#">
-            HA-BAN
-              </a>
-            </h1>
-            <div className="navigation">
-              <div className="item current">
-                <a href="#">Classic Cocktail</a>
-              </div>
-              <div className="item">
-                <a href="#">Taiwan Bar</a>
-              </div>
-              <div className="item">
-                <a href="#">Bartending Video</a>
-              </div>
-            </div>
-            <div className="member">
-              <a href="#">
-                  Sign Up
-              </a>
-              <a href="#" className="sign-in">
-                  Sign In
-              </a>
-            </div>
-            <form className="language">
-              <select name="language" id="">
-                <option value="EN">English</option>
-                <option value="zh-tw">繁體中文</option>
-              </select>
-            </form>
-          </nav>
+            <Navigation search={this.setSearchTarget}/>
           <div className="keyVisual">
             <h2>Let’s go out and juice up tonight!</h2>
           </div>
@@ -172,7 +181,7 @@ class GalleryPage extends Component {
             <div className={`item ${filter === 'Tequila' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Tequila</div>
           </div>
           <div className="gallery-item">
-            {/* {this.renderItem()} */}
+            {this.renderItem()}
           </div>
         </main>
         <Footer />
@@ -211,4 +220,7 @@ const Item = (props) => {
   );
 };
 
-export default withFirebase(GalleryPage);
+export default compose(
+  withFirebase,
+  ifAuth
+)(GalleryPage);

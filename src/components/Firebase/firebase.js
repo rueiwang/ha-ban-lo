@@ -51,6 +51,8 @@ class Firebase {
   getCocktail = () => this.db.collection('all_cocktail_recipe').limit(21).get();
 
   getNextCocktail = (next) => this.db.collection('all_cocktail_recipe').startAfter(next).limit(21).get();
+
+  searchCocktailByName = (name) => this.db.collection('all_cocktail_recipe').where('cocktail_name', '==', name).get();
 }
 
 export default Firebase;

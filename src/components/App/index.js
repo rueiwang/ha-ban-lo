@@ -11,7 +11,7 @@ import BartendingVideo from '../BartendingVideo';
 import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
 import AuthUserContext from '../AuthUser';
-import { AllCocktailRecipeContext } from '../AllCocktailRecipe';
+
 
 class App extends Component {
   constructor(props) {

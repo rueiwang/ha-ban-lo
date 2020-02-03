@@ -85,11 +85,19 @@ table {
 }
 
 .main-landing>h1 {
+    height: 150px;
     text-align: center;
     font-size: 3em;
     font-weight: bold;
     flex: 100%;
     margin-bottom: 50px;
+    text-indent: 101%;
+    white-space: nowrap;
+    overflow: hidden;
+    background-image: url('../asset/bg-h1.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
 }
 
 .main-landing>form {
@@ -314,3 +322,11 @@ footer>.view .copyright {
 .loading-wrap>.loading {
     fill: url(#three_opacity_stops);
 }
+
+.search>.search-suggestion {
+    background-color: #ffffff;
+    position: absolute;
+    height: 300px;
+    overflow-y: scroll;
+    cursor: pointer;
+} 
