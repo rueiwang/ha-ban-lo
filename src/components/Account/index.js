@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
-import AuthUserContext from '../Session';
+import AuthUserContext from '../AuthUser';
 
 const AccountPage = () => (
   <div>

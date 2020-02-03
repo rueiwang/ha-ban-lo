@@ -6,13 +6,15 @@ import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import SignInWithAccount from '../SignInWithAccount';
 import Footer from '../Footer';
+import Loading from '../Loading';
 import './landing-page.css';
 
 class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: 'signUp'
+      form: 'signUp',
+      isLoading: false
     };
   }
 
@@ -23,14 +25,15 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { form } = this.state;
+    const { form, isLoading } = this.state;
     return (
       <div className="wrap">
+        {isLoading ? <Loading /> : ''}
         <div className="intro-area">
           <h2>Get Off Work and Have A Drink</h2>
           <div className="triangle" />
         </div>
-        <main className="sign-in-area">
+        <main className="main-landing">
           <h1>HA-BAN</h1>
           <form id="memberInfo">
             <div className="filter">

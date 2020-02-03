@@ -41,6 +41,13 @@ class Firebase {
 
   memberIngredient = (uid) => this.db.collection('member_ingredient').doc(uid);
 
+  //  *** Gallery item ***
+
+  getAllCocktail = () => this.db.collection('all_cocktail_recipe').get();
+
+  getCocktail = () => this.db.collection('all_cocktail_recipe').limit(21).get();
+
+  getNextCocktail = (next) => this.db.collection('all_cocktail_recipe').startAfter(next).limit(21).get();
 }
 
 export default Firebase;

@@ -10,14 +10,16 @@ import BartendingVideo from '../BartendingVideo';
 
 import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
-import AuthUserContext from '../Session';
+import AuthUserContext from '../AuthUser';
+import { AllCocktailRecipeContext } from '../AllCocktailRecipe';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      authUser: null
+      authUser: null,
+      allrecipe: []
     };
   }
 
@@ -34,7 +36,7 @@ class App extends Component {
   }
 
   render() {
-    const { authUser } = this.state;
+    const { authUser, allrecipe } = this.state;
     return (
       <AuthUserContext.Provider value={authUser}>
         <BrowserRouter>

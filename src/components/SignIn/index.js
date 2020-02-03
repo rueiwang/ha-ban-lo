@@ -80,7 +80,7 @@ class SignInFormBase extends Component {
           </label>
           <a href="#">Forgot your password?</a>
         </div>
-        <button id="send" type="button" disabled={isInvalid} onClick={this.onClick}>登入</button>
+        <button id="send" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
         {error && <p>{error.message}</p>}
       </div>
     );
