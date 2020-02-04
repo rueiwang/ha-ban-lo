@@ -20,7 +20,7 @@ class GalleryPage extends Component {
       filter: 'All',
       recipes: [],
       isLoading: false,
-      next: null,
+      next: 0,
       searchTarget: null
     };
 
@@ -57,7 +57,7 @@ class GalleryPage extends Component {
       this.setState({
         isLoading: true
       });
-      if (next === null) {
+      if (next === 0) {
         firebase.getCocktail()
           .then((docSnapshot) => {
             const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
@@ -167,7 +167,7 @@ class GalleryPage extends Component {
         <header className="gallery-header">
             <Navigation search={this.setSearchTarget}/>
           <div className="keyVisual">
-            <h2>Let’s go out and juice up tonight!</h2>
+            <h2>Specialists in cocktail</h2>
           </div>
         </header>
         <main className="main-gallery">
