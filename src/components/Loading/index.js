@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SvgGlassOfSyrah } from '../Glasses';
+import { SvgGlassOfSyrah } from '../SVG';
 
 
 class Loading extends Component {

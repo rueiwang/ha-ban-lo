@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../Firebase';
+import { withFirebase } from '../../components/Context/Firebase';
 import * as ROUTES from '../../constants/routes';
+
+import SignInWithAccount from '../../components/SignInWithAccount';
 
 const INITIAL_STATE = {
   memberName: '',
@@ -71,7 +73,8 @@ class SignUpFormBase extends Component {
       || memberName.trim() === '';
 
     return (
-      <div className="sign-up-with-email">
+      <form className="sign-up-with-email">
+        <h3>SIGN UP</h3>
         <input
           type="text"
           id="new-name"
@@ -96,10 +99,15 @@ class SignUpFormBase extends Component {
           value={memberPassword}
           onChange={this.onChange}
         />
-        <button id="sign-up" type="button" disabled={isInvalid} onClick={this.onClick}>註冊</button>
 
+        <div className="btn-area">
+        <SignInWithAccount />
+        <button id="sign-up" type="button" disabled={isInvalid} onClick={this.onClick}>Sign up</button>
+        </div>
+        
+        
         {error && <p>{error.message}</p>}
-      </div>
+      </form>
     );
   }
 }

@@ -35,15 +35,11 @@ module.exports = {
         "no-unused-expressions" : "off",
         "no-unused-vars": "warn",
         "max-len": ["error", { "code": 150 }],
-<<<<<<< HEAD
         "jsx-a11y/anchor-is-valid": "off",
         "react/jsx-props-no-spreading": "off",
         "class-methods-use-this": "off",
         "array-callback-return": "off",
         "jsx-a11y/no-static-element-interactions": "off",
         "jsx-a11y/click-events-have-key-events": "off"
-=======
-        "no-alert": "off"
->>>>>>> 2b37b65092a82ab141c1286aca28ad3ade8fea1e
   },
 };

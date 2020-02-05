@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "all_cocktail_recipe",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "ingredients_detail",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ingredients",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

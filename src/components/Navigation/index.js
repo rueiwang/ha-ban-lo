@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { ifAuth } from '../AuthUser';
-import { withFirebase } from '../Firebase';
+import { ifAuth } from '../../components/Context/AuthUser';
+import { withFirebase } from '../../components/Context/Firebase';
 import * as ROUTES from '../../constants/routes';
 
-
+import '../../css/common.css';
 class Navigation extends Component {
   constructor(props) {
     super(props);
@@ -23,22 +23,65 @@ class Navigation extends Component {
         }
       ],
       value: '',
-      isSearching: false
+      isSearching: false,
+      clickToggle: false
     }
+
+    this.openMenu = this.openMenu.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
+
   }
 
   componentDidMount() {
     const { firebase } = this.props;
-    const newAry = [];
-    firebase.getAllCocktail()
-      .then((docSnapshot) => {
-        docSnapshot.forEach((doc) => {
-          newAry.push(doc.data());
-        })
+    const { allData } = this.state;
+    let newAry = [];
+    const isDataInLocalStorage = sessionStorage.getItem('allData') !== null;
+    console.log(isDataInLocalStorage)
+    if(isDataInLocalStorage) {
+      // console.log(sessionStorage.getItem('allData').split("},"));
+      const processAry = sessionStorage.getItem('allData').split("},").map((str, i) => {
+        if(i === (sessionStorage.getItem('allData').split("},").length) - 1) {
+          return str
+        }
+        return (str+'}');
+      });
+      newAry = processAry.map((item) => JSON.parse(item));
         this.setState({
           allData: [...newAry]
         })
-      })
+    } else {
+      firebase.getAllCocktail()
+        .then((docSnapshot) => {
+          docSnapshot.forEach((doc) => {
+            newAry.push(JSON.stringify(doc.data(), (key, value) => {
+              if (key !== 'ref') {
+                return value
+              }
+            }));
+          })
+          console.log(newAry.toString())
+          sessionStorage.setItem('allData', newAry.toString());
+          const dataAry = newAry.map((str) => JSON.parse(str));
+          this.setState({
+            allData: dataAry
+          })
+        })
+    }
+  }
+
+  openMenu(e) {
+    e.preventDefault();
+    this.setState({
+      clickToggle: true
+    })
+  }
+
+  closeMenu(e) {
+    e.preventDefault();
+    this.setState({
+      clickToggle: false
+    })
   }
 
   inputChange(e) {
@@ -77,47 +120,54 @@ class Navigation extends Component {
 
   render() {
     const { authUser } = this.props;
-    const { value, isSearching } = this.state;
+    const { value, isSearching, clickToggle } = this.state;
     return  (
-      <nav>
-        <h1>
-          <a href="#">
-        HA-BAN
-          </a>
-        </h1>
-        <div className="navigation">
-          <div className="item current">
-            <Link to={ROUTES.GALLERY}>Classic Cocktail</Link>
-          </div>
-          <div className="item">
-            <Link to={ROUTES.TAIWANBAR}>Taiwan Bar</Link>
-          </div>
-          <div className="item">
-            <Link to={ROUTES.VIDEO}>Bartending Video</Link>
-          </div>
+      <nav className="scroll">
+        <div className="nav-containter">
+        <div className="menu-toggle" onClick={(e) => this.openMenu(e)}>
+          <img src="./imgs/icon_menu_black.png" />
+          <a href="#">MENU</a>
         </div>
-        <form className="search">
-          <input type="text" name="search" id="search" autoComplete="off" value={this.state.value} onChange={(e) => this.inputChange(e)} />
-          {isSearching 
-           ? (<ul className="search-suggestion">
-            {this.renderlist()}
-          </ul>)
-          : ''}
-          <button onClick={(e) => this.transportSearchTarget(e,value)} onKeyDown={(e) => {
-            if(e.keyCode === 13) {
-              this.transportSearchTarget(e,value)
-            }
-          }}>搜尋</button>
-        </form>
-        <div className="member">
-          <Link to={authUser ? ROUTES.ACCOUNT : ROUTES.LANDING} className="sign-in">Sign In</Link>
-        </div>
-        <form className="language">
+        <h1>hā-pan</h1>
+        <button>YOUR DRINK</button>
+        <div className={`menu ${clickToggle ? 'open' : ''}`}>
+          <div className="close" onClick={(e) => this.closeMenu(e)}>
+            <img src="./imgs/close.png" />
+          </div>
+          <ul className="menu-link">
+            <li>
+              <Link to="/gallery">COCKTAIL GALLERY</Link>
+            </li>
+            <li>
+              <Link to="/taiwanbar">TAIWAN BAR</Link>
+            </li>
+            <li>
+              <Link to="/bartendingvedio">LEARN BARTENDING</Link>
+            </li>
+          </ul>
+          <form className="search">
+            <div className="search-auto-complete">
+              <input type="text" name="search" id="search" autoComplete="off" value={this.state.value} onChange={(e) => this.inputChange(e)} />
+              {isSearching 
+              ? (<ul className="search-suggestion">
+                {this.renderlist()}
+              </ul>)
+              : ''}
+            </div>
+            <button onClick={(e) => this.transportSearchTarget(e,value)} onKeyDown={(e) => {
+              if(e.keyCode === 13) {
+                this.transportSearchTarget(e,value)
+              }
+            }}>search</button>
+          </form>
+          <form className="language">
           <select name="language" id="">
             <option value="EN">English</option>
             <option value="zh-tw">繁體中文</option>
           </select>
         </form>
+        </div>
+        </div>
       </nav>
     );
   }

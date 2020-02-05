@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../Firebase';
+import { withFirebase } from '../../components/Context/Firebase';
 import * as ROUTES from '../../constants/routes';
 
 
@@ -55,7 +55,8 @@ class SignInFormBase extends Component {
     || email.trim() === '';
 
     return (
-      <div className="sign-in-with-email">
+      <form className="sign-in-with-email">
+        <h3>SIGN IN</h3>
         <input
           type="text"
           id="email"
@@ -73,16 +74,12 @@ class SignInFormBase extends Component {
           onChange={this.onChange}
         />
 
-        <div className="control">
-          <label htmlFor="remember">
-            <input type="checkbox" name="remember" id="remember" />
-          Remember Me
-          </label>
-          <a href="#">Forgot your password?</a>
+        <a href="#">Forgot your password?</a>
+        <div class="btn-area">
+        <button id="sign-in" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
         </div>
-        <button id="send" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
         {error && <p>{error.message}</p>}
-      </div>
+      </form>
     );
   }
 }

@@ -1,0 +1,150 @@
+.wrap-landing>.intro-area {
+    height: 100vh;
+    color: #ffffff;
+    background-image: url('/imgs/bg-index.jpg');
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 100px;
+}
+
+
+.wrap-landing>.intro-area>h2 {
+    color: #ffffff;
+    font-size: 5em;
+    text-shadow: black 0.1em 0.1em 0.2em;
+    margin: auto;
+}
+
+.wrap-landing>.intro-area>button {
+    padding: 0 25px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.wrap-landing>.main-landing {
+    padding: 100px 0;
+    
+}
+
+.wrap-landing>.main-landing>.member-area {
+    width: 60%;
+    margin: auto;
+    position: relative;
+}
+
+.wrap-landing>.main-landing>.member-area>.member-message {
+    display: flex;
+    padding: 30px;
+    background-color: #000000;
+    color: #ffffff;
+    height: 350px;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 3px;
+    border-radius: 3px;
+}
+
+.wrap-landing>.main-landing>.member-area>.member-message h4 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.wrap-landing>.main-landing>.member-area>.member-message p {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.wrap-landing>.main-landing>.member-area>.member-message>div {
+    width: 45%;
+    padding: 2%;
+}
+
+.wrap-landing>.main-landing>.member-area>.member-message>div button {
+    padding: 0 25px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    border-radius: 3px;
+}
+
+.wrap-landing>.main-landing>.member-area>form {
+    background-color: #ffffff;
+    padding: 50px 30px;
+    box-shadow: black 0.1em 0.1em 0.2em;
+    position: absolute;
+    top: -10px;
+    width: 375px;
+    height: 370px;
+}
+
+.wrap-landing>.main-landing>.member-area>form h3 {
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.wrap-landing>.main-landing>.member-area>form input {
+    letter-spacing: 2px;
+    display: block;
+    padding: 10px 5px;
+    border: none;
+    width: 100%;
+    margin: auto;
+    border-bottom: 2px solid #cdcdcd;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+.wrap-landing>.main-landing>.member-area>form>.btn-area{
+    display: flex;
+}
+.wrap-landing>.main-landing>.member-area>form button {
+    background-color: #000000;
+    color: #ffffff;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    border-radius: 3px;
+    border: none;
+    margin-top: 50px;
+}
+
+.wrap-landing>.main-landing>.member-area>form #sign-up,
+.wrap-landing>.main-landing>.member-area>form #sign-in {
+    margin-left: auto;
+}
+
+.wrap-landing>.main-landing>.member-area>form #facebook,
+.wrap-landing>.main-landing>.member-area>form #google {
+    border: none;
+    background-color: #ffffff;
+}
+
+.wrap-landing>.main-landing>.member-area>form button img {
+    width: 32px;
+} 
+
+.wrap-landing>.main-landing>.member-area>form a {
+    display: inline-block;
+    text-decoration: none;
+    color: #cdcdcd;
+    border-top: 20px solid #ffffff;
+}
+
+.wrap-landing>.main-landing>.member-area>.sign-in-with-email {
+    right: 0px;
+}
