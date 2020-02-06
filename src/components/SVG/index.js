@@ -9,15 +9,14 @@ import GlassOfUFO from './GlassOfUFO';
 import GlassOfWhisky from './GlassOfWhisky';
 
 
-
-export { 
-    SvgGlassOfSyrah,
-    GlassOfMontrachet,
-    GlassOfBrandy,
-    GlassOfChampagne,
-    GlassOfHighball,
-    GlassOfMartini,
-    GlassOfShot,
-    GlassOfUFO,
-    GlassOfWhisky
- };
+export {
+  SvgGlassOfSyrah,
+  GlassOfMontrachet,
+  GlassOfBrandy,
+  GlassOfChampagne,
+  GlassOfHighball,
+  GlassOfMartini,
+  GlassOfShot,
+  GlassOfUFO,
+  GlassOfWhisky
+};

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../../components/Context/Firebase';
+import { withFirebase } from '../Context/Firebase';
 import * as ROUTES from '../../constants/routes';
 
 
@@ -75,8 +75,8 @@ class SignInFormBase extends Component {
         />
 
         <a href="#">Forgot your password?</a>
-        <div class="btn-area">
-        <button id="sign-in" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
+        <div className="btn-area">
+          <button id="sign-in" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
         </div>
         {error && <p>{error.message}</p>}
       </form>

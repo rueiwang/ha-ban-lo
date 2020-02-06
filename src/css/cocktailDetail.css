@@ -1,0 +1,220 @@
+.main-detail {
+    background-image: linear-gradient(to bottom,#F0AD5F 50%, #413d40 50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 200px 3%;
+}
+
+.main-detail>.detail-box {
+    background-color: #ffffff;
+    width: 65%;
+    position: relative;
+    display: flex;
+    border-radius: 8px;
+}
+
+.main-detail>.detail-box>.pic {
+    background-image: url('/imgs/bartender.jpg');
+    width: 35%;
+    height: 120%;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 1px 1px 8px #413d40;
+    top: -50px;
+    left: -20px;
+}
+
+@media (max-width: 1700px) {
+    .main-detail>.detail-box {
+        width: 70%;
+    }
+}
+
+
+@media (max-width: 1600px) {
+    .main-detail>.detail-box {
+        width: 75%;
+    }
+}
+
+@media (max-width: 1400px) {
+    .main-detail>.detail-box {
+        width: 80%;
+    }
+}
+
+
+@media (max-width: 1280px) {
+    .main-detail {
+        padding: 100px 3%;
+    }
+    .main-detail>.detail-box {
+        width: 90%;
+    }
+    .main-detail>.detail-box>.pic {
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 1100px) {
+    .main-detail>.detail-box {
+        width: 100%;
+    }
+}
+
+
+
+.main-detail>.detail-box>.blank {
+    width: 40%;
+}
+
+
+.main-detail>.detail-box>.content {
+    padding: 60px 3%;
+    letter-spacing: 1px;
+    max-width: 55%;
+}
+
+@media (max-width: 1280px) {
+    .main-detail>.detail-box>.blank {
+        width: 40%;
+    }
+}
+
+@media (max-width: 650px) {
+    .main-detail>.detail-box {
+        /* width: 90%; */
+    }
+    .main-detail>.detail-box>.pic,
+    .main-detail>.detail-box>.blank  {
+        display: none;
+    }
+}
+
+.main-detail>.detail-box>.content>h2 {
+    font-size: 30px;
+    letter-spacing: 2px;
+    font-weight: 900;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.main-detail>.detail-box>.content>h2::after {
+    content: '';
+    width: 80px;
+    height: 5px;
+    background-color: #F0AD5F;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.main-detail>.detail-box>.content>p {
+    margin-bottom: 0px;
+    font-size: 18px;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 850px) {
+    .main-detail>.detail-box>.content>.ingredient-content {
+        flex-direction: column;
+    }
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>div {
+    width: 40%;
+}
+
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description h3 {
+    font-size: 28px;
+    margin: 50px 0;
+}
+
+@media (max-width: 950px) {
+    .main-detail>.detail-box>.content>.ingredient-content>div {
+        width: 45%;
+    }
+}
+
+@media (max-width: 850px) {
+    .main-detail>.detail-box>.content>.ingredient-content>div {
+        width: 90%;
+    }
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul {
+    margin-bottom: 50px;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li{
+    padding: 5px 0;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li .measure {
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description p {
+    line-height: 20px;
+}
+
+
+@media (max-width: 850px) {
+    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description p {
+        margin-bottom: 50px;
+    }
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description {
+    position: relative;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description::after {
+    position: absolute;
+    content: '';
+    background-color: #413d40;
+    width: 2px;
+    height: 200px;
+    top: 100px;
+    right: -90px;
+}
+
+
+@media (max-width: 950px) {
+    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description::after {
+        top: 100px;
+        right: -30px;
+    }
+}
+
+@media (max-width: 850px) {
+    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description::after {
+        display: none;
+    }
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingedient-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg {
+    margin-bottom: 30px;
+}
+.main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg img{
+    width: 150px;
+}

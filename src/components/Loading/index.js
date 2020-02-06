@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { SvgGlassOfSyrah } from '../SVG';
+import { GlassOfHighball } from '../SVG';
 
 
 class Loading extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 25
+      value: 10
     };
 
     this.valueCount = this.valueCount.bind(this);
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.valueCount, 500);
+    // this.interval = setInterval(this.valueCount, 500);
   }
 
   componentWillUnmount() {
@@ -30,7 +30,7 @@ class Loading extends Component {
     }
     this.setState((prevState) => (
       {
-        value: prevState.value + 25
+        value: prevState.value + 10
       }
     ));
   }
@@ -39,7 +39,7 @@ class Loading extends Component {
     const { value } = this.state;
     return (
       <div className="loading-wrap">
-        <SvgGlassOfSyrah
+        <GlassOfHighball
           className="loading"
           alt="loading"
           percent={value}

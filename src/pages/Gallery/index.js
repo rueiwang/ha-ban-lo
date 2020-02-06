@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Loading from '../../components/Loading';
-import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 
 import { ifAuth } from '../../components/Context/AuthUser';
@@ -24,7 +23,7 @@ class GalleryPage extends Component {
     };
 
     this.handleScroll = this.handleScroll.bind(this);
-    this.setSearchTarget = this.setSearchTarget.bind(this);
+    // this.setSearchTarget = this.setSearchTarget.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +36,39 @@ class GalleryPage extends Component {
 
     // window.addEventListener('scroll', this.handleScroll);
     // this.getData();
+    const { firebase, location } = this.props;
+    const newAry = [];
+    firebase.searchCocktailByName(location.state.searchTarget)
+      .then((docSnapshot) => {
+        docSnapshot.forEach((doc) => {
+          newAry.push(doc.data());
+        });
+        this.setState({
+          recipes: [...newAry],
+          searchTarget: location.state.searchTarget,
+          filter: 'searching'
+        });
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('hi');
+    const { firebase, location } = this.props;
+    const { searchTarget } = this.state;
+    const newAry = [];
+    if (searchTarget === null) {
+      firebase.searchCocktailByName(location.state.searchTarget)
+        .then((docSnapshot) => {
+          docSnapshot.forEach((doc) => {
+            newAry.push(doc.data());
+          });
+          this.setState({
+            recipes: [...newAry],
+            searchTarget: location.state.searchTarget,
+            filter: 'searching'
+          });
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -90,19 +122,8 @@ class GalleryPage extends Component {
     }
   }
 
-  setSearchTarget(cocktailName) {
-    const { firebase } = this.props;
-    const newAry = [];
-    firebase.searchCocktailByName(cocktailName)
-      .then((docSnapshot) => {
-        docSnapshot.forEach((doc) => {
-          newAry.push(doc.data());
-        });
-        this.setState({
-          recipes: [...newAry]
-        });
-      });
-  }
+  // setSearchTarget(cocktailName) {
+  // }
 
   handleScroll() {
     const { filter, next } = this.state;
@@ -163,7 +184,6 @@ class GalleryPage extends Component {
       <>
         <div className="wrap-gallery">
           {isLoading ? <Loading /> : ''}
-          <Navigation search={this.setSearchTarget} />
           <div className="intro-area">
             <h2>Specialist in Cocktail</h2>
           </div>
@@ -179,7 +199,6 @@ class GalleryPage extends Component {
             </div>
             <div className="gallery-item">
               {this.renderItem()}
-              {/* <GlassOfBrandy /> */}
             </div>
           </main>
           {/* <Footer /> */}
@@ -202,8 +221,28 @@ const Item = (props) => {
         <h3>{recipe.cocktail_name}</h3>
         <p>{recipe.cocktail_category}</p>
         <div className="cover">
-          <button className="checkRecipe" type="button">Detail</button>
-          <button className="collect" type="button">Collect</button>
+          <button className="checkRecipe" type="button">
+            <Link to={{
+              pathname: '/cocktailDetail',
+              search: recipe.cocktail_id,
+              state: {
+                cocktailID: recipe.cocktail_id
+              }
+            }}
+            >
+Detail
+            </Link>
+          </button>
+          <button className="collect" type="button">
+            <Link to={{
+              state: {
+                data: recipe
+              }
+            }}
+            >
+Collect
+            </Link>
+          </button>
         </div>
       </div>
     </div>

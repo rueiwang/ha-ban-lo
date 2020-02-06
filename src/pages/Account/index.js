@@ -7,18 +7,17 @@ import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
 import * as ROUTES from '../../constants/routes';
 
-import Navigation from '../../components/Navigation';
-
 
 const AccountPage = (props) => {
-  console.log(props)
-  return (<div>
-    <Navigation />
-    <h1>
-    {props.authUser ? `hi ${props.authUser.displayName}` : '未登入'}
-    </h1>
-    {props.authUser ? <Account /> : ''}
-  </div>)
+  const { authUser } = props;
+  return (
+    <div>
+      <h1>
+        {authUser ? `hi ${authUser.displayName}` : '未登入'}
+      </h1>
+      {authUser ? <Account /> : ''}
+    </div>
+  );
 };
 
 class AccountPageBase extends Component {

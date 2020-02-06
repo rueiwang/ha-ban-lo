@@ -62,6 +62,11 @@ nav.scroll {
     font-weight: 900;
 } 
 
+.nav-containter button a{
+    color: #ffffff;
+    text-decoration: none;
+}
+
 .nav-containter>.menu {
     position: fixed;
     z-index: 99;
@@ -73,7 +78,7 @@ nav.scroll {
     border: 2px solid #000000;
     border-left: none;
     transform: translateX(-470px);
-    transition: all 2s;
+    transition: all 1s;
     /* display: none; */
 }
 
@@ -122,6 +127,8 @@ nav.scroll {
     border: 2px solid #000000;
     border-top: none;
     width: 310px;
+    max-height: 300px;
+    overflow: scroll;
 }
 
 .nav-containter>.menu>form .search-suggestion li {

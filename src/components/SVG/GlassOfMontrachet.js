@@ -5,6 +5,8 @@ import React from 'react';
 const GlassOfMontrachet = () => (
   <svg
     id="Capa_1"
+    width="200px"
+    height="250px"
     x="0px"
     y="0px"
     viewBox="0 0 321.742 321.742"

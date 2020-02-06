@@ -6,7 +6,12 @@ function SvgGlassOfSyrah(props) {
   console.log(props);
   const { percent } = props;
   return (
-    <svg width={100} height={100} viewBox="0 0 595.281 841.89" {...props}>
+    <svg
+      width="200px"
+      height="250px"
+      viewBox="0 0 595.281 841.89"
+      {...props}
+    >
       <defs>
         <linearGradient spreadMethod="pad" id="three_opacity_stops" x1="0%" y1="100%" x2="0%" y2="0%">
           <stop
