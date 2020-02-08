@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { GlassOfHighball } from '../SVG';
+// import { GlassOfHighball } from '../SVG';
 
 
 class Loading extends Component {
@@ -39,11 +39,7 @@ class Loading extends Component {
     const { value } = this.state;
     return (
       <div className="loading-wrap">
-        <GlassOfHighball
-          className="loading"
-          alt="loading"
-          percent={value}
-        />
+        <h1>LOADING</h1>
       </div>
     );
   }

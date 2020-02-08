@@ -1,12 +1,13 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../../components/Context/Firebase';
+import { withFirebase } from '../Context/Firebase';
 import * as ROUTES from '../../constants/routes';
 
-import SignInWithAccount from '../../components/SignInWithAccount';
+import SignInWithAccount from '../SignInWithAccount';
 
 const INITIAL_STATE = {
   memberName: '',
@@ -15,8 +16,8 @@ const INITIAL_STATE = {
   error: null
 };
 
-const SignUp = () => (
-  <SignUpForm />
+const SignUp = (props) => (
+  <SignUpForm slip={props.isShowUp} />
 );
 
 class SignUpFormBase extends Component {
@@ -43,10 +44,10 @@ class SignUpFormBase extends Component {
         });
         firebase.member(authUser.user.uid).collection('member_ingredient');
         firebase.member(authUser.user.uid).collection('member_collection_cocktail');
+        history.push(`/account/${authUser.user.uid}`);
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        history.push(ROUTES.ACCOUNT);
       })
       .catch((error) => {
         this.setState({ error });
@@ -68,12 +69,14 @@ class SignUpFormBase extends Component {
       error
     } = this.state;
 
+    const { slip } = this.props;
+
     const isInvalid = memberPassword.trim() === ''
       || memberEmail.trim() === ''
       || memberName.trim() === '';
 
     return (
-      <form className="sign-up-with-email">
+      <form className={`sign-up-with-email ${slip === 'signUp' ? 'slip' : ''}`}>
         <h3>SIGN UP</h3>
         <input
           type="text"
@@ -101,11 +104,9 @@ class SignUpFormBase extends Component {
         />
 
         <div className="btn-area">
-        <SignInWithAccount />
-        <button id="sign-up" type="button" disabled={isInvalid} onClick={this.onClick}>Sign up</button>
+          <SignInWithAccount />
+          <button id="sign-up" type="button" disabled={isInvalid} onClick={this.onClick}>Sign up</button>
         </div>
-        
-        
         {error && <p>{error.message}</p>}
       </form>
     );

@@ -33,7 +33,15 @@ class LandingPage extends Component {
         <div className="intro-area">
           <h2>Get Off Work and Have A Drink</h2>
           <button type="button">
-            <Link to="/gallery">DRINK MORE</Link>
+            <Link to={{
+              pathname: '/gallery',
+              state: {
+                searchTarget: undefined
+              }
+            }}
+            >
+DRINK MORE
+            </Link>
           </button>
         </div>
         <main className="main-landing">
@@ -54,7 +62,9 @@ class LandingPage extends Component {
                 </button>
               </div>
             </div>
-            {form === 'signIn' ? <SignIn /> : <SignUp />}
+            <SignIn isShowUp={form} />
+            <SignUp isShowUp={form} />
+            {/* {form === 's' ? <SignIn /> : <SignUp />} */}
           </div>
         </main>
         {/* <Footer /> */}

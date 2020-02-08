@@ -4,7 +4,7 @@ import React from 'react';
 
 function SvgGlassOfSyrah(props) {
   console.log(props);
-  const { percent } = props;
+  const { mainColor } = props;
   return (
     <svg
       width="200px"
@@ -13,21 +13,23 @@ function SvgGlassOfSyrah(props) {
       {...props}
     >
       <defs>
-        <linearGradient spreadMethod="pad" id="three_opacity_stops" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop
-            offset={`${percent}%`}
-            style={{
-              stopColor: 'rgb(247, 194, 66)',
-              stopOpacity: 1
-            }}
-          />
-          <stop
-            offset="10%"
-            style={{
-              stopColor: 'rgb(229, 233, 242)',
-              stopOpacity: 1
-            }}
-          />
+        <linearGradient spreadMethod="pad" id="color-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+          {mainColor !== [] ? (
+            mainColor.colorPlette.map((rgbAry, i) => {
+              const percent = 100 / i;
+
+              return (
+                <stop
+                  offset={`${percent}%`}
+                  style={{
+                    stopColor: `rgb(${mainColor.colorPlette[i][0]}, ${mainColor.colorPlette[i][1]}, ${mainColor.colorPlette[i][2]})`,
+                    stopOpacity: 1
+                  }}
+                />
+              );
+            })
+          )
+            : ''}
         </linearGradient>
       </defs>
       <path
@@ -35,7 +37,7 @@ function SvgGlassOfSyrah(props) {
         d="M224.49 438.405h146.3c-18.07 25.31-43.101 45.78-73.15 58.3-30.05-12.52-55.08-32.991-73.15-58.3z"
       />
       <path
-        // fill="#EC693B"
+        fill="url(#color-gradient)"
         d="M401.74 321.945c2.9 28.47-1.439 56.33-11.71 81.54H205.25a170.064 170.064 0 01-11.71-81.54l16.66-163.71h174.88l16.66 163.71z"
       />
       <path

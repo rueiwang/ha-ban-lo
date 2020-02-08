@@ -83,20 +83,29 @@ class Navigation extends Component {
       <nav className="scroll">
         <div className="nav-containter">
           <div className="menu-toggle" onClick={(e) => this.openMenu(e)}>
-            <img src="./imgs/icon_menu_black.png" alt="" />
+            <img src="https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Ficon_menu_black.png?alt=media&token=7f30038f-dc13-491b-b5a1-aea205eb347f" alt="" />
             <a href="#">MENU</a>
           </div>
           <h1>hā-pan</h1>
           <button type="button">
-            <Link to={authUser ? '/account/:id' : '/'}>YOUR DRINK</Link>
+            <Link to={authUser ? `/account/${authUser.uid}` : '/'}>YOUR DRINK</Link>
           </button>
           <div className={`menu ${clickToggle ? 'open' : ''}`}>
             <div className="close" onClick={(e) => this.closeMenu(e)}>
-              <img src="./imgs/close.png" alt="" />
+              <img src="https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Fclose.png?alt=media&token=c47d304f-dcbb-4166-b8cc-ed2bbf5cb727" alt="" />
             </div>
             <ul className="menu-link" onClick={(e) => this.closeMenu(e)}>
               <li>
-                <Link to="/gallery">COCKTAIL GALLERY</Link>
+                <Link
+                  to={{
+                    pathname: '/gallery',
+                    state: {
+                      searchTarget: undefined
+                    }
+                  }}
+                >
+COCKTAIL GALLERY
+                </Link>
               </li>
               <li>
                 <Link to="/taiwanbar">TAIWAN BAR</Link>
@@ -125,12 +134,13 @@ class Navigation extends Component {
                 //   }
                 // }}
               >
-                <Link to={{
-                  pathname: '/gallery',
-                  state: {
-                    searchTarget: value
-                  }
-                }}
+                <Link
+                  to={{
+                    pathname: '/gallery',
+                    state: {
+                      searchTarget: value
+                    }
+                  }}
                 >
 search
                 </Link>

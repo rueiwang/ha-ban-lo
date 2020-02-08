@@ -14,12 +14,14 @@ import '../../css/gallery.css';
 class GalleryPage extends Component {
   constructor(props) {
     super(props);
+    this.isCancel = true;
     this.state = {
       filter: 'All',
       recipes: [],
       isLoading: false,
       next: 0,
-      searchTarget: null
+      searchTarget: null,
+      lastSearch: ''
     };
 
     this.handleScroll = this.handleScroll.bind(this);
@@ -27,56 +29,65 @@ class GalleryPage extends Component {
   }
 
   componentDidMount() {
-    // 抓 query 做搜尋，怎麼觸發?
-    // const searchTarget = queryString.parse(this.props.location.search);
-    // console.log(searchTarget)
-    // this.setState({
-    //   searchTarget: searchTarget.cocktailName
-    // })
-
-    // window.addEventListener('scroll', this.handleScroll);
-    // this.getData();
+    const { recipes, lastSearch } = this.state;
     const { firebase, location } = this.props;
-    const newAry = [];
-    firebase.searchCocktailByName(location.state.searchTarget)
-      .then((docSnapshot) => {
-        docSnapshot.forEach((doc) => {
-          newAry.push(doc.data());
-        });
-        this.setState({
-          recipes: [...newAry],
-          searchTarget: location.state.searchTarget,
-          filter: 'searching'
-        });
-      });
+
+    this.isCancel = false;
+    if (this.isCancel === false) {
+      window.addEventListener('scroll', this.handleScroll);
+
+      const newAry = [];
+      if (location.state.searchTarget === undefined && location.state.searchTarget !== lastSearch) {
+        this.getData();
+      } else {
+        firebase.searchCocktailByName(location.state.searchTarget)
+          .then((docSnapshot) => {
+            docSnapshot.forEach((doc) => {
+              newAry.push(doc.data());
+            });
+            this.setState({
+              recipes: [...newAry],
+              searchTarget: null,
+              lastSearch: location.state.searchTarget,
+              filter: 'searching'
+            });
+          });
+      }
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('hi');
     const { firebase, location } = this.props;
-    const { searchTarget } = this.state;
+    const { searchTarget, lastSearch } = this.state;
     const newAry = [];
     if (searchTarget === null) {
-      firebase.searchCocktailByName(location.state.searchTarget)
-        .then((docSnapshot) => {
-          docSnapshot.forEach((doc) => {
-            newAry.push(doc.data());
+      if (location.state.searchTarget !== lastSearch && location.state.searchTarget !== undefined) {
+        console.log('hi');
+        firebase.searchCocktailByName(location.state.searchTarget)
+          .then((docSnapshot) => {
+            docSnapshot.forEach((doc) => {
+              newAry.push(doc.data());
+            });
+            this.setState({
+              recipes: [...newAry],
+              searchTarget: null,
+              lastSearch: location.state.searchTarget,
+              filter: 'searching',
+              isLoading: false,
+              next: 0
+            });
           });
-          this.setState({
-            recipes: [...newAry],
-            searchTarget: location.state.searchTarget,
-            filter: 'searching'
-          });
-        });
+      }
     }
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    this.isCancel = true;
   }
 
   getData() {
-    const { firebase } = this.props;
+    const { firebase, location } = this.props;
     const {
       recipes,
       filter,
@@ -97,6 +108,9 @@ class GalleryPage extends Component {
             });
             this.setState((prevState) => (
               {
+                filter: 'All',
+                searchTarget: null,
+                lastSearch: location.state.searchTarget,
                 recipes: [...newAry],
                 isLoading: false,
                 next: lastVisible
@@ -112,6 +126,9 @@ class GalleryPage extends Component {
             });
             this.setState((prevState) => (
               {
+                filter: 'All',
+                searchTarget: null,
+                lastSearch: location.state.searchTarget,
                 recipes: [...recipes, ...newAry],
                 isLoading: false,
                 next: lastVisible
@@ -122,57 +139,127 @@ class GalleryPage extends Component {
     }
   }
 
-  // setSearchTarget(cocktailName) {
-  // }
-
   handleScroll() {
-    const { filter, next } = this.state;
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1) {
-      if (next.exists === false) {
+    const { firebase, location } = this.props;
+    const {
+      filter, next, recipes, searchTarget
+    } = this.state;
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1 && filter !== 'searching') {
+      if (next === undefined) {
         alert('已顯示全部酒譜!');
         return;
       }
+      const newAry = [];
       if (filter === 'All') {
         this.getData();
+      } else {
+        firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', filter.toLowerCase())
+          .startAfter(next)
+          .limit(20)
+          .get()
+          .then((docSnapshot) => {
+            const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
+            docSnapshot.forEach((doc) => {
+              newAry.push(doc.data());
+            });
+            this.setState((prevState) => (
+              {
+                filter: prevState.filter,
+                searchTarget: null,
+                lastSearch: location.state.searchTarget,
+                recipes: [...recipes, ...newAry],
+                isLoading: false,
+                next: lastVisible
+              }
+            ));
+          });
       }
     }
   }
 
   changeFilter(e) {
     this.setState({
-      isLoading: true
+      isLoading: true,
+      next: 0
     });
-    const { firebase } = this.props;
+    const { firebase, location } = this.props;
+    const { next, recipes } = this.state;
+
     const category = e.target.textContent;
+    const newAry = [];
     if (category === 'All') {
       this.setState({
         filter: category
       });
-      this.getData();
+      firebase.getCocktail()
+        .then((docSnapshot) => {
+          const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
+          docSnapshot.forEach((doc) => {
+            newAry.push(doc.data());
+          });
+          this.setState((prevState) => (
+            {
+              filter: 'All',
+              searchTarget: null,
+              lastSearch: location.state.searchTarget,
+              recipes: [...newAry],
+              isLoading: false,
+              next: lastVisible
+            }
+          ));
+        });
       return;
     }
-    const newAry = [];
-    firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
-      .get()
-      .then((docSnapshot) => {
-        docSnapshot.forEach((doc) => {
-          newAry.push(doc.data());
+
+    if (category !== 'All') {
+      firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
+        .limit(20)
+        .get()
+        .then((docSnapshot) => {
+          const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
+          docSnapshot.forEach((doc) => {
+            newAry.push(doc.data());
+          });
+          this.setState((prevState) => (
+            {
+              filter: category,
+              searchTarget: null,
+              lastSearch: location.state.searchTarget,
+              recipes: [...newAry],
+              isLoading: false,
+              next: lastVisible
+            }
+          ));
         });
-        this.setState((prevState) => (
-          {
-            recipes: [...newAry],
-            isLoading: false,
-            filter: category
-          }
-        ));
-      });
+    } else {
+      firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
+        .startAfter(next)
+        .limit(20)
+        .get()
+        .then((docSnapshot) => {
+          const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
+          docSnapshot.forEach((doc) => {
+            newAry.push(doc.data());
+          });
+          this.setState((prevState) => (
+            {
+              filter: category,
+              searchTarget: null,
+              lastSearch: location.state.searchTarget,
+              recipes: [...recipes, ...newAry],
+              isLoading: false,
+              next: lastVisible
+            }
+          ));
+        });
+    }
   }
 
   renderItem() {
     const { recipes } = this.state;
     const itemAry = [];
     for (let i = 0; i < recipes.length; i += 1) {
-      itemAry.push(<Item recipe={recipes[i]} />);
+      itemAry.push(<Item recipe={recipes[i]} key={recipes[i].cocktail_id} />);
     }
     return itemAry;
   }

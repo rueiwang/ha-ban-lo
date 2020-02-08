@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
@@ -13,8 +14,8 @@ const INITIAL_STATE = {
   error: null
 };
 
-const SignIn = () => (
-  <SignInForm />
+const SignIn = (props) => (
+  <SignInForm slip={props.isShowUp} />
 );
 
 class SignInFormBase extends Component {
@@ -31,7 +32,7 @@ class SignInFormBase extends Component {
     firebase.doSignInWithEmailAndPassword(email, password)
       .then((authUser) => {
         this.setState({ ...INITIAL_STATE });
-        history.push(ROUTES.ACCOUNT);
+        history.push(`/account/${authUser.user.uid}`);
       })
       .catch((error) => {
         this.setState({ error });
@@ -51,11 +52,13 @@ class SignInFormBase extends Component {
       error
     } = this.state;
 
+    const { slip } = this.props;
+
     const isInvalid = password.trim() === ''
     || email.trim() === '';
 
     return (
-      <form className="sign-in-with-email">
+      <form className={`sign-in-with-email ${slip === 'signIn' ? 'slip' : ''}`}>
         <h3>SIGN IN</h3>
         <input
           type="text"

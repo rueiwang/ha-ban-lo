@@ -52,7 +52,7 @@
     color: #ffffff;
     height: 350px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     letter-spacing: 3px;
     border-radius: 3px;
 }
@@ -68,7 +68,7 @@
 }
 
 .wrap-landing>.main-landing>.member-area>.member-message>div {
-    width: 45%;
+    width: 40%;
     padding: 2%;
 }
 
@@ -90,8 +90,53 @@
     box-shadow: black 0.1em 0.1em 0.2em;
     position: absolute;
     top: -10px;
-    width: 375px;
+    width: 50%;
     height: 370px;
+    
+}
+
+@media (max-width: 1550px) {
+    .wrap-landing>.main-landing>.member-area {
+        width: 70%;
+    }
+} 
+
+@media (max-width: 1000px) {
+    .wrap-landing>.main-landing>.member-area {
+        width: 85%;
+    }
+} 
+
+@media (max-width: 700px) {
+    .wrap-landing>.main-landing>.member-area {
+        width: 95%;
+    }
+}
+
+.wrap-landing>.main-landing>.member-area>.sign-in-with-email {
+    
+    transform: translateX(0);
+    transition: ease-in .3s;
+    opacity: 0;
+}
+
+.wrap-landing>.main-landing>.member-area>.sign-in-with-email.slip {
+    
+    transform: translateX(90%);
+    opacity: 1;
+}
+
+.wrap-landing>.main-landing>.member-area>.sign-up-with-email {
+    
+    transform: translateX(90%);
+    transition: ease-in .3s;
+    opacity: 0;
+}
+
+.wrap-landing>.main-landing>.member-area>.sign-up-with-email.slip {
+   
+    transform: translateX(5%);
+    opacity: 1;
 }
 
 .wrap-landing>.main-landing>.member-area>form h3 {
@@ -149,6 +194,4 @@
     border-top: 20px solid #ffffff;
 }
 
-.wrap-landing>.main-landing>.member-area>.sign-in-with-email {
-    right: 0px;
-}
+

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../../components/Context/Firebase';
+import { withFirebase } from '../Context/Firebase';
 import * as ROUTES from '../../constants/routes';
 
 const SignInWithAccount = () => (
@@ -31,10 +31,11 @@ function signIn(firebase, provider, history, account) {
       });
       firebase.member(user.uid).collection('member_ingredient');
       firebase.member(user.uid).collection('member_collection_cocktail');
+      history.push(`/account/${user.uid}`);
     })
-    .then(() => {
-      history.push(ROUTES.ACCOUNT);
-    })
+    // .then((s) => {
+    //   console.log(s);
+    // })
     .catch((error) => {
       alert(error.message);
     });

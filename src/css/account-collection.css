@@ -1,0 +1,132 @@
+
+.collection-wine-cabinet {
+    background-color: #eeeeee;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    height: 135px;
+    border-bottom: 5px solid #664e0e;
+}
+
+.collection-wine-cabinet ul {
+    display: flex;
+    background-color: #F0AD5F;
+    justify-content: stretch;
+    overflow-x: scroll;
+}
+
+.collection-wine-cabinet ul li {
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.collection-wine-cabinet ul li h5 {
+    letter-spacing: 1.5px;
+}
+
+.collection-wine-cabinet ul li:hover h5 {
+    font-size: 24px;
+}
+
+.collection-wine-cabinet ul li img {
+    width: 64px;
+}
+
+
+.wrap-accounting>.main-account>.collection-detail>.content {
+    padding: 60px 3%;
+    letter-spacing: 1px;
+    max-width: 80%;
+    margin: auto;
+}
+
+
+.wrap-accounting>.main-account>.collection-detail>.content>h2 {
+    font-size: 30px;
+    letter-spacing: 2px;
+    font-weight: 900;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>h2::after {
+    content: '';
+    width: 80px;
+    height: 5px;
+    background-color: #F0AD5F;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>p {
+    margin-bottom: 0px;
+    font-size: 18px;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>div {
+    width: 50%;
+}
+
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description h3 {
+    font-size: 28px;
+    margin: 20px 0;
+}
+
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description ul {
+    margin-bottom: 20px;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description ul li{
+    padding: 5px 0;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description ul li .measure {
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description p {
+    line-height: 20px;
+}
+
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description {
+    position: relative;
+}
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingredient-description::after {
+    position: absolute;
+    content: '';
+    background-color: #413d40;
+    width: 2px;
+    height: 200px;
+    top: 100px;
+    right: -90px;
+    display: none;
+}
+
+
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingedient-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingedient-info>img {
+    display: none;
+}
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingedient-info>.svg {
+    margin-bottom: 20px;
+}
+.wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingedient-info>.svg img{
+}
