@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -9,7 +10,103 @@ import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
 
 import '../../css/gallery.css';
+import { cacheData } from '../../components/Context/DataInSessionStorage';
 
+class Item extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collected: false
+    };
+    this.collect = this.collect.bind(this);
+  }
+
+  componentDidMount() {
+    const { authUser, recipe } = this.props;
+    if (authUser) {
+      const isCollected = authUser.userCollections.findIndex((id) => id === recipe.cocktail_id) !== -1;
+      if (isCollected) {
+        this.setState({
+          collected: true
+        });
+      }
+    }
+  }
+
+  collect(e, itemId) {
+    e.preventDefault();
+    const { DataInSessionStorage, firebase, authUser } = this.props;
+    const { collected } = this.state;
+    const targetDataObj = DataInSessionStorage.filter((item) => item.cocktail_id === itemId)[0];
+    if (authUser === null) {
+      alert('Please Log in first!')
+      return;
+    }
+    if (collected) {
+      const question = window.confirm('Are you sure to remove this from your collection?');
+      if (!question) {
+        return;
+      }
+      firebase.db.collection('members').doc(authUser.authUser.uid).collection('member_collections').doc(itemId)
+        .delete()
+        .then(() => {
+          console.log('Document successfully deleted!');
+          this.setState({
+            collected: false
+          });
+        });
+    } else {
+      firebase.db.collection('members').doc(authUser.authUser.uid).collection('member_collections').doc(itemId)
+        .set(targetDataObj);
+      this.setState({
+        collected: true
+      });
+    }
+  }
+
+  render() {
+    console.log('render');
+    const { recipe } = this.props;
+    const { collected } = this.state;
+    return (
+      <div className="item row">
+        <div className="item-pic">
+          <img src={recipe.cocktail_pic} alt="cocktail name" />
+        </div>
+        <div className="item-description">
+          {
+            collected ? (
+              <div className="collect-sign">
+                <img src="./imgs/barman.png" alt="collected" />
+              </div>
+            )
+              : ''
+          }
+          <h4 className="cocktail-IBA">{recipe.cocktail_IBA}</h4>
+          <h3>{recipe.cocktail_name}</h3>
+          <p>{recipe.cocktail_category}</p>
+          <div className="cover">
+            <button className="checkRecipe" type="button">
+              <Link to={{
+                pathname: '/cocktailDetail',
+                search: recipe.cocktail_id,
+                state: {
+                  cocktailID: recipe.cocktail_id
+                }
+              }}
+              >
+  Detail
+              </Link>
+            </button>
+            <button className="collect" type="button" onClick={(e) => this.collect(e, recipe.cocktail_id)}>
+  Collect
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
 class GalleryPage extends Component {
   constructor(props) {
@@ -34,7 +131,7 @@ class GalleryPage extends Component {
 
     this.isCancel = false;
     if (this.isCancel === false) {
-      window.addEventListener('scroll', this.handleScroll);
+      // window.addEventListener('scroll', this.handleScroll);
 
       const newAry = [];
       if (location.state.searchTarget === undefined && location.state.searchTarget !== lastSearch) {
@@ -258,8 +355,9 @@ class GalleryPage extends Component {
   renderItem() {
     const { recipes } = this.state;
     const itemAry = [];
+    const ItemWithData = compose(cacheData, withFirebase, ifAuth)(Item);
     for (let i = 0; i < recipes.length; i += 1) {
-      itemAry.push(<Item recipe={recipes[i]} key={recipes[i].cocktail_id} />);
+      itemAry.push(<ItemWithData recipe={recipes[i]} key={recipes[i].cocktail_id} />);
     }
     return itemAry;
   }
@@ -294,47 +392,6 @@ class GalleryPage extends Component {
     );
   }
 }
-
-const Item = (props) => {
-  console.log('render');
-  const { recipe } = props;
-  return (
-    <div className="item row">
-      <div className="item-pic">
-        <img src={recipe.cocktail_pic} alt="cocktail name" />
-      </div>
-      <div className="item-description">
-        <h4 className="cocktail-IBA">{recipe.cocktail_IBA}</h4>
-        <h3>{recipe.cocktail_name}</h3>
-        <p>{recipe.cocktail_category}</p>
-        <div className="cover">
-          <button className="checkRecipe" type="button">
-            <Link to={{
-              pathname: '/cocktailDetail',
-              search: recipe.cocktail_id,
-              state: {
-                cocktailID: recipe.cocktail_id
-              }
-            }}
-            >
-Detail
-            </Link>
-          </button>
-          <button className="collect" type="button">
-            <Link to={{
-              state: {
-                data: recipe
-              }
-            }}
-            >
-Collect
-            </Link>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default compose(
   withFirebase,

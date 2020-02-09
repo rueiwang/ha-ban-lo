@@ -1,28 +1,33 @@
 
 .collection-wine-cabinet {
-    background-color: #eeeeee;
     width: 80%;
     margin: auto;
     overflow: hidden;
-    height: 135px;
-    border-bottom: 5px solid #664e0e;
+    /* border-bottom: 5px solid #664e0e; */
 }
 
 .collection-wine-cabinet ul {
     display: flex;
-    background-color: #F0AD5F;
+    flex-wrap: wrap;
     justify-content: stretch;
-    overflow-x: scroll;
 }
 
 .collection-wine-cabinet ul li {
     padding: 30px 20px;
     text-align: center;
     cursor: pointer;
+    border: 2px solid #664e0e;
+    margin: 10px;
+}
+
+.collection-wine-cabinet ul li a {
+    text-decoration: none;
+    color: #413d40;
 }
 
 .collection-wine-cabinet ul li h5 {
     letter-spacing: 1.5px;
+    text-transform: capitalize;
 }
 
 .collection-wine-cabinet ul li:hover h5 {
@@ -31,6 +36,7 @@
 
 .collection-wine-cabinet ul li img {
     width: 64px;
+    margin-bottom: 20px;
 }
 
 

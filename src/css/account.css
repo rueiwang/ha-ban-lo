@@ -26,6 +26,10 @@
     margin-bottom: 30px;
 }
 
+.wrap-accounting>.side-bar>ul {
+    margin-bottom: 50px;
+}
+
 .wrap-accounting>.side-bar>ul>li {
     padding: 30px 50px;
     font-size: 20px;
@@ -49,6 +53,20 @@
 .wrap-accounting>.side-bar>ul>li.current a,
 .wrap-accounting>.side-bar>ul>li:hover a {
     color: #000000;
+}
+
+.wrap-accounting>.side-bar>.sign-out {
+    width: 60%;
+    display: block;
+    padding: 0 10px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    margin: auto;
 }
 
 .wrap-accounting>.main-account {

@@ -121,7 +121,7 @@
 }
 
 .wrap-landing>.main-landing>.member-area>.sign-in-with-email.slip {
-    
+    z-index: 50;
     transform: translateX(90%);
     opacity: 1;
 }
@@ -169,7 +169,7 @@
     font-weight: 900;
     border-radius: 3px;
     border: none;
-    margin-top: 50px;
+    margin: 30px 0;
 }
 
 .wrap-landing>.main-landing>.member-area>form #sign-up,
@@ -192,6 +192,12 @@
     text-decoration: none;
     color: #cdcdcd;
     border-top: 20px solid #ffffff;
+}
+
+.wrap-landing>.main-landing>.member-area>form p {
+    font-size: 14px;
+    color: pink;
+    line-height: 16px;
 }
 
 

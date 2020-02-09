@@ -34,6 +34,9 @@ class SignUpFormBase extends Component {
     firebase.doCreateUserWithEmailAndPassword(memberEmail, memberPassword)
       .then((authUser) => {
         console.log(authUser);
+        authUser.user.updateProfile({
+          displayName: memberName
+        });
         const documentRefString = firebase.db.collection('members').doc(`${authUser.user.uid}`);
         const recipeRef = firebase.db.doc(documentRefString.path);
         firebase.member(authUser.user.uid).set({

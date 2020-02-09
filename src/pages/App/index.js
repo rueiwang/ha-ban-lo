@@ -37,7 +37,23 @@ class App extends Component {
       // set authcontext value
       this.listener = firebase.auth.onAuthStateChanged((authUser) => {
         console.log(authUser);
-        authUser ? this.setState({ authUser }) : this.setState({ authUser: null });
+        if (authUser) {
+          firebase.db.collection('members').doc(authUser.uid).collection('member_collections')
+            .onSnapshot((query) => {
+              const collectionsAry = [];
+              query.forEach((doc) => {
+                collectionsAry.push(doc.data().cocktail_id);
+              });
+              this.setState({
+                authUser: {
+                  authUser,
+                  userCollections: collectionsAry
+                }
+              });
+            });
+        } else {
+          this.setState({ authUser: null });
+        }
       });
 
       // set session storage value
