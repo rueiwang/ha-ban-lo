@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-useless-constructor */
 import React, { Component } from 'react';
 import {
@@ -19,17 +20,16 @@ import '../../css/account-collection.css';
 import '../../css/account.css';
 
 function MyCollection(props) {
-  const { authUser, DataInSessionStorage } = props;
+  const { userData, DataInSessionStorage } = props;
   const matchData = [];
-  if (authUser) {
-    authUser.userCollections.map((usersItemId) => {
-      matchData.push(DataInSessionStorage.filter((item) => item.cocktail_id === usersItemId)[0]);
+  if (userData.authUser) {
+    userData.userCollections.map((usersItemId) => {
+      matchData.push(DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === usersItemId)[0]);
     });
     console.log(matchData);
   }
   if (matchData !== []) {
     return (
-      // <h1> My Collection </h1>
       <>
         <div className="collection-wine-cabinet">
           <ul className="collection">
@@ -64,7 +64,7 @@ function MyCollection(props) {
                   break;
               }
               return (
-                <li>
+                <li key={item.cocktail_id}>
 
                   <Link to={{
                     pathname: '/cocktailDetail',
@@ -82,49 +82,20 @@ function MyCollection(props) {
               );
             })
           }
+            <li className="see-more">
+              <Link to={{
+                pathname: '/gallery',
+                state: {
+                  searchTarget: undefined
+                }
+              }}
+              >
+                <img src="../imgs/plus.png" alt="plus" />
+              </Link>
+            </li>
           </ul>
-        </div>
-        {/* <div className="collection-detail">
-          <div className="content">
-            <h2>Dragonfly</h2>
-            <p>Ordinary Drink</p>
-            <div className="ingredient-content">
-              <div className="ingredient-description">
-                <h3>Ingredients</h3>
-                <ul className="ingredient-list">
-                  <li className="item">
-                    <span className="measure">1 1/2 oz</span>
-                    <span className="name">Gin</span>
-                  </li>
-                  <li className="item">
-                    <span className="measure">4 oz</span>
-                    <span className="name">Ginger ale</span>
-                  </li>
-                  <li className="item">
-                    <span className="measure">1</span>
-                    <span className="name">Lime</span>
-                  </li>
-                </ul>
-                <p className="intro">
-                In a highball glass almost filled with ice cubes, combine the gin and ginger ale. Stir well. Garnish with the lime wedge.
-                </p>
-              </div>
 
-              <div className="ingedient-info">
-                <img src={`${item.cocktail_pic}?time=${new Date().valueOf()}`}
-                 ref={this.img} alt="none" className="invisibleImg"
-                 onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length)} crossOrigin="anonymous" />
-                <div className="svg">
-                  <img src="../imgs/Glass-of-martini.svg" alt="" srcSet="" />
-                  <GlassComponent glassType={item.cocktail_glass_type} colors={this.state} />
-                </div>
-                <div className="glass">
-                  <p>Highball glass</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
+        </div>
       </>
 
     );
@@ -137,10 +108,80 @@ function MyCollection(props) {
   );
 }
 
-function Note() {
-  return (
-    <h1> Note </h1>
-  );
+class Note extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      baseWine: [],
+      liqueur: [],
+      other: [],
+      tobuy: []
+    };
+
+    this.classify = this.classify.bind(this);
+  }
+
+  componentDidMount() {
+
+  }
+
+  classify() {
+    const { userData, DataInSessionStorage } = this.props;
+    let baseWineAry = [];
+    let liqueurAry = [];
+    let otherAry = [];
+    let tobuyAry = [];
+  }
+
+  render() {
+    return (
+      <>
+        <div className="ingredients-wrap">
+          <div className="basewine">
+            <h3>Base Wine</h3>
+            <ul className="basewine-list">
+              <li>
+                <img src="https://www.thecocktaildb.com/images/ingredients/Scotch-Medium.png" alt="icon" />
+                <h5>Scotch</h5>
+              </li>
+              <li>
+                <img src="https://www.thecocktaildb.com/images/ingredients/Peach Vodka-Medium.png" alt="icon" />
+                <h5>Peach Vodka</h5>
+              </li>
+            </ul>
+          </div>
+          <div className="liqueur">
+            <h3>Liqueur</h3>
+            <ul className="liqueur-list">
+              <li>
+                <img src="https://www.thecocktaildb.com/images/ingredients/Creme de Mure-Medium.png" alt="icon" />
+                <h5>Creme de Mure</h5>
+              </li>
+              <li>
+                <img src="https://www.thecocktaildb.com/images/ingredients/Vermouth-Medium.png" alt="icon" />
+                <h5>Vermouth</h5>
+              </li>
+            </ul>
+          </div>
+          <div className="other">
+            <h3>Other</h3>
+            <ul className="other-list">
+              <li>
+                <img src="https://www.thecocktaildb.com/images/ingredients/Condensed%20milk-Medium.png" alt="icon" />
+                <h5>Condensed milk</h5>
+              </li>
+              <li>
+                <img src="https://www.thecocktaildb.com/images/ingredients/Pineapple-Medium.png" alt="icon" />
+                <h5>Pineapple</h5>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </>
+
+    );
+  }
 }
 
 function Create() {
@@ -164,17 +205,27 @@ const AccountPage = (props) => {
 class AccountPageBase extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      filter: 'collection'
+    };
   }
 
   onClick = (e) => {
     e.preventDefault();
     const { firebase, history } = this.props;
     firebase.doSignOut();
-    history.push(ROUTES.LANDING);
+    history.push('/');
+  }
+
+  changeFilter(e, filter) {
+    this.setState({
+      filter
+    });
   }
 
   render() {
-    const { match, authUser } = this.props;
+    const { match, userData } = this.props;
+    const { filter } = this.state;
     return (
       <>
         <div className="wrap-accounting">
@@ -183,17 +234,17 @@ class AccountPageBase extends Component {
               <img src="https://api.adorable.io/avatars/285/abott@adorable.png" alt="your pic" />
               <h2>
 Hi!
-                {authUser ? `${authUser.authUser.displayName}` : ''}
+                {userData.authUser ? `${userData.authUser.displayName}` : ''}
               </h2>
             </div>
             <ul className="menu">
-              <li className="current">
+              <li className={filter === 'collection' ? 'current' : ''} onClick={(e) => this.changeFilter(e, 'collection')}>
                 <Link to={`${match.url}`}>My collection</Link>
               </li>
-              <li>
+              <li className={filter === 'ingredientsNote' ? 'current' : ''} onClick={(e) => this.changeFilter(e, 'ingredientsNote')}>
                 <Link to={`${match.url}/IngredientsNote`}>Ingredients Note</Link>
               </li>
-              <li>
+              <li className={filter === 'create' ? 'current' : ''} onClick={(e) => this.changeFilter(e, 'create')}>
                 <Link to={`${match.url}/Create`}>Create Recipe</Link>
               </li>
             </ul>
@@ -202,7 +253,7 @@ Hi!
           <main className="main-account">
             <Switch>
               <Route path={`${match.url}`} exact component={compose(cacheData, ifAuth)(MyCollection)} />
-              <Route path={`${match.url}/IngredientsNote`} component={Note} />
+              <Route path={`${match.url}/IngredientsNote`} component={compose(cacheData, ifAuth)(Note)} />
               <Route path={`${match.url}/Create`} component={Create} />
             </Switch>
           </main>

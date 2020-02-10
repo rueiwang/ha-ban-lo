@@ -22,9 +22,9 @@ class Item extends Component {
   }
 
   componentDidMount() {
-    const { authUser, recipe } = this.props;
-    if (authUser) {
-      const isCollected = authUser.userCollections.findIndex((id) => id === recipe.cocktail_id) !== -1;
+    const { userData, recipe } = this.props;
+    if (userData.authUser) {
+      const isCollected = userData.userCollections.findIndex((id) => id === recipe.cocktail_id) !== -1;
       if (isCollected) {
         this.setState({
           collected: true
@@ -35,11 +35,11 @@ class Item extends Component {
 
   collect(e, itemId) {
     e.preventDefault();
-    const { DataInSessionStorage, firebase, authUser } = this.props;
+    const { DataInSessionStorage, firebase, userData } = this.props;
     const { collected } = this.state;
-    const targetDataObj = DataInSessionStorage.filter((item) => item.cocktail_id === itemId)[0];
-    if (authUser === null) {
-      alert('Please Log in first!')
+    const targetDataObj = DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === itemId)[0];
+    if (userData.authUser === null) {
+      alert('Please Log in first!');
       return;
     }
     if (collected) {
@@ -47,7 +47,7 @@ class Item extends Component {
       if (!question) {
         return;
       }
-      firebase.db.collection('members').doc(authUser.authUser.uid).collection('member_collections').doc(itemId)
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_collections').doc(itemId)
         .delete()
         .then(() => {
           console.log('Document successfully deleted!');
@@ -56,11 +56,13 @@ class Item extends Component {
           });
         });
     } else {
-      firebase.db.collection('members').doc(authUser.authUser.uid).collection('member_collections').doc(itemId)
-        .set(targetDataObj);
-      this.setState({
-        collected: true
-      });
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_collections').doc(itemId)
+        .set(targetDataObj)
+        .then(() => {
+          this.setState({
+            collected: true
+          });
+        });
     }
   }
 
@@ -99,7 +101,7 @@ class Item extends Component {
               </Link>
             </button>
             <button className="collect" type="button" onClick={(e) => this.collect(e, recipe.cocktail_id)}>
-  Collect
+              {collected ? 'remove' : 'Collect'}
             </button>
           </div>
         </div>
@@ -363,7 +365,7 @@ class GalleryPage extends Component {
   }
 
   render() {
-    const { authUser } = this.props;
+    const { userData } = this.props;
     const { filter, isLoading, searchTarget } = this.state;
     return (
       <>

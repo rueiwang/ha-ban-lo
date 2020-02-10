@@ -6,6 +6,8 @@
     width: 200px;
     background-color: #000000;
     padding: 80px 0;
+    /* height: 100vh; */
+    max-height: auto;
 }
 
 .wrap-accounting>.side-bar>.member-info {
@@ -34,7 +36,6 @@
     padding: 30px 50px;
     font-size: 20px;
     letter-spacing: 2px;
-    cursor: pointer;
 }
 
 

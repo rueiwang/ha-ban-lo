@@ -59,7 +59,7 @@ class Navigation extends Component {
   renderlist() {
     const { DataInSessionStorage } = this.props;
     const { value } = this.state;
-    const updataData = DataInSessionStorage
+    const updataData = DataInSessionStorage.cacheData
       .filter((item) => item.cocktail_name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
 
     const data = updataData
@@ -77,7 +77,7 @@ class Navigation extends Component {
   }
 
   render() {
-    const { authUser } = this.props;
+    const { userData } = this.props;
     const { value, isSearching, clickToggle } = this.state;
     return (
       <nav className="scroll">
@@ -88,7 +88,7 @@ class Navigation extends Component {
           </div>
           <h1>hā-pan</h1>
           <button type="button">
-            <Link to={authUser ? `/account/${authUser.uid}` : '/'}>YOUR DRINK</Link>
+            <Link to={userData.authUser ? `/account/${userData.authUser.uid}` : '/'}>YOUR DRINK</Link>
           </button>
           <div className={`menu ${clickToggle ? 'open' : ''}`}>
             <div className="close" onClick={(e) => this.closeMenu(e)}>

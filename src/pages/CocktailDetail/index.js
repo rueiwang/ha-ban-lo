@@ -47,16 +47,20 @@ class CocktailDetailPage extends Component {
     e.preventDefault();
     const { DataInSessionStorage } = this.props;
     const { cocktailId, index } = this.state;
-    const targetIndex = DataInSessionStorage.findIndex((item) => item.cocktail_id === cocktailId);
+    const targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
+    if (DataInSessionStorage.cacheData[targetIndex - 1] === 'undefiend') {
+      alert('There is no more cocktail');
+      return;
+    }
     // console.log(targetIndex);
     if (index === 0) {
       this.setState({
-        cocktailId: DataInSessionStorage[targetIndex - 1].cocktail_id,
+        cocktailId: DataInSessionStorage.cacheData[targetIndex - 1].cocktail_id,
         index: targetIndex - 1
       });
     } else {
       this.setState({
-        cocktailId: DataInSessionStorage[index - 1].cocktail_id,
+        cocktailId: DataInSessionStorage.cacheData[index - 1].cocktail_id,
         index: index - 1
       });
     }
@@ -66,16 +70,16 @@ class CocktailDetailPage extends Component {
     e.preventDefault();
     const { DataInSessionStorage } = this.props;
     const { cocktailId, index } = this.state;
-    const targetIndex = DataInSessionStorage.findIndex((item) => item.cocktail_id === cocktailId);
+    const targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
     // console.log(targetIndex);
     if (index === 0) {
       this.setState({
-        cocktailId: DataInSessionStorage[targetIndex + 1].cocktail_id,
+        cocktailId: DataInSessionStorage.cacheData[targetIndex + 1].cocktail_id,
         index: targetIndex + 1
       });
     } else {
       this.setState({
-        cocktailId: DataInSessionStorage[index + 1].cocktail_id,
+        cocktailId: DataInSessionStorage.cacheData[index + 1].cocktail_id,
         index: index + 1
       });
     }
@@ -102,6 +106,80 @@ class CocktailDetailPage extends Component {
   }
 }
 
+class AddButtonBase extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collected: false,
+      ingredientId: ''
+    };
+
+    this.addIngredients = this.addIngredients.bind(this);
+  }
+
+  componentDidMount() {
+    const { userData, target } = this.props;
+    if (userData.authUser) {
+      console.log('hi');
+      // 比對會員收藏的原料和全部原料資料，有的話顯示
+      const isCollected = userData.userIngredients.findIndex((name) => name === target) !== -1;
+      if (isCollected) {
+        this.setState({
+          collected: true
+        });
+      }
+    }
+  }
+
+  addIngredients(e) {
+    e.preventDefault();
+    const { collected, ingredientId } = this.state;
+    const { target, userData, firebase } = this.props;
+    console.log(target);
+    if (userData.authUser === null) {
+      alert('Please Sign in!');
+      return;
+    }
+    if (collected) {
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientId)
+        .delete()
+        .then(() => {
+          this.setState({
+            collected: false
+          });
+        });
+    } else {
+      firebase.db.collection('all_ingredient').where('ingredient_name', '==', target)
+        .get()
+        .then((docQuery) => {
+          let targetObj = null;
+          docQuery.forEach((doc) => {
+            targetObj = doc.data();
+          });
+          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(targetObj.ingredient_id)
+            .set(targetObj)
+            .then(() => {
+              this.setState({
+                collected: true,
+                ingredientId: targetObj.ingredient_id
+              });
+            });
+        })
+        .catch(() => alert('Sorry, something wrong, try to reload your page!'));
+    }
+  }
+
+  render() {
+    const { collected } = this.state;
+    return (
+      <div className={`add-to-my-ingredients ${collected ? 'collected' : ''}`} onClick={(e) => this.addIngredients(e)}>
+        <img src={collected ? '../imgs/ok.png' : '../imgs/plus.png'} alt="plus" />
+      </div>
+    );
+  }
+}
+
+const AddButton = compose(withFirebase, cacheData, ifAuth)(AddButtonBase);
 class ContentBase extends Component {
   constructor(props) {
     super(props);
@@ -131,9 +209,7 @@ class ContentBase extends Component {
 
   render() {
     const { DataInSessionStorage, cocaktailId } = this.props;
-    const { mainColor, colorPlette } = this.state;
-
-    const targetDetail = DataInSessionStorage.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
+    const targetDetail = DataInSessionStorage.cacheData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
     // console.log(targetDetail);
     return (
       targetDetail.map((item) => (
@@ -149,6 +225,7 @@ class ContentBase extends Component {
                   <li className="item" key={`${item.cocktail_ingredients_type[i]}+${i}`}>
                     <span className="measure">{item.cocktail_measures[i]}</span>
                     <span className="name">{ingredient}</span>
+                    <AddButton target={ingredient} />
                   </li>
                 ))
               }

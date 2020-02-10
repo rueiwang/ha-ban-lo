@@ -18,6 +18,7 @@
     cursor: pointer;
     border: 2px solid #664e0e;
     margin: 10px;
+    flex: auto;
 }
 
 .collection-wine-cabinet ul li a {
@@ -37,6 +38,16 @@
 .collection-wine-cabinet ul li img {
     width: 64px;
     margin-bottom: 20px;
+}
+
+.collection-wine-cabinet ul li.see-more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.collection-wine-cabinet ul li.see-more img {
+    margin-bottom: 0;
 }
 
 

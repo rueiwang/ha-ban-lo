@@ -22,11 +22,18 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.isCancel = true;
-
     this.state = {
-      authUser: null,
-      cacheData: []
+      userData: {
+        authUser: null,
+        userCollections: [],
+        userIngredients: []
+      },
+      cacheData: [],
+      ingredientData: []
     };
+
+    this.putAllRecipeToSessionStorage = this.putAllRecipeToSessionStorage.bind(this);
+    this.putAllIngredientsToSessionStorage = this.putAllIngredientsToSessionStorage.bind(this);
   }
 
   componentDidMount() {
@@ -44,52 +51,41 @@ class App extends Component {
               query.forEach((doc) => {
                 collectionsAry.push(doc.data().cocktail_id);
               });
-              this.setState({
-                authUser: {
+              this.setState((prevState) => ({
+                userData: {
                   authUser,
-                  userCollections: collectionsAry
-                }
-              });
-            });
-        } else {
-          this.setState({ authUser: null });
-        }
-      });
-
-      // set session storage value
-      const { cacheData } = this.state;
-      let newAry = [];
-      const isDataInSessionStorage = sessionStorage.getItem('allData') !== null;
-      console.log(isDataInSessionStorage);
-      if (isDataInSessionStorage) {
-      // console.log(sessionStorage.getItem('allData').split("},"));
-        const processAry = sessionStorage.getItem('allData').split('},').map((str, i) => {
-          if (i === (sessionStorage.getItem('allData').split('},').length) - 1) {
-            return str;
-          }
-          return (`${str}}`);
-        });
-        newAry = processAry.map((item) => JSON.parse(item));
-        this.setState({
-          cacheData: [...newAry]
-        });
-      } else {
-        firebase.getAllCocktail()
-          .then((docSnapshot) => {
-            docSnapshot.forEach((doc) => {
-              newAry.push(JSON.stringify(doc.data(), (key, value) => {
-                if (key !== 'ref') {
-                  return value;
+                  userCollections: [...collectionsAry],
+                  userIngredients: prevState.userData.userIngredients
                 }
               }));
             });
-            sessionStorage.setItem('allData', newAry.toString());
-            const dataAry = newAry.map((str) => JSON.parse(str));
-            this.setState({
-              cacheData: dataAry
+          firebase.db.collection('members').doc(authUser.uid).collection('member_ingredients')
+            .onSnapshot((query) => {
+              const IngredientsAry = [];
+              query.forEach((doc) => {
+                IngredientsAry.push(doc.data().ingredient_name);
+              });
+              this.setState((prevState) => ({
+                userData: {
+                  authUser,
+                  userCollections: prevState.userData.userCollections,
+                  userIngredients: [...IngredientsAry]
+                }
+              }));
             });
-          });
-      }
+        } else {
+          this.setState((prevState) => ({
+            userData: {
+              authUser: null,
+              userCollections: [],
+              userIngredients: []
+            }
+          }));
+        }
+      });
+
+      this.putAllRecipeToSessionStorage();
+      this.putAllIngredientsToSessionStorage();
     }
   }
 
@@ -98,11 +94,86 @@ class App extends Component {
     this.isCancel = true;
   }
 
+  putAllIngredientsToSessionStorage() {
+    const { firebase } = this.props;
+    let newAry = [];
+    const isDataInSessionStorage = sessionStorage.getItem('allIngredients') !== null;
+    console.log(isDataInSessionStorage);
+    if (isDataInSessionStorage) {
+      const processAry = sessionStorage.getItem('allIngredients').split('},').map((str, i) => {
+        if (i === (sessionStorage.getItem('allIngredients').split('},').length) - 1) {
+          return str;
+        }
+        return (`${str}}`);
+      });
+      newAry = processAry.map((item) => JSON.parse(item));
+      this.setState({
+        ingredientData: [...newAry]
+      });
+    } else {
+      firebase.db.collection('all_ingredient')
+        .get()
+        .then((docSnapshot) => {
+          docSnapshot.forEach((doc) => {
+            newAry.push(JSON.stringify(doc.data(), (key, value) => {
+              if (key !== 'ref') {
+                return value;
+              }
+            }));
+          });
+          sessionStorage.setItem('allIngredients', newAry.toString());
+          const dataAry = newAry.map((str) => JSON.parse(str));
+          this.setState({
+            ingredientData: dataAry
+          });
+        });
+    }
+  }
+
+  putAllRecipeToSessionStorage() {
+    const { firebase } = this.props;
+    let newAry = [];
+    const isDataInSessionStorage = sessionStorage.getItem('allData') !== null;
+    console.log(isDataInSessionStorage);
+    if (isDataInSessionStorage) {
+      const processAry = sessionStorage.getItem('allData').split('},').map((str, i) => {
+        if (i === (sessionStorage.getItem('allData').split('},').length) - 1) {
+          return str;
+        }
+        return (`${str}}`);
+      });
+      newAry = processAry.map((item) => JSON.parse(item));
+      this.setState({
+        cacheData: [...newAry]
+      });
+    } else {
+      firebase.getAllCocktail()
+        .then((docSnapshot) => {
+          docSnapshot.forEach((doc) => {
+            newAry.push(JSON.stringify(doc.data(), (key, value) => {
+              if (key !== 'ref') {
+                return value;
+              }
+            }));
+          });
+          sessionStorage.setItem('allData', newAry.toString());
+          const dataAry = newAry.map((str) => JSON.parse(str));
+          this.setState({
+            cacheData: dataAry
+          });
+        });
+    }
+  }
+
   render() {
-    const { authUser, cacheData } = this.state;
+    const { userData, cacheData, ingredientData } = this.state;
     return (
-      <AuthUserContext.Provider value={authUser}>
-        <DataInSessionStorageContext.Provider value={cacheData}>
+      <AuthUserContext.Provider value={userData}>
+        <DataInSessionStorageContext.Provider value={{
+          cacheData,
+          ingredientData
+        }}
+        >
           <BrowserRouter>
             <Navigation />
             <Switch>

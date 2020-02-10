@@ -147,7 +147,7 @@
 }
 
 .main-detail>.detail-box>.content>.ingredient-content>div {
-    width: 40%;
+    width: 45%;
 }
 
 
@@ -174,11 +174,31 @@
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li{
     padding: 5px 0;
+    display: flex;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li span {
+  
 }
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li .measure {
     font-weight: 900;
     margin-right: 10px;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li .add-to-my-ingredients {
+   cursor: pointer;
+   margin-left: auto;
+   display: none;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li:hover .add-to-my-ingredients,
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li .collected  {
+    display: flex;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul li .add-to-my-ingredients img {
+    width: 20px;
 }
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description p {
