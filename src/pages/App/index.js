@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter, Route, Switch, Redirect
+} from 'react-router-dom';
 
 import LandingPage from '../Landing';
 import AccountPage from '../Account';
@@ -177,8 +179,8 @@ class App extends Component {
           <BrowserRouter>
             <Navigation />
             <Switch>
-              <Route exact path="/" component={LandingPage} />
-              <Route path="/account" component={AccountPage} />
+              <Route exact path="/" render={(props) => (userData.authUser ? <Redirect to={`/account/${userData.authUser.uid}`} /> : <LandingPage {...props} />)} />
+              <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
               <Route path="/gallery" component={GalleryPage} />
               <Route path="/cocktailDetail" component={CocktailDetailPage} />
               <Route path="/taiwanbar" component={TaiwanBarPage} />

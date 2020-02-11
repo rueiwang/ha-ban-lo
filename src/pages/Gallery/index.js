@@ -39,7 +39,7 @@ class Item extends Component {
     const { collected } = this.state;
     const targetDataObj = DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === itemId)[0];
     if (userData.authUser === null) {
-      alert('Please Log in first!');
+      alert('Please Sign in!');
       return;
     }
     if (collected) {
@@ -133,7 +133,7 @@ class GalleryPage extends Component {
 
     this.isCancel = false;
     if (this.isCancel === false) {
-      // window.addEventListener('scroll', this.handleScroll);
+      window.addEventListener('scroll', this.handleScroll);
 
       const newAry = [];
       if (location.state.searchTarget === undefined && location.state.searchTarget !== lastSearch) {

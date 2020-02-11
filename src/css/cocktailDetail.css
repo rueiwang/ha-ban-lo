@@ -247,7 +247,7 @@
     justify-content: center;
     align-items: center;
 }
-.main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>img {
+.main-detail>.detail-box>.content> img {
     display: none;
 }
 .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg {

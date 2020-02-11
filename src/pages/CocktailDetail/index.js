@@ -180,12 +180,12 @@ class AddButtonBase extends Component {
 }
 
 const AddButton = compose(withFirebase, cacheData, ifAuth)(AddButtonBase);
+
 class ContentBase extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mainColor: [255, 255, 255],
       colorPlette: [],
       isLoading: false
     };
@@ -197,12 +197,10 @@ class ContentBase extends Component {
     const { isLoading } = this.state;
     const colorThief = new ColorThief();
     const img = this.img.current;
-    img.setAttribute('crossOrigin', 'anonymous');
-    // console.log(img);
-    const mainColorRGB = colorThief.getColor(img);
+    // img.setAttribute('crossOrigin', 'anonymous');
     const colorPletteRGB = colorThief.getPalette(img, length);
+    console.log(colorPletteRGB);
     this.setState({
-      mainColor: [...mainColorRGB],
       colorPlette: [...colorPletteRGB]
     });
   }
@@ -214,6 +212,7 @@ class ContentBase extends Component {
     return (
       targetDetail.map((item) => (
         <div className="content" key={item.cocktail_id}>
+          <img src={`${item.cocktail_pic}?time=${new Date().valueOf()}`} ref={this.img} alt="none" className="invisibleImg" onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length)} crossOrigin="anonymous" />
           <h2>{item.cocktail_name}</h2>
           <p>{item.cocktail_category}</p>
           <div className="ingredient-content">
@@ -234,7 +233,6 @@ class ContentBase extends Component {
             </div>
 
             <div className="ingedient-info">
-              <img src={`${item.cocktail_pic}?time=${new Date().valueOf()}`} ref={this.img} alt="none" className="invisibleImg" onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length)} crossOrigin="anonymous" />
               <div className="svg">
                 <GlassComponent glassType={item.cocktail_glass_type} colors={this.state} />
               </div>
