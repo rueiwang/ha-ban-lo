@@ -7,6 +7,7 @@ import GlassOfMartini from './GlassOfMartini';
 import GlassOfShot from './GlassOfShot';
 import GlassOfUFO from './GlassOfUFO';
 import GlassOfWhisky from './GlassOfWhisky';
+import LoadingIcon from './LoadingIcon';
 
 
 export {
@@ -18,5 +19,6 @@ export {
   GlassOfMartini,
   GlassOfShot,
   GlassOfUFO,
-  GlassOfWhisky
+  GlassOfWhisky,
+  LoadingIcon
 };

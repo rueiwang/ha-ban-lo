@@ -1,9 +1,9 @@
 .wrap-landing>.intro-area {
-    height: 100vh;
+    height: 500px;
     color: #ffffff;
     background-image: url('/imgs/bg-index.jpg');
     background-position: center;
-    background-size: cover;
+    background-size: contain;
     display: flex;
     justify-content: center;
     align-items: center;

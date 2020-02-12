@@ -124,7 +124,6 @@ class GalleryPage extends Component {
     };
 
     this.handleScroll = this.handleScroll.bind(this);
-    // this.setSearchTarget = this.setSearchTarget.bind(this);
   }
 
   componentDidMount() {
@@ -277,19 +276,16 @@ class GalleryPage extends Component {
   }
 
   changeFilter(e) {
-    this.setState({
-      isLoading: true,
-      next: 0
-    });
     const { firebase, location } = this.props;
     const { next, recipes } = this.state;
-
     const category = e.target.textContent;
+    this.setState({
+      isLoading: true,
+      next: 0,
+      filter: category
+    });
     const newAry = [];
     if (category === 'All') {
-      this.setState({
-        filter: category
-      });
       firebase.getCocktail()
         .then((docSnapshot) => {
           const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
@@ -298,7 +294,6 @@ class GalleryPage extends Component {
           });
           this.setState((prevState) => (
             {
-              filter: 'All',
               searchTarget: null,
               lastSearch: location.state.searchTarget,
               recipes: [...newAry],
@@ -321,7 +316,6 @@ class GalleryPage extends Component {
           });
           this.setState((prevState) => (
             {
-              filter: category,
               searchTarget: null,
               lastSearch: location.state.searchTarget,
               recipes: [...newAry],
@@ -369,8 +363,8 @@ class GalleryPage extends Component {
     const { filter, isLoading, searchTarget } = this.state;
     return (
       <>
+        {isLoading ? <Loading /> : ''}
         <div className="wrap-gallery">
-          {isLoading ? <Loading /> : ''}
           <div className="intro-area">
             <h2>Specialist in Cocktail</h2>
           </div>

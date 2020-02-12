@@ -17,6 +17,7 @@
     text-align: center;
     cursor: pointer;
     border: 2px solid #664e0e;
+    background-color: rgba(102, 78, 14, .1);
     margin: 10px;
     flex: auto;
 }
@@ -31,10 +32,9 @@
     text-transform: capitalize;
 }
 
-.collection-wine-cabinet ul li:hover h5 {
-    font-size: 24px;
+.collection-wine-cabinet ul li:hover {
+    background-color: #ffffff;
 }
-
 .collection-wine-cabinet ul li img {
     width: 64px;
     margin-bottom: 20px;

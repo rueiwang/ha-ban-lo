@@ -1,45 +1,45 @@
 import React, { Component } from 'react';
-// import { GlassOfHighball } from '../SVG';
+import { LoadingIcon } from '../SVG';
 
 
 class Loading extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 10
+      index: 0
     };
 
-    this.valueCount = this.valueCount.bind(this);
+    this.indexCount = this.indexCount.bind(this);
   }
 
   componentDidMount() {
-    // this.interval = setInterval(this.valueCount, 500);
+    // this.interval = setInterval(this.indexCount, 1000);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  valueCount() {
-    const { value } = this.state;
-    if (value >= 100) {
+  indexCount() {
+    const { index } = this.state;
+    if (index >= 6) {
       this.setState({
-        value: 0
+        index: 0
       });
       return;
     }
     this.setState((prevState) => (
       {
-        value: prevState.value + 10
+        index: prevState.index + 1
       }
     ));
   }
 
   render() {
-    const { value } = this.state;
+    const { index } = this.state;
     return (
       <div className="loading-wrap">
-        <h1>LOADING</h1>
+        <LoadingIcon index={index} />
       </div>
     );
   }

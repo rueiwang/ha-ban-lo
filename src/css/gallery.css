@@ -1,5 +1,5 @@
 .wrap-gallery>.intro-area {
-    height: 100vh;
+    height: 500px;
     color: #ffffff;
     background-image: url('/imgs/bg-classic.jpg');
     background-position: center;
@@ -35,8 +35,12 @@
     font-weight: 900;
 }
 
-.wrap-gallery>.main-gallery>.filter>.item:hover,
-.wrap-gallery>.main-gallery>.filter>.current {
+.wrap-gallery>.main-gallery>.filter>.item:hover {
+    background-color: rgba(241,241,241, .5)
+}
+
+.wrap-gallery>.main-gallery>.filter>.current,
+.wrap-gallery>.main-gallery>.filter>.current:hover {
     background-color: #ffffff;
     color: #000000;
     border-bottom: none;
@@ -98,6 +102,11 @@
     position: absolute;
     right: 20px;
     bottom: 10px;
+    
+}
+
+.wrap-gallery>.main-gallery>.gallery-item>.item>.item-description .collect-sign img {
+    width: 50px;
 }
 
 .wrap-gallery>.main-gallery>.gallery-item>.item>.item-description .cover {
