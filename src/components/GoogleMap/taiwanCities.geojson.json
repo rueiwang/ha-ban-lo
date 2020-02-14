@@ -5,8 +5,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10014001",
-                "COUNTYNAME": "台東縣",
-                "name": "台東縣"
+                "COUNTYNAME": "Taitung City",
+                "name": "Taitung City"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -1070,8 +1070,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10002001",
-                "COUNTYNAME": "宜蘭縣",
-                "name": "宜蘭縣"
+                "COUNTYNAME": "Yilan City",
+                "name": "Yilan City"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -1675,8 +1675,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "63000001",
-                "COUNTYNAME": "台北市",
-                "name": "台北市"
+                "COUNTYNAME": "Taipei City",
+                "name": "Taipei City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -1910,8 +1910,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10009001",
-                "COUNTYNAME": "雲林縣",
-                "name": "雲林縣"
+                "COUNTYNAME": "Yunlin City ",
+                "name": "Yunlin City "
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -2463,8 +2463,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10003001",
-                "COUNTYNAME": "桃園縣",
-                "name": "桃園縣"
+                "COUNTYNAME": "Taoyuan City",
+                "name": "Taoyuan City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -2970,8 +2970,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10013001",
-                "COUNTYNAME": "屏東縣",
-                "name": "屏東縣"
+                "COUNTYNAME": "Pingtung City",
+                "name": "Pingtung City"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -3751,8 +3751,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10006001",
-                "COUNTYNAME": "台中市",
-                "name": "台中市"
+                "COUNTYNAME": "Taichung City",
+                "name": "Taichung City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -4426,8 +4426,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10011001",
-                "COUNTYNAME": "台南市",
-                "name": "台南市"
+                "COUNTYNAME": "Tainan City",
+                "name": "Tainan City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -4901,8 +4901,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10017001",
-                "COUNTYNAME": "基隆市",
-                "name": "基隆市"
+                "COUNTYNAME": "Keelung City",
+                "name": "Keelung City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -5052,8 +5052,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "09007001",
-                "COUNTYNAME": "連江縣",
-                "name": "連江縣"
+                "COUNTYNAME": "Lienchiang City",
+                "name": "Lienchiang City"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -5213,8 +5213,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10008001",
-                "COUNTYNAME": "南投縣",
-                "name": "南投縣"
+                "COUNTYNAME": "Nantou City",
+                "name": "Nantou City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -6024,8 +6024,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10016001",
-                "COUNTYNAME": "澎湖縣",
-                "name": "澎湖縣"
+                "COUNTYNAME": "Penghu City",
+                "name": "Penghu City"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -6521,8 +6521,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10005001",
-                "COUNTYNAME": "苗栗縣",
-                "name": "苗栗縣"
+                "COUNTYNAME": "Miaoli City",
+                "name": "Miaoli City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -6996,8 +6996,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10020001",
-                "COUNTYNAME": "嘉義市",
-                "name": "嘉義市"
+                "COUNTYNAME": "Chiayi City",
+                "name": "Chiayi City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -7103,8 +7103,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10004001",
-                "COUNTYNAME": "新竹縣",
-                "name": "新竹縣"
+                "COUNTYNAME": "Hsinchu City",
+                "name": "Hsinchu City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -7666,8 +7666,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10001001",
-                "COUNTYNAME": "新北市",
-                "name": "新北市"
+                "COUNTYNAME": "New TaipeiCity ",
+                "name": "New TaipeiCity "
             },
             "geometry": {
                 "type": "Polygon",
@@ -8619,8 +8619,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10015001",
-                "COUNTYNAME": "花蓮縣",
-                "name": "花蓮縣"
+                "COUNTYNAME": "Hualien City",
+                "name": "Hualien City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -9574,8 +9574,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10012001",
-                "COUNTYNAME": "高雄市",
-                "name": "高雄市"
+                "COUNTYNAME": "Kaohsiung City",
+                "name": "Kaohsiung City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -10393,8 +10393,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10007001",
-                "COUNTYNAME": "彰化縣",
-                "name": "彰化縣"
+                "COUNTYNAME": "Changhua City",
+                "name": "Changhua City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -10732,8 +10732,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "10010001",
-                "COUNTYNAME": "嘉義縣",
-                "name": "嘉義縣"
+                "COUNTYNAME": "Chiayi City",
+                "name": "Chiayi City"
             },
             "geometry": {
                 "type": "Polygon",
@@ -11549,8 +11549,8 @@
             "type": "Feature",
             "properties": {
                 "COUNTYSN": "09020001",
-                "COUNTYNAME": "金門縣",
-                "name": "金門縣"
+                "COUNTYNAME": "Kinmen City",
+                "name": "Kinmen City"
             },
             "geometry": {
                 "type": "MultiPolygon",

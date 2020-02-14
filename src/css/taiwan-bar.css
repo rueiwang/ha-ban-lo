@@ -1,4 +1,18 @@
-#example-map {
-    width: 800px;
-    height: 800px;
+.wrap-bar {
+    background-image: linear-gradient(to bottom,#F0AD5F 50%, #413d40 50%);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 200px 1%;
+}
+
+.wrap-bar>div {
+    
+}
+
+
+.wrap-bar>#map {
+    width: 50%;
+    height: 700px;
+    border: 5px solid #413d40;
 }
