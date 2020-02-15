@@ -112,46 +112,69 @@ class Map extends Component {
         lng: 120.917631
       },
       targetName: 'Nantou City',
-      isMapLoad: false
+      isMapLoad: false,
+      resultPlaces: [],
+      placePhotos: [],
+      stars: []
     };
 
     this.getPosition = this.getPosition.bind(this);
-    this.searchBox = null;
-    this.check = this.check.bind(this);
+    this.places = null;
     this.loadMap = this.loadMap.bind(this);
-    this.input = React.createRef();
+    this.container = React.createRef();
   }
 
   componentDidMount() {
-    
+
   }
 
   componentDidUpdate() {
-    const { isMapLoad } = this.state;
+    const { isMapLoad, mousePosition } = this.state;
     if (isMapLoad) {
       console.log('update');
-      // creat search box
-      this.searchBox = new window.google.maps.places.SearchBox(this.input.current);
-      // console.log(this.searchBox.getPlaces());
-      // window.google.maps.event.addListener(this.searchBox, 'place_changed', this.check);
-      this.input.current.addEventListener('input', () => window.google.maps.event.trigger(this.searchBox, 'place_changed'));
+      this.places = new window.google.maps.places.PlacesService(this.container.current);
     }
   }
 
 
   getPosition(e, where) {
-    this.setState({
-      mousePosition: {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng()
-      },
-      targetName: where
+    const { isMapLoad, mousePosition } = this.state;
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    const mylocation = new window.google.maps.LatLng(lat, lng);
+    const radius = 3000;
+    const requestObj = {
+      location: mylocation,
+      radius,
+      type: 'bar'
+    };
+    // https://www.google.com/maps/place/{place_name}
+    this.places.nearbySearch(requestObj, (results, status) => {
+      console.log('Retrieved data:');
+      console.log(results);
+      const resultsAry = results;
+      // const stars = resultsAry.map((result) => {
+      //   const starsAmount = Math.floor(Number(result.rating));
+      //   const starsImg = [];
+      //   for (let i = 0; i < starsAmount; i += 1) {
+      //     starsImg.push('<img src="./imgs.png" />');
+      //   }
+      //   return starsImg.join('');
+      // });
+      const placesPic = resultsAry.map((result) => result.photos.map((photo) => photo.getUrl()));
+
+      console.log(placesPic);
+      this.setState({
+        mousePosition: {
+          lat,
+          lng
+        },
+        targetName: where,
+        resultPlaces: [...resultsAry],
+        placePhotos: [...placesPic]
+        // stars: [...stars]
+      });
     });
-  }
-
-
-  check(e) {
-    console.log(this.searchBox.getPlaces());
   }
 
   loadMap() {
@@ -163,9 +186,52 @@ class Map extends Component {
 
   render() {
     const { taiwan, name } = this.props;
-    const { mousePosition, targetName, searchFunction } = this.state;
+    const {
+      mousePosition, resultPlaces, targetName, placePhotos, stars
+    } = this.state;
     return (
       <>
+        <ul className="results-list">
+          <div className="title">
+            <h2>Which Country do you want to go?</h2>
+            <p>
+Bar in
+              <span>{targetName}</span>
+            </p>
+          </div>
+          {
+            resultPlaces !== []
+              ? resultPlaces.map((result, i) => (
+                <li>
+                  <a href={`https://www.google.com/maps/place/${result.name}`} title="Check on Google">
+                    <div className="result-description">
+                      <h3>{result.name}</h3>
+                      <p className="rating">
+                        {result.rating}
+                        {/* {stars[i]} */}
+(
+                        {result.user_ratings_total}
+)
+                      </p>
+                      <p className="address">
+                        {result.price_level}
+                        {result.vicinity}
+                      </p>
+                      {/* <p>
+                        {
+                      result.opening_hours.open_now ? 'OPEN' : 'CLOSED'
+                    }
+                      </p> */}
+                    </div>
+                    <div className="result-pic">
+                      <img src={placePhotos[i][0]} alt={result.name} />
+                    </div>
+                  </a>
+                </li>
+              ))
+              : <h3>There is no bar in 3000 meters around the place you choose.</h3>
+          }
+        </ul>
         <GoogleMap
           zoom={8}
           center={{
@@ -258,7 +324,6 @@ class Map extends Component {
           }}
           onLoad={this.loadMap}
         >
-
           {
         taiwan.map((country, i) => (
           <Polygon
@@ -277,44 +342,12 @@ class Map extends Component {
           />
         ))
       }
-          <label htmlFor="readOnlyInput">
-            {/* <StandaloneSearchBox
-              onLoad={this.onLoad}
-              onPlacesChanged={this.check}
-            > */}
-            <input
-              ref={this.input}
-              id="readOnlyInput"
-              // onChange={this.check}
-              value={`${targetName} bar`}
-              readOnly
-              type="text"
-              placeholder="Customized your placeholder"
-              style={{
-                boxSizing: 'border-box',
-                border: '1px solid transparent',
-                width: '240px',
-                height: '32px',
-                padding: '0 12px',
-                borderRadius: '3px',
-                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-                fontSize: '14px',
-                outline: 'none',
-                textOverflow: 'ellipses',
-                position: 'absolute',
-                left: '50%',
-                marginLeft: '-120px'
-              }}
-            />
-            {/* </StandaloneSearchBox> */}
-          </label>
-
           <Marker
             icon="./imgs/placeholder.png"
             position={mousePosition}
             animation={1}
           />
-
+          <div className="place-service-container" ref={this.container} />
         </GoogleMap>
       </>
 
