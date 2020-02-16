@@ -113,13 +113,12 @@ class Map extends Component {
       },
       targetName: 'Nantou City',
       isMapLoad: false,
-      resultPlaces: [],
-      placePhotos: [],
-      stars: []
+      resultPlaces: []
     };
 
-    this.getPosition = this.getPosition.bind(this);
     this.places = null;
+    this.getPosition = this.getPosition.bind(this);
+    this.getStars = this.getStars.bind(this);
     this.loadMap = this.loadMap.bind(this);
     this.container = React.createRef();
   }
@@ -129,7 +128,7 @@ class Map extends Component {
   }
 
   componentDidUpdate() {
-    const { isMapLoad, mousePosition } = this.state;
+    const { isMapLoad } = this.state;
     if (isMapLoad) {
       console.log('update');
       this.places = new window.google.maps.places.PlacesService(this.container.current);
@@ -138,43 +137,39 @@ class Map extends Component {
 
 
   getPosition(e, where) {
-    const { isMapLoad, mousePosition } = this.state;
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
     const mylocation = new window.google.maps.LatLng(lat, lng);
-    const radius = 3000;
     const requestObj = {
       location: mylocation,
-      radius,
-      type: 'bar'
+      radius: '500',
+      query: `bar in ${where}`
     };
-    // https://www.google.com/maps/place/{place_name}
-    this.places.nearbySearch(requestObj, (results, status) => {
+    this.places.textSearch(requestObj, (results, status) => {
+      console.log('status', status);
       console.log('Retrieved data:');
       console.log(results);
-      const resultsAry = results;
-      // const stars = resultsAry.map((result) => {
-      //   const starsAmount = Math.floor(Number(result.rating));
-      //   const starsImg = [];
-      //   for (let i = 0; i < starsAmount; i += 1) {
-      //     starsImg.push('<img src="./imgs.png" />');
-      //   }
-      //   return starsImg.join('');
-      // });
-      const placesPic = resultsAry.map((result) => result.photos.map((photo) => photo.getUrl()));
-
-      console.log(placesPic);
-      this.setState({
-        mousePosition: {
-          lat,
-          lng
-        },
-        targetName: where,
-        resultPlaces: [...resultsAry],
-        placePhotos: [...placesPic]
-        // stars: [...stars]
-      });
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        this.setState({
+          mousePosition: {
+            lat,
+            lng
+          },
+          targetName: where,
+          resultPlaces: [...results]
+          // stars: [...stars]
+        });
+      }
     });
+  }
+
+  getStars(rating) {
+    const ratingInteger = Math.floor(rating);
+    const imgTag = [];
+    for (let i = 0; i < ratingInteger; i += 1) {
+      imgTag.push(<img src="./imgs/star.png" alt="star" />);
+    }
+    return imgTag;
   }
 
   loadMap() {
@@ -187,55 +182,61 @@ class Map extends Component {
   render() {
     const { taiwan, name } = this.props;
     const {
-      mousePosition, resultPlaces, targetName, placePhotos, stars
+      mousePosition, resultPlaces, targetName
     } = this.state;
     return (
       <>
         <ul className="results-list">
           <div className="title">
-            <h2>Which Country do you want to go?</h2>
+            <h2>Which City do you want to go?</h2>
             <p>
 Bar in
               <span>{targetName}</span>
             </p>
           </div>
           {
-            resultPlaces !== []
-              ? resultPlaces.map((result, i) => (
-                <li>
-                  <a href={`https://www.google.com/maps/place/${result.name}`} title="Check on Google">
+            resultPlaces.length === 0
+              ? <h3>Click the Map!</h3>
+              : resultPlaces.map((result, i) => (
+                <li key={result.id}>
+                  <a href={`https://www.google.com/maps?daddr=${result.geometry.location.lat()},${result.geometry.location.lng()}&hl=en`} title="Check on Google" target="_blank">
+                    <h3>{result.name}</h3>
                     <div className="result-description">
-                      <h3>{result.name}</h3>
                       <p className="rating">
                         {result.rating}
-                        {/* {stars[i]} */}
-(
+                        <span className="stars">
+                          {this.getStars(result.rating)}
+                        </span>
+                        (
                         {result.user_ratings_total}
 )
                       </p>
                       <p className="address">
                         {result.price_level}
-                        {result.vicinity}
+                        {result.formatted_address}
                       </p>
-                      {/* <p>
-                        {
-                      result.opening_hours.open_now ? 'OPEN' : 'CLOSED'
+                      {
+                          result.opening_hours
+                            ? result.opening_hours.open_now ? (<p className="is-open open">OPEN</p>) : (<p className="is-open">CLOSED</p>)
+                            : ''
                     }
-                      </p> */}
                     </div>
                     <div className="result-pic">
-                      <img src={placePhotos[i][0]} alt={result.name} />
+                      {
+                      result.photos
+                        ? <img src={result.photos[0].getUrl()} alt={result.name} />
+                        : <img src="./imgs/beer.png" alt={result.name} />
+                    }
                     </div>
                   </a>
                 </li>
               ))
-              : <h3>There is no bar in 3000 meters around the place you choose.</h3>
           }
         </ul>
         <GoogleMap
           zoom={8}
           center={{
-            lat: 23.858987, lng: 120.917631
+            lat: 23.605525, lng: 119.610184
           }}
           id="map"
           options={{

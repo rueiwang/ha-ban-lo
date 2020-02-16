@@ -28,6 +28,13 @@ nav.scroll {
     justify-content: space-between;
 }
 
+
+@media (max-width: 720px) {
+    .nav-containter {
+        width: 100%
+    }
+} 
+
 .nav-containter>.menu-toggle {
     display: flex;
     align-items: center;
@@ -40,6 +47,12 @@ nav.scroll {
     font-weight: 900;
 }
 
+@media (max-width: 600px) {
+    .nav-containter>.menu-toggle a {
+        display: none
+    }
+}
+
 .nav-containter>.menu-toggle img {
     width: 48px;
     margin-right: 10px;
@@ -50,9 +63,28 @@ nav.scroll {
     font-weight: 900;
 }
 
+@media (max-width: 720px) {
+    .nav-containter h1 {
+        font-size: 50px;;
+    }
+} 
+
+
+@media (max-width: 500px) {
+    .nav-containter {
+        padding: 30px 10px;
+    }
+}
+
+@media (max-width: 500px) {
+    .nav-containter h1 {
+        font-size: 40px;;
+    }
+}
+
 
 .nav-containter button {
-    padding: 0 25px;
+    padding: 0 1%;
     background-color: #000000;
     color: #ffffff;
     border: 2px solid #000000;
@@ -60,6 +92,7 @@ nav.scroll {
     letter-spacing: 4px;
     cursor: pointer;
     font-weight: 900;
+    width: 140px;
 } 
 
 .nav-containter button a{
@@ -67,9 +100,15 @@ nav.scroll {
     text-decoration: none;
 }
 
+@media (max-width: 500px) {
+    .nav-containter button {
+        width: 100px;
+    } 
+}
+
 .nav-containter>.menu {
     position: fixed;
-    z-index: 99;
+    z-index: 150;
     top: 0;
     bottom: 0;
     left: 0;

@@ -30,7 +30,6 @@ class Navigation extends Component {
   }
 
   closeMenu(e) {
-    e.preventDefault();
     this.setState({
       clickToggle: false
     });
@@ -135,6 +134,7 @@ COCKTAIL GALLERY
                 // }}
               >
                 <Link
+                  onClick={this.closeMenu}
                   to={{
                     pathname: '/gallery',
                     state: {

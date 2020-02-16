@@ -138,6 +138,9 @@ class GalleryPage extends Component {
       if (location.state.searchTarget === undefined && location.state.searchTarget !== lastSearch) {
         this.getData();
       } else {
+        this.setState({
+          isLoading: true
+        });
         firebase.searchCocktailByName(location.state.searchTarget)
           .then((docSnapshot) => {
             docSnapshot.forEach((doc) => {
@@ -147,7 +150,8 @@ class GalleryPage extends Component {
               recipes: [...newAry],
               searchTarget: null,
               lastSearch: location.state.searchTarget,
-              filter: 'searching'
+              filter: 'searching',
+              isLoading: false
             });
           });
       }
@@ -160,7 +164,6 @@ class GalleryPage extends Component {
     const newAry = [];
     if (searchTarget === null) {
       if (location.state.searchTarget !== lastSearch && location.state.searchTarget !== undefined) {
-        console.log('hi');
         firebase.searchCocktailByName(location.state.searchTarget)
           .then((docSnapshot) => {
             docSnapshot.forEach((doc) => {
@@ -188,7 +191,6 @@ class GalleryPage extends Component {
     const { firebase, location } = this.props;
     const {
       recipes,
-      filter,
       isLoading,
       next
     } = this.state;
@@ -366,7 +368,7 @@ class GalleryPage extends Component {
         {isLoading ? <Loading /> : ''}
         <div className="wrap-gallery">
           <div className="intro-area">
-            <h2>Specialist in Cocktail</h2>
+            <h2>Classic Cocktail</h2>
           </div>
           <main className="main-gallery">
             <div className="filter">

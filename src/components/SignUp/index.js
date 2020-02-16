@@ -79,7 +79,7 @@ class SignUpFormBase extends Component {
       || memberName.trim() === '';
 
     return (
-      <form className={`sign-up-with-email ${slip === 'signUp' ? 'slip' : ''}`}>
+      <form className={`sign-up-with-email ${slip === 'signUp' || slip === 'mobile-signUp' ? 'slip' : ''}`}>
         <h3>SIGN UP</h3>
         <input
           type="text"

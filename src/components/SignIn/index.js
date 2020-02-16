@@ -58,7 +58,7 @@ class SignInFormBase extends Component {
     || email.trim() === '';
 
     return (
-      <form className={`sign-in-with-email ${slip === 'signIn' ? 'slip' : ''}`}>
+      <form className={`sign-in-with-email ${slip === 'signIn' || slip === 'mobile-signIn' ? 'slip' : ''}`}>
         <h3>SIGN IN</h3>
         <input
           type="text"

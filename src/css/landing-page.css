@@ -11,12 +11,32 @@
     padding-bottom: 100px;
 }
 
+@media (max-width: 700px) {
+    .wrap-landing>.intro-area {
+        padding-left: 20px;
+        padding-right: 20px;
+
+    }
+}
+
 
 .wrap-landing>.intro-area>h2 {
     color: #ffffff;
     font-size: 5em;
     text-shadow: black 0.1em 0.1em 0.2em;
     margin: auto;
+}
+
+@media (max-width: 1100px) {
+    .wrap-landing>.intro-area>h2 {
+        font-size: 4em;
+    }
+}
+
+@media (max-width: 900px) {
+    .wrap-landing>.intro-area>h2 {
+        font-size: 3em;
+    }
 }
 
 .wrap-landing>.intro-area>button {
@@ -72,7 +92,8 @@
     padding: 2%;
 }
 
-.wrap-landing>.main-landing>.member-area>.member-message>div button {
+.wrap-landing>.main-landing>.member-area>.member-message>div button,
+.wrap-landing>.main-landing>.member-area>.member-message>button {
     padding: 0 25px;
     background-color: #000000;
     color: #ffffff;
@@ -84,15 +105,8 @@
     border-radius: 3px;
 }
 
-.wrap-landing>.main-landing>.member-area>form {
-    background-color: #ffffff;
-    padding: 50px 30px;
-    box-shadow: black 0.1em 0.1em 0.2em;
-    position: absolute;
-    top: -10px;
-    width: 50%;
-    height: 370px;
-    
+.wrap-landing>.main-landing>.member-area>.member-message>button {
+
 }
 
 @media (max-width: 1550px) {
@@ -105,6 +119,10 @@
     .wrap-landing>.main-landing>.member-area {
         width: 85%;
     }
+    .wrap-landing>.main-landing>.member-area>.member-message>div {
+        width: 40%;
+        padding: 1%;
+    }
 } 
 
 @media (max-width: 700px) {
@@ -113,8 +131,18 @@
     }
 }
 
+
+.wrap-landing>.main-landing>.member-area>form {
+    background-color: #ffffff;
+    padding: 50px 30px;
+    box-shadow: black 0.1em 0.1em 0.2em;
+    position: absolute;
+    top: -10px;
+    width: 50%;
+    height: 370px;
+}
+
 .wrap-landing>.main-landing>.member-area>.sign-in-with-email {
-    
     transform: translateX(0);
     transition: ease-in .3s;
     opacity: 0;
@@ -134,9 +162,96 @@
 }
 
 .wrap-landing>.main-landing>.member-area>.sign-up-with-email.slip {
-   
     transform: translateX(5%);
     opacity: 1;
+}
+
+.wrap-landing>.main-landing>.member-area>.mobile-buttons {
+    display: none;
+}
+
+.wrap-landing>.main-landing>.member-area>.mobile-buttons>button {
+    width: 50%;
+    padding: 0 25px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    cursor: pointer;
+
+}
+
+.wrap-landing>.main-landing>.member-area>.mobile-buttons>#mobile-signUp {
+    border-radius: 0 0 0 3px;
+}
+
+.wrap-landing>.main-landing>.member-area>.mobile-buttons>#mobile-signIn {
+    border-radius: 0 0 3px 0;
+}
+
+.wrap-landing>.main-landing>.member-area>.mobile-buttons>button.current {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* sign in sign up form, mobile version */
+@media (max-width: 650px) {
+    .wrap-landing>.main-landing>.member-area>.mobile-buttons {
+        display: flex;
+    }
+    .wrap-landing>.main-landing>.member-area {
+        box-shadow: 0 1px 10px #000000;
+        border-radius: 3px;
+        background-color: #ffffff;
+    }
+    .wrap-landing>.main-landing>.member-area>.member-message {
+        flex-direction: column;
+        overflow: hidden;
+        height: 360px;
+        background-color: #ffffff;
+    }
+
+    .wrap-landing>.main-landing>.member-area>.member-message>div>button {
+        background-color: #ffffff;
+    }
+
+    .wrap-landing>.main-landing>.member-area>.member-message>div {
+        width: 100%;
+    }
+    .wrap-landing>.main-landing>.member-area>form {
+        box-shadow: none;
+        /* position: unset; */
+        width: 100%;
+        height: 370px;
+        border-radius: 3px 3px 0 0;
+    }
+    
+    .wrap-landing>.main-landing>.member-area>.sign-in-with-email {
+        transform: translateY(-400px);
+        transition: ease-in .5s;
+        opacity: 0;
+    }
+    
+    .wrap-landing>.main-landing>.member-area>.sign-in-with-email.slip {
+        z-index: 50;
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .wrap-landing>.main-landing>.member-area>.sign-up-with-email {
+        transform: translateX(-400px);
+        transition: ease-in .5s;
+        opacity: 0;
+    }
+    
+    .wrap-landing>.main-landing>.member-area>.sign-up-with-email.slip {
+       
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .wrap-landing>.main-landing>.member-area>form h3 {

@@ -40,7 +40,7 @@ class LandingPage extends Component {
               }
             }}
             >
-DRINK MORE
+CLASSIC COCKTAIL
             </Link>
           </button>
         </div>
@@ -49,14 +49,14 @@ DRINK MORE
             <div className="member-message">
               <div className="left">
                 <h4>Don&apos;t Have an account?</h4>
-                <p>Tootsie roll apple pie powder apple pie jujubes caramels.</p>
+                <p>Become a member to discover the world of cocktail.</p>
                 <button type="button" id="signUp" className={form === 'signUp' ? 'current' : ''} onClick={this.changeForm}>
                   Sign Up
                 </button>
               </div>
               <div className="right">
                 <h4>Have an account?</h4>
-                <p>Muffin halvah wafer candy carrot cake.</p>
+                <p>Put some new cocktail recipe into your collection. Then try it tonight!</p>
                 <button type="button" id="signIn" className={form === 'signIn' ? 'current' : ''} onClick={this.changeForm}>
                   Sign In
                 </button>
@@ -64,7 +64,14 @@ DRINK MORE
             </div>
             <SignIn isShowUp={form} />
             <SignUp isShowUp={form} />
-            {/* {form === 's' ? <SignIn /> : <SignUp />} */}
+            <div className="mobile-buttons">
+              <button type="button" id="mobile-signUp" className={form === 'signUp' || form === 'mobile-signUp' ? 'current' : ''} onClick={this.changeForm}>
+                  Sign Up
+              </button>
+              <button type="button" id="mobile-signIn" className={form === 'signIn' || form === 'mobile-signIn' ? 'current' : ''} onClick={this.changeForm}>
+                  Sign In
+              </button>
+            </div>
           </div>
         </main>
         {/* <Footer /> */}
