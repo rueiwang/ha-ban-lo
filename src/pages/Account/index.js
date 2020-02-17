@@ -118,8 +118,7 @@ class Note extends Component {
       other: [],
       tobuy: [],
       translate: 0,
-      slideTarget: 'basewineLi',
-      maxWidth: 0
+      slideTarget: 'basewineLi'
     };
 
     this.ulWidth = React.createRef();
@@ -131,10 +130,6 @@ class Note extends Component {
 
   componentDidMount() {
     this.classify();
-    console.log(this.ulWidth);
-    this.setState({
-      maxWidth: this.ulWidth.current.offsetWidth
-    });
   }
 
   classify() {
@@ -158,7 +153,6 @@ class Note extends Component {
       });
     });
 
-    console.log(baseWineAry, liqueurAry, otherAry);
     this.setState({
       baseWine: [...baseWineAry],
       liqueur: [...liqueurAry],

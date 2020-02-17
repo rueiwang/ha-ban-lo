@@ -9,6 +9,10 @@ class GlassOfWhisky extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log('mount');
+  }
+
   render() {
     const { mainColor } = this.props;
 

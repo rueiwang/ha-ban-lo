@@ -3,7 +3,6 @@
 import React from 'react';
 
 function SvgGlassOfSyrah(props) {
-  console.log(props);
   const { mainColor } = props;
   return (
     <svg

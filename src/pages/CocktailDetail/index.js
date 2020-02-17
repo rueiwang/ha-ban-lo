@@ -3,6 +3,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { Component } from 'react';
 import { compose } from 'recompose';
+import { Link } from 'react-router-dom';
 
 import ColorThief from 'colorthief';
 import { ifAuth } from '../../components/Context/AuthUser';
@@ -19,12 +20,14 @@ import {
 } from '../../components/SVG';
 
 import '../../css/cocktailDetail.css';
+import Loading from '../../components/Loading';
 
 class CocktailDetailPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cocktailId: '',
+      isCollected: false,
       index: 0
     };
 
@@ -38,10 +41,6 @@ class CocktailDetailPage extends Component {
       cocktailId: location.state.cocktailID
     });
   }
-
-
-  // componentWillUnmount() {
-  // }
 
   getLastCocktail(e) {
     e.preventDefault();
@@ -106,6 +105,70 @@ class CocktailDetailPage extends Component {
   }
 }
 
+class CollectButtonBase extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collected: false
+    };
+    this.collect = this.collect.bind(this);
+  }
+
+  componentDidMount() {
+    const { userData, cocaktailId } = this.props;
+    if (userData.authUser) {
+      const isCollected = userData.userCollections.findIndex((id) => id === cocaktailId) !== -1;
+      this.setState({
+        isCollected
+      });
+    }
+  }
+
+  collect(e, itemId) {
+    e.preventDefault();
+    const { DataInSessionStorage, firebase, userData } = this.props;
+    const { isCollected } = this.state;
+    const targetDataObj = DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === itemId)[0];
+    if (userData.authUser === null) {
+      alert('Please Sign in!');
+      return;
+    }
+    if (isCollected) {
+      const question = window.confirm('Are you sure to remove this from your collection?');
+      if (!question) {
+        return;
+      }
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_collections').doc(itemId)
+        .delete()
+        .then(() => {
+          this.setState({
+            isCollected: false
+          });
+        });
+    } else {
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_collections').doc(itemId)
+        .set(targetDataObj)
+        .then(() => {
+          this.setState({
+            isCollected: true
+          });
+        });
+    }
+  }
+
+  render() {
+    const { isCollected } = this.state;
+    const { cocaktailId } = this.props;
+    return (
+      <button className="collect" type="button" onClick={(e) => this.collect(e, cocaktailId)}>
+        <img src={isCollected ? '../imgs/hearts.png' : '../imgs/heart.png'} alt="plus" />
+      </button>
+    );
+  }
+}
+
+const CollectButton = compose(withFirebase, cacheData, ifAuth)(CollectButtonBase);
+
 class AddButtonBase extends Component {
   constructor(props) {
     super(props);
@@ -120,8 +183,6 @@ class AddButtonBase extends Component {
   componentDidMount() {
     const { userData, target } = this.props;
     if (userData.authUser) {
-      console.log('hi');
-      // 比對會員收藏的原料和全部原料資料，有的話顯示
       const isCollected = userData.userIngredients.findIndex((name) => name === target) !== -1;
       if (isCollected) {
         this.setState({
@@ -178,29 +239,34 @@ class AddButtonBase extends Component {
     );
   }
 }
-
 const AddButton = compose(withFirebase, cacheData, ifAuth)(AddButtonBase);
 
 class ContentBase extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       colorPlette: [],
-      isLoading: false
+      isLoading: false,
+      isCollected: false
     };
     this.img = React.createRef();
     this.getImgColor = this.getImgColor.bind(this);
   }
 
+  componentDidMount() {
+    console.log('hi');
+    this.setState({
+      isLoading: true,
+      colorPlette: []
+    });
+  }
+
   getImgColor(e, length) {
-    const { isLoading } = this.state;
     const colorThief = new ColorThief();
     const img = this.img.current;
-    // img.setAttribute('crossOrigin', 'anonymous');
     const colorPletteRGB = colorThief.getPalette(img, length);
-    console.log(colorPletteRGB);
     this.setState({
+      isLoading: false,
       colorPlette: [...colorPletteRGB]
     });
   }
@@ -208,12 +274,21 @@ class ContentBase extends Component {
   render() {
     const { DataInSessionStorage, cocaktailId } = this.props;
     const targetDetail = DataInSessionStorage.cacheData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
-    // console.log(targetDetail);
     return (
       targetDetail.map((item) => (
         <div className="content" key={item.cocktail_id}>
-          <img src={`${item.cocktail_pic}?time=${new Date().valueOf()}`} ref={this.img} alt="none" className="invisibleImg" onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length)} crossOrigin="anonymous" />
-          <h2>{item.cocktail_name}</h2>
+          <img
+            src={`${item.cocktail_pic}?time=${new Date().valueOf()}`}
+            ref={this.img}
+            alt="none"
+            className="invisibleImg"
+            onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length)}
+            crossOrigin="anonymous"
+          />
+          <h2>
+            {item.cocktail_name}
+          </h2>
+          <CollectButton cocaktailId={cocaktailId} />
           <p>{item.cocktail_category}</p>
           <div className="ingredient-content">
             <div className="ingredient-description">
@@ -241,6 +316,17 @@ class ContentBase extends Component {
               </div>
             </div>
           </div>
+          <Link
+            className="back-to-gallery"
+            to={{
+              pathname: '/gallery',
+              state: {
+                searchTarget: undefined
+              }
+            }}
+          >
+← Go Back
+          </Link>
         </div>
       )));
   }
@@ -279,7 +365,7 @@ function GlassComponent(props) {
   }
 }
 
-const Content = cacheData(ContentBase);
+const Content = compose(withFirebase, cacheData, ifAuth)(ContentBase);
 
 export default compose(
   ifAuth,

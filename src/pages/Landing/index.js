@@ -32,17 +32,15 @@ class LandingPage extends Component {
         {isLoading ? <Loading /> : ''}
         <div className="intro-area">
           <h2>Get Off Work and Have A Drink</h2>
-          <button type="button">
-            <Link to={{
-              pathname: '/gallery',
-              state: {
-                searchTarget: undefined
-              }
-            }}
-            >
+          <Link to={{
+            pathname: '/gallery',
+            state: {
+              searchTarget: undefined
+            }
+          }}
+          >
 CLASSIC COCKTAIL
-            </Link>
-          </button>
+          </Link>
         </div>
         <main className="main-landing">
           <div className="member-area">

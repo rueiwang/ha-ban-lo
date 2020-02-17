@@ -10,6 +10,10 @@ class GlassOfHighball extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log('mount');
+  }
+
   render() {
     const { mainColor } = this.props;
     const { randomColor } = this.state;

@@ -5,9 +5,6 @@ const TaiwanBarPage = () => (
   <>
     <div className="wrap-bar">
       <MapContainer />
-      {/* <div className="mobile-searchBar">
-        <input type="text" name="" id="" placeholder="choose a place" />
-      </div> */}
     </div>
   </>
 );

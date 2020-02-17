@@ -9,6 +9,10 @@ class GlassOfShot extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log('mount');
+  }
+
   render() {
     const { mainColor } = this.props;
 

@@ -47,7 +47,6 @@
     }
 }
 
-
 @media (max-width: 1600px) {
     .main-detail>.detail-box {
         width: 75%;
@@ -82,8 +81,6 @@
     }
 }
 
-
-
 .main-detail>.detail-box>.blank {
     width: 40%;
 }
@@ -95,20 +92,24 @@
     max-width: 55%;
 }
 
-@media (max-width: 1280px) {
-    .main-detail>.detail-box>.blank {
-        width: 40%;
-    }
+
+
+.main-detail>.detail-box>.content {
+    position: relative;
+    overflow: hidden;
 }
 
-@media (max-width: 650px) {
-    .main-detail>.detail-box {
-        /* width: 90%; */
-    }
-    .main-detail>.detail-box>.pic,
-    .main-detail>.detail-box>.blank  {
-        display: none;
-    }
+.main-detail>.detail-box>.content>.collect {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: #ffffff;
+    border: none;
+    cursor: pointer;
+    width: 10%;
+}
+.main-detail>.detail-box>.content>.collect img{
+    width: 100%;
 }
 
 .main-detail>.detail-box>.content>h2 {
@@ -118,6 +119,26 @@
     position: relative;
     padding-bottom: 20px;
     margin-bottom: 20px;
+    /* display: flex; */
+    overflow: hidden;
+}
+
+.main-detail>.detail-box>.content>a {
+    position: absolute;
+    right: 0;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 30px;
+    text-decoration: none;
+    color: #000000;
+    transform: translateX(82px);
+    transition: linear .5s;
+}
+
+.main-detail>.detail-box>.content>a:hover {
+    transform: translateX(0);
+    transition: all .5s;
+    border-bottom: 2px solid #000000;
 }
 
 .main-detail>.detail-box>.content>h2::after {
@@ -140,11 +161,6 @@
     justify-content: space-between;
 }
 
-@media (max-width: 850px) {
-    .main-detail>.detail-box>.content>.ingredient-content {
-        flex-direction: column;
-    }
-}
 
 .main-detail>.detail-box>.content>.ingredient-content>div {
     width: 45%;
@@ -162,11 +178,69 @@
     }
 }
 
+
 @media (max-width: 850px) {
-    .main-detail>.detail-box>.content>.ingredient-content>div {
+    .main-detail>.detail-box {
+        justify-content: center;
+    }
+    .main-detail>.detail-box>.content {
+        max-width: unset;
         width: 90%;
     }
+    .main-detail>.detail-box>.content>p {
+        margin-bottom: 10px;
+    }
+    .main-detail>.detail-box>.content>.ingredient-content {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+
+    .main-detail>.detail-box>.content>.ingredient-content>div {
+        width: 100%;
+    }
+    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description {
+        order: 1;
+    }
+    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-info {
+        order: 0;
+    }
+    .main-detail>.detail-box>.pic,
+    .main-detail>.detail-box>.blank  {
+        display: none;
+    }
+
+    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description h3 {
+        margin: 20px 0;
+    }
+    
+    .main-detail>.detail-box>.content>a {
+        transform: translateX(0);
+    }
 }
+
+@media (max-width: 680px) {
+    .main-detail>.detail-box>.content>h2 {
+        font-size: 25px;
+    }
+    .main-detail {
+        position: relative;
+    }
+    .main-detail>.last,
+    .main-detail>.next {
+        position: absolute;
+        z-index: 3;
+        top: 340px;
+    }
+    .main-detail>.last {
+        right: 8%;
+    }
+
+    .main-detail>.next {
+        left: 8%;
+    }
+}
+
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description ul {
     margin-bottom: 50px;
@@ -203,13 +277,6 @@
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description p {
     line-height: 20px;
-}
-
-
-@media (max-width: 850px) {
-    .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description p {
-        margin-bottom: 50px;
-    }
 }
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingredient-description {
@@ -255,4 +322,15 @@
 }
 .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg img{
     width: 150px;
+}
+
+
+@media (max-width: 850px) {
+    .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg {
+        margin-bottom: 20px;
+    }
+    .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg svg{
+        width: 150px;
+        height: 200px;
+    }
 }

@@ -100,7 +100,13 @@
         height: calc(100vh - 120px);
         overflow-y: scroll;
         transform: translateY(calc(100vh - 220px));
+        cursor: pointer;
+        transition: all .5s;
     }   
+
+    .wrap-bar>.results-list.open {
+        transform: translateY(0);
+    }
     
     .wrap-bar>.results-list>.title {
        width: 100%;
@@ -129,6 +135,16 @@
     }
 }
 
+@media (max-width: 600px) { 
+    .wrap-bar>.results-list {
+        transform: translateY(calc(100vh - 280px));
+        padding-bottom: 60px;
+    } 
+    .wrap-bar>.results-list>.title>h2{
+        font-size: 20px;
+    }
+}
+
 .wrap-bar>.results-list>li {
     background-color: #ffffff;
     margin-bottom: 10px;
@@ -136,6 +152,8 @@
     width: 100%;
     border-bottom: 1px solid #cdcdcd;
 }
+
+
 .wrap-bar>.results-list>li>a {
     color: #000000;
     text-decoration: none;

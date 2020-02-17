@@ -9,10 +9,13 @@ class GlassOfChampagne extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log('mount');
+  }
+
 
   render() {
     const { mainColor } = this.props;
-    const { randomColor } = this.state;
     return (
       <svg
         version="1.1"

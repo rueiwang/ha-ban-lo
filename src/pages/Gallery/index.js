@@ -79,7 +79,7 @@ class Item extends Component {
           {
             collected ? (
               <div className="collect-sign">
-                <img src="./imgs/barman.png" alt="collected" />
+                <img src="./imgs/hearts.png" alt="collected" />
               </div>
             )
               : ''
@@ -93,7 +93,8 @@ class Item extends Component {
                 pathname: '/cocktailDetail',
                 search: recipe.cocktail_id,
                 state: {
-                  cocktailID: recipe.cocktail_id
+                  cocktailID: recipe.cocktail_id,
+                  isCollected: collected
                 }
               }}
               >
@@ -120,10 +121,13 @@ class GalleryPage extends Component {
       isLoading: false,
       next: 0,
       searchTarget: null,
-      lastSearch: ''
+      lastSearch: '',
+      openFilter: false
     };
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.openMobileFilter = this.openMobileFilter.bind(this);
+    this.categoryAry = ['All', 'Vodka', 'Brandy', 'Rum', 'Gin', 'Whisky', 'Tequila'];
   }
 
   componentDidMount() {
@@ -158,7 +162,7 @@ class GalleryPage extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     const { firebase, location } = this.props;
     const { searchTarget, lastSearch } = this.state;
     const newAry = [];
@@ -284,7 +288,8 @@ class GalleryPage extends Component {
     this.setState({
       isLoading: true,
       next: 0,
-      filter: category
+      filter: category,
+      openFilter: false
     });
     const newAry = [];
     if (category === 'All') {
@@ -350,6 +355,19 @@ class GalleryPage extends Component {
     }
   }
 
+  openMobileFilter() {
+    const { openFilter } = this.state;
+    if (openFilter) {
+      this.setState({
+        openFilter: false
+      });
+    } else {
+      this.setState({
+        openFilter: true
+      });
+    }
+  }
+
   renderItem() {
     const { recipes } = this.state;
     const itemAry = [];
@@ -362,7 +380,7 @@ class GalleryPage extends Component {
 
   render() {
     const { userData } = this.props;
-    const { filter, isLoading, searchTarget } = this.state;
+    const { filter, isLoading, openFilter } = this.state;
     return (
       <>
         {isLoading ? <Loading /> : ''}
@@ -371,15 +389,16 @@ class GalleryPage extends Component {
             <h2>Classic Cocktail</h2>
           </div>
           <main className="main-gallery">
-            <div className="filter">
-              <div className={`item ${filter === 'All' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>All</div>
-              <div className={`item ${filter === 'Vodka' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Vodka</div>
-              <div className={`item ${filter === 'Brandy' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Brandy</div>
-              <div className={`item ${filter === 'Rum' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Rum</div>
-              <div className={`item ${filter === 'Gin' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Gin</div>
-              <div className={`item ${filter === 'Whisky' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Whisky</div>
-              <div className={`item ${filter === 'Tequila' ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>Tequila</div>
-            </div>
+            <ul className={`filter ${openFilter ? 'open' : ''}`}>
+              <button type="button" className="open-filter-list" onClick={this.openMobileFilter}>
+                <img src="./imgs/arrow-point-to-down.png" alt="open" />
+              </button>
+              {
+              this.categoryAry.map((category) => (
+                <li className={`item ${filter === category ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>{category}</li>
+              ))
+            }
+            </ul>
             <div className="gallery-item">
               {this.renderItem()}
             </div>

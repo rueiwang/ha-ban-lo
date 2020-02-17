@@ -113,13 +113,15 @@ class Map extends Component {
       },
       targetName: 'Nantou City',
       isMapLoad: false,
-      resultPlaces: []
+      resultPlaces: [],
+      openList: false
     };
 
     this.places = null;
     this.getPosition = this.getPosition.bind(this);
     this.getStars = this.getStars.bind(this);
     this.loadMap = this.loadMap.bind(this);
+    this.openList = this.openList.bind(this);
     this.container = React.createRef();
   }
 
@@ -156,8 +158,8 @@ class Map extends Component {
             lng
           },
           targetName: where,
-          resultPlaces: [...results]
-          // stars: [...stars]
+          resultPlaces: [...results],
+          openList: true
         });
       }
     });
@@ -178,16 +180,30 @@ class Map extends Component {
     });
   }
 
+  openList() {
+    const { openList } = this.state;
+    if (openList) {
+      this.setState({
+        openList: false
+      });
+    } else {
+      this.setState({
+        openList: true
+      });
+    }
+  }
+
 
   render() {
     const { taiwan, name } = this.props;
+    const { openList } = this.state;
     const {
       mousePosition, resultPlaces, targetName
     } = this.state;
     return (
       <>
-        <ul className="results-list">
-          <div className="title">
+        <ul className={`results-list ${openList ? 'open' : ''}`}>
+          <div className="title" onClick={this.openList}>
             <h2>Which City do you want to go?</h2>
             <p>
 Bar in

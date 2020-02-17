@@ -47,11 +47,7 @@ nav.scroll {
     font-weight: 900;
 }
 
-@media (max-width: 600px) {
-    .nav-containter>.menu-toggle a {
-        display: none
-    }
-}
+
 
 .nav-containter>.menu-toggle img {
     width: 48px;
@@ -61,6 +57,7 @@ nav.scroll {
 .nav-containter h1 {
     font-size: 60px;
     font-weight: 900;
+    text-align: center;
 }
 
 @media (max-width: 720px) {
@@ -76,11 +73,6 @@ nav.scroll {
     }
 }
 
-@media (max-width: 500px) {
-    .nav-containter h1 {
-        font-size: 40px;;
-    }
-}
 
 
 .nav-containter button {
@@ -93,6 +85,7 @@ nav.scroll {
     cursor: pointer;
     font-weight: 900;
     width: 140px;
+    text-align: center;
 } 
 
 .nav-containter button a{
@@ -100,11 +93,34 @@ nav.scroll {
     text-decoration: none;
 }
 
-@media (max-width: 500px) {
-    .nav-containter button {
-        width: 100px;
-    } 
+@media (max-width: 600px) {
+
+    .nav-containter {
+        justify-content: center;
+    }
+    .nav-containter>.menu-toggle {
+        background-color: #ffffff;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 150;
+        width: 50%;
+        justify-content: center;
+        padding: 5px;
+        height: 60px;
+
+    }
+
+    .nav-containter>.member-btn {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        z-index: 150;
+        width: 50%;
+        height: 60px;
+    }
 }
+
 
 .nav-containter>.menu {
     position: fixed;

@@ -9,9 +9,12 @@ class GlassOfBrandy extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log('mount');
+  }
+
   render() {
     const { randomColor } = this.state;
-    console.log(this.props);
     const { mainColor } = this.props;
     return (
       <svg

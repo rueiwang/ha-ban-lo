@@ -49,12 +49,6 @@ class Navigation extends Component {
     });
   }
 
-  transportSearchTarget(e, cocktailName) {
-    e.preventDefault();
-    const { search } = this.props;
-    search(cocktailName);
-  }
-
   renderlist() {
     const { DataInSessionStorage } = this.props;
     const { value } = this.state;
@@ -86,7 +80,7 @@ class Navigation extends Component {
             <a href="#">MENU</a>
           </div>
           <h1>hā-pan</h1>
-          <button type="button">
+          <button type="button" className="member-btn">
             <Link to={userData.authUser ? `/account/${userData.authUser.uid}` : '/'}>YOUR DRINK</Link>
           </button>
           <div className={`menu ${clickToggle ? 'open' : ''}`}>
