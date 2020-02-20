@@ -10,6 +10,7 @@ import TaiwanBarPage from '../TaiwanBar';
 import BartendingVideo from '../BartendingVideo';
 import CocktailDetailPage from '../CocktailDetail';
 import Navigation from '../../components/Navigation';
+import Loading from '../../components/Loading';
 
 
 import * as ROUTES from '../../constants/routes';
@@ -26,7 +27,7 @@ class App extends Component {
     this.isCancel = true;
     this.state = {
       userData: {
-        authUser: null,
+        authUser: '',
         userCollections: [],
         userIngredients: []
       },
@@ -34,6 +35,7 @@ class App extends Component {
       ingredientData: []
     };
 
+    this.isLoading = true;
     this.putAllRecipeToSessionStorage = this.putAllRecipeToSessionStorage.bind(this);
     this.putAllIngredientsToSessionStorage = this.putAllIngredientsToSessionStorage.bind(this);
   }
@@ -178,8 +180,24 @@ class App extends Component {
         >
           <BrowserRouter>
             <Navigation />
+            {this.isLoading ? <Loading /> : ''}
             <Switch>
-              <Route exact path="/" render={(props) => (userData.authUser ? <Redirect to={`/account/${userData.authUser.uid}`} /> : <LandingPage {...props} />)} />
+              <Route
+                exact
+                path="/"
+                render={(props) => {
+                  if (userData.authUser === '') {
+                    this.isLoading = false;
+                    return '';
+                  }
+                  if (userData.authUser === null) {
+                    this.isLoading = false;
+                    return <LandingPage {...props} />;
+                  }
+                  this.isLoading = false;
+                  return <Redirect to={`/account/${userData.authUser.uid}`} />;
+                }}
+              />
               <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
               <Route path="/gallery" component={GalleryPage} />
               <Route path="/cocktailDetail" component={CocktailDetailPage} />

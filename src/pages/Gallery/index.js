@@ -118,7 +118,7 @@ class GalleryPage extends Component {
     this.state = {
       filter: 'All',
       recipes: [],
-      isLoading: false,
+      isLoading: true,
       next: 0,
       searchTarget: null,
       lastSearch: '',
@@ -142,9 +142,6 @@ class GalleryPage extends Component {
       if (location.state.searchTarget === undefined && location.state.searchTarget !== lastSearch) {
         this.getData();
       } else {
-        this.setState({
-          isLoading: true
-        });
         firebase.searchCocktailByName(location.state.searchTarget)
           .then((docSnapshot) => {
             docSnapshot.forEach((doc) => {
@@ -199,10 +196,10 @@ class GalleryPage extends Component {
       next
     } = this.state;
     const newAry = [];
-    if (isLoading === false) {
-      this.setState({
-        isLoading: true
-      });
+    if (isLoading === true) {
+      // this.setState({
+      //   isLoading: true
+      // });
       if (next === 0) {
         firebase.getCocktail()
           .then((docSnapshot) => {
@@ -379,7 +376,6 @@ class GalleryPage extends Component {
   }
 
   render() {
-    const { userData } = this.props;
     const { filter, isLoading, openFilter } = this.state;
     return (
       <>

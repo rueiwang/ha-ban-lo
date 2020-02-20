@@ -1,0 +1,329 @@
+.create-wrap {
+    width: 75%;
+    margin: auto;
+    /* display: flex;
+    flex-wrap: wrap; */
+}
+.create-wrap>h2 {
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+
+.create-wrap>.create-form>.related-buttons {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    right: -10%;
+    top: 30px;
+    width: 10%;
+}
+
+.create-wrap>.create-form>.related-buttons button {
+    padding: 0;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+
+.create-wrap>.create-form>.related-buttons button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+.create-wrap>.create-form {
+    padding: 30px 0;
+    width: 80%;
+    position: relative;
+}
+
+.create-wrap>.create-form p.create-remind {
+    font-size: 12px;
+    color: lightslategrey;
+    margin-bottom: 20px;
+}
+
+.create-wrap>.create-form label,
+.create-wrap>.create-form input {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.create-wrap>.create-form label {
+    font-size: 18px;
+}
+
+.create-wrap>.create-form input,
+.create-wrap>.create-form .input-icon input {
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #cdcdcd;
+    border-radius: 5px 5px 0 0;
+    letter-spacing: 2px;
+    width: 100%;
+    padding-left: 35px;
+}
+
+.create-wrap>.create-form .input-icon {
+    position: relative;
+}
+
+
+.create-wrap>.create-form .input-icon {
+    position: relative;
+}
+
+.create-wrap>.create-form .input-icon img.correct{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 16px;
+}
+
+.create-wrap>.create-form .input-icon img.drop-down-menu-icon{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 16px;
+
+}
+
+
+.create-wrap>.create-form .input-icon input.drop-down-menu-input{
+    cursor: pointer;
+}
+
+
+.create-wrap>.create-form .input-icon select.drop-down-menu-input{
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #cdcdcd;
+    outline: none;
+    border-radius: 5px;
+
+}
+
+.create-wrap>.create-form .input-icon select.drop-down-menu-input:focus{
+    border: 2px solid #000000;
+    background-color: #F0AD5F;
+}
+
+.create-wrap>.create-form .input-icon ul.drop-down-menu-list,
+.create-wrap>.create-form .input-icon ul.auto-complete-list {
+    border: 2px solid #000000;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    transform: translateY(-200px);
+    transition: all .3s;
+    position: absolute;
+    background-color: #ffffff;
+    width: 100%;
+    z-index: -1;
+}
+
+.create-wrap>.create-form .input-icon ul.auto-complete-list {
+    height: 190px;
+    overflow-y: scroll;
+}
+
+/* width */
+.create-wrap>.create-form .input-icon ul.auto-complete-list::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .create-wrap>.create-form .input-icon ul.auto-complete-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-sizing: 0 0 5px 5px;
+  }
+  
+  /* Handle */
+  .create-wrap>.create-form .input-icon ul.auto-complete-list::-webkit-scrollbar-thumb {
+    background: #888;
+    box-sizing: 0 0 5px 5px;
+  }
+  
+  /* Handle on hover */
+  .create-wrap>.create-form .input-icon ul.auto-complete-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+.create-wrap>.create-form .input-icon ul.drop-down-menu-list.down,
+.create-wrap>.create-form .input-icon ul.auto-complete-list.down{
+    transform: translateY(-10px);
+    transition: all .3s;
+    z-index: 4;
+}
+
+.create-wrap>.create-form .input-icon ul.drop-down-menu-list>li,
+.create-wrap>.create-form .input-icon ul.auto-complete-list>li {
+    padding: 5px 15px;
+    cursor: pointer;
+
+}
+
+.create-wrap>.create-form .input-icon ul.drop-down-menu-list>li:hover,
+.create-wrap>.create-form .input-icon ul.auto-complete-list>li:hover{
+    background-color: #cdcdcd;
+}
+
+
+.create-wrap>.create-form input:focus {
+    border-bottom: 2px solid #000000;
+    background-color: #F0AD5F;
+}
+
+.create-wrap>.create-form input.wrong,
+.create-wrap>.create-form textarea.wrong{
+    border-bottom: 2px solid red;
+    background-color: rgb(214, 175, 175);
+}
+
+.create-wrap>.create-form input.correct {
+    border-bottom: 2px solid #000000;
+}
+
+.create-wrap>.create-form>.top,
+.create-wrap>.create-form>.bottom {
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.create-wrap>.create-form>.top>.text-area,
+.create-wrap>.create-form>.bottom>.intro-area,
+.create-wrap>.create-form>.bottom>.ingredients-area {
+    margin-right: 40px;
+}
+
+.create-wrap>.create-form>.top>.text-area,
+.create-wrap>.create-form>.bottom>.intro-area {
+    width: 38%;
+}
+
+.create-wrap>.create-form>.top>.text-area>input {
+    width: 100%;
+}
+
+.create-wrap>.create-form>.top>.upload-pic {
+    width: 50%;
+    border: 2px solid #000000;
+    position: relative;
+}
+
+.create-wrap>.create-form>.top>.upload-pic>label>.preview-pic{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-wrap>.create-form>.top>.upload-pic>label>.preview-pic>img {
+    max-width: 100%;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.create-wrap>.create-form>.top>.upload-pic label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.create-wrap>.create-form>.top>.upload-pic img{
+    margin-bottom: 10px;
+}
+
+.create-wrap>.create-form>.top>.upload-pic label>#create-cocktail-pic {
+    position: absolute;
+    width: 3px;
+    top: 0;
+    opacity: 0;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area {
+    margin-left: auto;
+    width: 55%;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>.create-cocktail-ingredient-field,
+.create-wrap>.create-form>.bottom>.ingredients-area>label{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label {
+    align-items: center;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label>button {
+    margin-left: auto;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label>span {
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>.create-cocktail-ingredient-field>.field {
+    margin-right: 10px;
+    width: 40%;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>.create-cocktail-ingredient-field>.field>input {
+    width: 95%;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>.create-cocktail-ingredient-field>button,
+.create-wrap>.create-form>.bottom>.ingredients-area>label>button {
+    height: 30px;
+    width: 30px;
+    align-self: center;
+    font-size: 24px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #000000;
+    border: none;
+    cursor: pointer;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label>button {
+    border-radius: 50%;
+}
+
+.create-wrap>.create-form>.bottom>.intro-area>textarea {
+    height: 90%;
+    width: 100%;
+    resize: none;
+    padding: 10px;
+    outline: none;
+    margin-top: 10px;
+    border: 1px solid #cdcdcd;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.create-wrap>.create-form>.bottom>.intro-area>textarea:focus {
+    background-color: #F0AD5F;
+    border: 2px solid #000000;
+}

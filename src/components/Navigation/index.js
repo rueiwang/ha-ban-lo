@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import { compose } from 'recompose';
 
 import { ifAuth } from '../Context/AuthUser';
@@ -15,7 +16,8 @@ class Navigation extends Component {
     this.state = {
       value: '',
       isSearching: false,
-      clickToggle: false
+      clickToggle: false,
+      suggestionLength: 0
     };
 
     this.openMenu = this.openMenu.bind(this);
@@ -31,7 +33,9 @@ class Navigation extends Component {
 
   closeMenu(e) {
     this.setState({
-      clickToggle: false
+      clickToggle: false,
+      isSearching: false,
+      value: ''
     });
   }
 
@@ -65,7 +69,6 @@ class Navigation extends Component {
           {item.cocktail_name}
         </li>
       ));
-
     return data;
   }
 
@@ -74,6 +77,7 @@ class Navigation extends Component {
     const { value, isSearching, clickToggle } = this.state;
     return (
       <nav className="scroll">
+        <div className={`click-to-close-nav-menu ${clickToggle ? 'open' : ''}`} onClick={(e) => this.closeMenu(e)} />
         <div className="nav-containter">
           <div className="menu-toggle" onClick={(e) => this.openMenu(e)}>
             <img src="https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Ficon_menu_black.png?alt=media&token=7f30038f-dc13-491b-b5a1-aea205eb347f" alt="" />
@@ -81,7 +85,7 @@ class Navigation extends Component {
           </div>
           <h1>hā-pan</h1>
           <button type="button" className="member-btn">
-            <Link to={userData.authUser ? `/account/${userData.authUser.uid}` : '/'}>YOUR DRINK</Link>
+            <HashLink to={userData.authUser ? `/account/${userData.authUser.uid}` : '/#member'}>YOUR DRINK</HashLink>
           </button>
           <div className={`menu ${clickToggle ? 'open' : ''}`}>
             <div className="close" onClick={(e) => this.closeMenu(e)}>
@@ -109,7 +113,7 @@ COCKTAIL GALLERY
             </ul>
             <form className="search">
               <div className="search-auto-complete">
-                <input type="text" name="search" id="search" autoComplete="off" value={value} onChange={(e) => this.inputChange(e)} placeholder="Name or ingredient" />
+                <input type="text" name="search" id="search" autoComplete="off" value={value} onChange={(e) => this.inputChange(e)} placeholder="Cocktail Name" />
                 {isSearching
                   ? (
                     <ul className="search-suggestion">
@@ -120,17 +124,11 @@ COCKTAIL GALLERY
               </div>
               <button
                 type="button"
-                // onClick={(e) => this.transportSearchTarget(e, value)}
-                // onKeyDown={(e) => {
-                //   if (e.keyCode === 13) {
-                //     this.transportSearchTarget(e, value);
-                //   }
-                // }}
               >
                 <Link
                   onClick={this.closeMenu}
                   to={{
-                    pathname: '/gallery',
+                    pathname: '/gallery/#cocktails',
                     state: {
                       searchTarget: value
                     }

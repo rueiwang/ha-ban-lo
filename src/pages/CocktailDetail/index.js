@@ -202,12 +202,22 @@ class AddButtonBase extends Component {
       return;
     }
     if (collected) {
-      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientId)
-        .delete()
-        .then(() => {
-          this.setState({
-            collected: false
+      console.log(userData.authUser.uid);
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').where('ingredient_name', '==', target)
+        .get()
+        .then((docQuery) => {
+          let targetObj = null;
+          docQuery.forEach((doc) => {
+            targetObj = doc.data();
           });
+          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(targetObj.ingredient_id)
+            .delete()
+            .then(() => {
+              this.setState({
+                collected: false,
+                ingredientId: targetObj.ingredient_id
+              });
+            });
         });
     } else {
       firebase.db.collection('all_ingredient').where('ingredient_name', '==', target)
@@ -246,19 +256,10 @@ class ContentBase extends Component {
     super(props);
     this.state = {
       colorPlette: [],
-      isLoading: false,
       isCollected: false
     };
     this.img = React.createRef();
     this.getImgColor = this.getImgColor.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('hi');
-    this.setState({
-      isLoading: true,
-      colorPlette: []
-    });
   }
 
   getImgColor(e, length) {
@@ -266,7 +267,6 @@ class ContentBase extends Component {
     const img = this.img.current;
     const colorPletteRGB = colorThief.getPalette(img, length);
     this.setState({
-      isLoading: false,
       colorPlette: [...colorPletteRGB]
     });
   }
@@ -309,6 +309,7 @@ class ContentBase extends Component {
 
             <div className="ingedient-info">
               <div className="svg">
+                <img src="./imgs/shaker.png" alt="" className="cover-shaker" />
                 <GlassComponent glassType={item.cocktail_glass_type} colors={this.state} />
               </div>
               <div className="glass">

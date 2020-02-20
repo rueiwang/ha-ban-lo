@@ -9,7 +9,7 @@ nav {
     color: #ffffff;
     font-size: 18px;
     letter-spacing: 4px;
-    
+    position: relative;
 }
 
 nav.scroll {
@@ -17,6 +17,18 @@ nav.scroll {
     color: #000000;
     border-bottom: 2px solid #000000;
     box-shadow: 1px 1px 1px #ffffff;
+}
+
+
+nav>.click-to-close-nav-menu.open {
+    position: fixed;
+    background-color: #ffffff;
+    opacity: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 50;  
 }
 
 .nav-containter {

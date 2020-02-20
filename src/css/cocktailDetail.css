@@ -112,6 +112,24 @@
     width: 100%;
 }
 
+.main-detail>.detail-box>.content>.collect:hover {
+    animation-name: shake;
+    animation-duration: .2s;
+    animation-iteration-count: 2;
+}
+
+@keyframes shake {
+    0%{
+        transform: rotate(0.05turn);
+    }
+    50%{
+        transform: rotate(0turn);
+    }
+    100%{
+        transform: rotate(-0.05turn);
+    }
+}
+
 .main-detail>.detail-box>.content>h2 {
     font-size: 30px;
     letter-spacing: 2px;
@@ -319,9 +337,112 @@
 }
 .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg {
     margin-bottom: 30px;
+    position: relative;
+}
+
+.main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg svg{
+    animation-name: hideGlass;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease;
+    opacity: 1;
 }
 .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg img{
-    width: 150px;
+    width: 64px;
+    background-color: #ffffff;
+    position: absolute;
+    animation-name: shakeGlass;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    top: 86px;
+    left: calc(50% - 32px);
+    opacity: 0;
+}
+
+@keyframes hideGlass {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+
+@keyframes shakeGlass {
+    0%{
+        transform: rotate(0.03turn);
+        opacity: 1;
+    }
+    6%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
+    12%{
+        transform: rotate(-0.03turn);
+        opacity: 1;
+    }
+    18%{
+        transform: rotate(0.03turn);
+        opacity: 1;
+    }
+    24%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
+    30%{
+        transform: rotate(-0.03turn);
+        opacity: 1;
+    }
+    36%{
+        transform: rotate(0.03turn);
+        opacity: 1;
+    }
+    42%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
+    48%{
+        transform: rotate(-0.03turn);
+        opacity: 1;
+    }
+    54%{
+        transform: rotate(0.03turn);
+        opacity: 1;
+    }
+    60%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
+    66%{
+        transform: rotate(-0.03turn);
+        opacity: 1;
+    }
+    72%{
+        transform: rotate(0.03turn);
+        opacity: 1;
+    }
+    78%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
+    84%{
+        transform: rotate(-0.03turn);
+        opacity: 1;
+    }
+    90%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
+    96%{
+        transform: rotate(0.03turn);
+        opacity: 1;
+    }
+    100%{
+        transform: rotate(0turn);
+        opacity: 1;
+    }
 }
 
 

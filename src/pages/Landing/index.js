@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { ifAuth } from '../../components/Context/AuthUser';
+
 import * as ROUTES from '../../constants/routes';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
@@ -18,6 +20,7 @@ class LandingPage extends Component {
       isLoading: false
     };
   }
+
 
   changeForm = (e) => {
     e.preventDefault();
@@ -43,7 +46,7 @@ CLASSIC COCKTAIL
           </Link>
         </div>
         <main className="main-landing">
-          <div className="member-area">
+          <div className="member-area" id="member">
             <div className="member-message">
               <div className="left">
                 <h4>Don&apos;t Have an account?</h4>
@@ -78,4 +81,4 @@ CLASSIC COCKTAIL
   }
 }
 
-export default LandingPage;
+export default ifAuth(LandingPage);

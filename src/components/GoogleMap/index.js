@@ -351,9 +351,9 @@ Bar in
             options={{
               strokeColor: '#000',
               strokeOpacity: 0.8,
-              strokeWeight: 2,
+              strokeWeight: 1.5,
               fillColor: '#fff',
-              fillOpacity: 1
+              fillOpacity: 0.2
             }}
             key={i}
           />
