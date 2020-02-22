@@ -43,6 +43,8 @@ module.exports = {
         "jsx-a11y/click-events-have-key-events": "off",
         "jsx-a11y/no-noninteractive-element-interactions": "off",
         "jsx-a11y/label-has-associated-control": "off",
-        "max-classes-per-file": "off"
+        "max-classes-per-file": "off",
+        "prefer-destructuring": "off",
+        "react/sort-comp": "off"
   },
 };

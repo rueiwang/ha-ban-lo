@@ -6,6 +6,7 @@ import {
 import LandingPage from '../Landing';
 import AccountPage from '../Account';
 import GalleryPage from '../Gallery';
+import IdeasPage from '../BartendingIdeas';
 import TaiwanBarPage from '../TaiwanBar';
 import BartendingVideo from '../BartendingVideo';
 import CocktailDetailPage from '../CocktailDetail';
@@ -29,7 +30,8 @@ class App extends Component {
       userData: {
         authUser: '',
         userCollections: [],
-        userIngredients: []
+        userIngredients: [],
+        userCreations: []
       },
       cacheData: [],
       ingredientData: []
@@ -59,7 +61,8 @@ class App extends Component {
                 userData: {
                   authUser,
                   userCollections: [...collectionsAry],
-                  userIngredients: prevState.userData.userIngredients
+                  userIngredients: prevState.userData.userIngredients,
+                  userCreations: prevState.userData.userCreations
                 }
               }));
             });
@@ -73,7 +76,23 @@ class App extends Component {
                 userData: {
                   authUser,
                   userCollections: prevState.userData.userCollections,
-                  userIngredients: [...IngredientsAry]
+                  userIngredients: [...IngredientsAry],
+                  userCreations: prevState.userData.userCreations
+                }
+              }));
+            });
+          firebase.db.collection('members').doc(authUser.uid).collection('member_creations')
+            .onSnapshot((query) => {
+              const creationsAry = [];
+              query.forEach((doc) => {
+                creationsAry.push(doc.data().cocktail_id);
+              });
+              this.setState((prevState) => ({
+                userData: {
+                  authUser,
+                  userCollections: prevState.userData.userCollections,
+                  userIngredients: prevState.userData.userIngredients,
+                  userCreations: [...creationsAry]
                 }
               }));
             });
@@ -90,6 +109,7 @@ class App extends Component {
 
       this.putAllRecipeToSessionStorage();
       this.putAllIngredientsToSessionStorage();
+      // this.putAllCreationsToSessionStorage();
     }
   }
 
@@ -97,6 +117,25 @@ class App extends Component {
     this.listener();
     this.isCancel = true;
   }
+
+  // 把創作存進 sessionStorage
+  // putAllCreationsToSessionStorage() {
+  //   const { firebase } = this.props;
+  //   let newAry = [];
+  //   const isDataInSessionStorage = sessionStorage.getItem('allCreations') !== null;
+  //   if (isDataInSessionStorage) {
+  //     const processAry = sessionStorage.getItem('allCreations').split('},').map((str, i) => {
+  //       if (i === (sessionStorage.getItem('allCreations').split('},').length) - 1) {
+  //         return str;
+  //       }
+  //       return (`${str}}`);
+  //     });
+  //     newAry = processAry.map((item) => JSON.parse(item));
+  //     this.setState({
+  //       creationsData: [...newAry]
+  //     });
+  //   }
+  // }
 
   putAllIngredientsToSessionStorage() {
     const { firebase } = this.props;
@@ -199,10 +238,11 @@ class App extends Component {
                 }}
               />
               <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
-              <Route path="/gallery" component={GalleryPage} />
+              <Route path="/gallery" render={(props) => (userData.authUser ? <GalleryPage {...props} /> : <GalleryPage {...props} />)} />
+              <Route path="/bartending-ideas" component={IdeasPage} />
               <Route path="/cocktailDetail" component={CocktailDetailPage} />
               <Route path="/taiwanbar" component={TaiwanBarPage} />
-              <Route path="/taiwanbar/:pubdetail" component={TaiwanBarPage} />
+              {/* <Route path="/taiwanbar/:pubdetail" component={TaiwanBarPage} /> */}
               <Route path="/bartendingvedio" component={BartendingVideo} />
             </Switch>
           </BrowserRouter>

@@ -1,5 +1,5 @@
 .create-wrap {
-    width: 75%;
+    width: 90%;
     margin: auto;
     /* display: flex;
     flex-wrap: wrap; */
@@ -16,9 +16,9 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    right: -10%;
+    right: -20%;
     top: 30px;
-    width: 10%;
+    width: 15%;
 }
 
 .create-wrap>.create-form>.related-buttons button {
@@ -118,7 +118,7 @@
 
 .create-wrap>.create-form .input-icon ul.drop-down-menu-list,
 .create-wrap>.create-form .input-icon ul.auto-complete-list {
-    border: 2px solid #000000;
+    border: 2px solid #f1f1f1;
     border-top: none;
     border-radius: 0 0 5px 5px;
     transform: translateY(-200px);
@@ -167,7 +167,7 @@
 .create-wrap>.create-form .input-icon ul.auto-complete-list>li {
     padding: 5px 15px;
     cursor: pointer;
-
+    font-size: 16px;
 }
 
 .create-wrap>.create-form .input-icon ul.drop-down-menu-list>li:hover,
@@ -181,8 +181,7 @@
     background-color: #F0AD5F;
 }
 
-.create-wrap>.create-form input.wrong,
-.create-wrap>.create-form textarea.wrong{
+.create-wrap>.create-form input.wrong {
     border-bottom: 2px solid red;
     background-color: rgb(214, 175, 175);
 }
@@ -198,14 +197,13 @@
 }
 
 .create-wrap>.create-form>.top>.text-area,
-.create-wrap>.create-form>.bottom>.intro-area,
-.create-wrap>.create-form>.bottom>.ingredients-area {
-    margin-right: 40px;
+.create-wrap>.create-form>.bottom>.intro-area {
+    margin-right: 60px;
 }
 
 .create-wrap>.create-form>.top>.text-area,
 .create-wrap>.create-form>.bottom>.intro-area {
-    width: 38%;
+    width: 50%;
 }
 
 .create-wrap>.create-form>.top>.text-area>input {
@@ -216,6 +214,11 @@
     width: 50%;
     border: 2px solid #000000;
     position: relative;
+}
+
+.create-wrap>.create-form>.top>.upload-pic>label.wrong{
+    border: 2px solid red;
+    background-color: rgb(214, 175, 175);
 }
 
 .create-wrap>.create-form>.top>.upload-pic>label>.preview-pic{
@@ -261,7 +264,7 @@
 
 .create-wrap>.create-form>.bottom>.ingredients-area {
     margin-left: auto;
-    width: 55%;
+    width: 50%;
 }
 
 .create-wrap>.create-form>.bottom>.ingredients-area>.create-cocktail-ingredient-field,
@@ -326,4 +329,10 @@
 .create-wrap>.create-form>.bottom>.intro-area>textarea:focus {
     background-color: #F0AD5F;
     border: 2px solid #000000;
+}
+
+.create-wrap>.create-form>.bottom>.intro-area>textarea.wrong{
+    border: none;
+    border-bottom: 2px solid red;
+    background-color: rgb(214, 175, 175);
 }

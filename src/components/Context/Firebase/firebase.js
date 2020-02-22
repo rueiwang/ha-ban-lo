@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 const config = {
   apiKey: 'AIzaSyDmb0ixL_qui06ihq5-q9TaoUpouujLhxM',
@@ -19,6 +20,8 @@ class Firebase {
     this.auth = app.auth();
     this.account = app.auth;
     this.db = app.firestore();
+    this.storage = app.storage();
+    this.storageRef = this.storage.ref();
   }
 
   //  *** Auth API ***

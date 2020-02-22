@@ -101,8 +101,11 @@ class Navigation extends Component {
                     }
                   }}
                 >
-COCKTAIL GALLERY
+CLASSIC COCKTAIL
                 </Link>
+              </li>
+              <li>
+                <Link to="/bartending-ideas">BARTENDING IDEAS</Link>
               </li>
               <li>
                 <Link to="/taiwanbar">TAIWAN BAR</Link>

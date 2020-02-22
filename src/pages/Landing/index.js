@@ -42,7 +42,13 @@ class LandingPage extends Component {
             }
           }}
           >
-CLASSIC COCKTAIL
+CLASSICS
+          </Link>
+          <Link to={{
+            pathname: '/bartending-ideas'
+          }}
+          >
+IDEAS
           </Link>
         </div>
         <main className="main-landing">

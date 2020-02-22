@@ -45,8 +45,6 @@ class SignUpFormBase extends Component {
           memberId: authUser.user.uid,
           ref: recipeRef
         });
-        firebase.member(authUser.user.uid).collection('member_ingredient');
-        firebase.member(authUser.user.uid).collection('member_collection_cocktail');
         history.push(`/account/${authUser.user.uid}`);
       })
       .then(() => {

@@ -118,7 +118,7 @@ class GalleryPage extends Component {
     this.state = {
       filter: 'All',
       recipes: [],
-      isLoading: true,
+      isLoading: false,
       next: 0,
       searchTarget: null,
       lastSearch: '',
@@ -196,10 +196,10 @@ class GalleryPage extends Component {
       next
     } = this.state;
     const newAry = [];
-    if (isLoading === true) {
-      // this.setState({
-      //   isLoading: true
-      // });
+    if (isLoading === false) {
+      this.setState({
+        isLoading: true
+      });
       if (next === 0) {
         firebase.getCocktail()
           .then((docSnapshot) => {
