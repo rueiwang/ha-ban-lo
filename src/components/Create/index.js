@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import photo from './assets/photo-camera.png';
 import correct from './assets/correct.png';
 import required from './assets/required.png';
@@ -13,15 +14,14 @@ function generateKey(pre) {
   return `${pre}_${Date.now()}`;
 }
 
-const INITAIL_STATE = {
-  isLoading: false,
+const FORM_INITAIL_STATE = {
+  cocktailId: '',
   cocktailName: '',
   cocktailPic: '',
   previewPic: '',
   cocktailGlass: 'Brandy Glass',
   cocktailGlassType: 'GlassOfBrandy',
   cocktailCategory: '',
-  cocktailIngredientsType: [],
   cocktailIntro: '',
   cocktailTags: [],
   errors: {
@@ -40,6 +40,7 @@ const INITAIL_STATE = {
   ingredientsInputFields: [{
     ingredientValue: '',
     measureValue: '',
+    cocktailIngredientsType: '',
     key: generateKey('ingredient')
   }]
 };
@@ -48,7 +49,12 @@ const formKey = generateKey('form');
 export default class Create extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...INITAIL_STATE };
+    this.state = {
+      ...FORM_INITAIL_STATE,
+      isLoading: false,
+      creations: [],
+      filter: 'creating-mode'
+    };
     this.onInputChangeStr = this.onInputChangeStr.bind(this);
     this.onInputChangeAry = this.onInputChangeAry.bind(this);
     this.addNewIngredientInput = this.addNewIngredientInput.bind(this);
@@ -57,17 +63,83 @@ export default class Create extends Component {
     this.clearAllInput = this.clearAllInput.bind(this);
     this.writeInDatabase = this.writeInDatabase.bind(this);
     this.img = React.createRef();
+
+    this.editCreations = this.editCreations.bind(this);
+    this.updateDatabase = this.updateDatabase.bind(this);
+    this.deleteDatabase = this.deleteDatabase.bind(this);
   }
 
   componentDidMount() {
-    // this.addNewIngredientInput();
+    this.getCreations();
   }
 
   componentWillUnmount() {
     // eslint-disable-next-line no-restricted-globals
     // 若尚未發布就離開記得提醒
     // eslint-disable-next-line no-restricted-globals
-    const ifExist = confirm('Are yiu sure to quit this page?');
+    // const ifExist = confirm('Are yiu sure to quit this page?');
+    this.setState = (state, callback) => {
+      // eslint-disable-next-line no-useless-return
+      return;
+    };
+  }
+
+  editCreations(e, id) {
+    const { creations, ingredientsInputFields, errors } = this.state;
+    const targetCreation = creations.filter((creation) => creation.cocktail_id === id);
+    ingredientsInputFields.splice(0, ingredientsInputFields.length);
+    errors.cocktailIngredients.splice(0, errors.cocktailIngredients.length);
+    errors.cocktailMeasures.splice(0, errors.cocktailMeasures.length);
+    targetCreation[0].cocktail_ingredients.map((item, i) => {
+      const obj = {
+        ingredientValue: item,
+        measureValue: targetCreation[0].cocktail_measures[i],
+        cocktailIngredientsType: targetCreation[0].cocktail_ingredients_type[i],
+        key: generateKey(`ingredient${i}`)
+      };
+      ingredientsInputFields.push(obj);
+      errors.cocktailIngredients.push({
+        ingredient: 'OK'
+      });
+      errors.cocktailMeasures.push({
+        measure: 'OK'
+      });
+    });
+
+    errors.cocktailName = 'OK';
+    errors.cocktailPic = 'OK';
+    errors.cocktailCategory = 'OK';
+    errors.cocktailIntro = 'OK';
+    errors.cocktailTags = 'OK';
+    this.setState({
+      ...FORM_INITAIL_STATE,
+      cocktailId: targetCreation[0].cocktail_id,
+      cocktailName: targetCreation[0].cocktail_name,
+      cocktailPic: targetCreation[0].cocktail_pic,
+      previewPic: targetCreation[0].cocktail_pic,
+      cocktailGlass: targetCreation[0].cocktail_glass,
+      cocktailGlassType: targetCreation[0].cocktail_glass_type,
+      cocktailCategory: targetCreation[0].cocktail_category,
+      cocktailIntro: targetCreation[0].cocktail_introduction,
+      cocktailTags: targetCreation[0].cocktail_tag.join(' '),
+      errors,
+      ingredientsInputFields,
+      filter: 'editing-mode'
+    });
+  }
+
+  getCreations() {
+    const { firebase, userData } = this.props;
+    const { creations } = this.state;
+    console.log(userData.authUser.uid);
+    firebase.db.collection('members_creations').where('cocktail_creator_id', '==', userData.authUser.uid)
+      .get()
+      .then((dosSnapshot) => {
+        dosSnapshot.forEach((doc) => creations.push(doc.data()));
+        this.setState({
+          creations: [...creations]
+        });
+      });
   }
 
   validateForm(errors) {
@@ -122,7 +194,8 @@ export default class Create extends Component {
       isLoading: true
     });
     // 照片上傳到 storage
-    const uploadTask = firebase.storageRef.child(`user-recipe-images/${cocktailName}`).put(cocktailPic);
+    const docRef = firebase.db.collection('members_creations').doc();
+    const uploadTask = firebase.storageRef.child(`user-recipe-images/${docRef.id}`).put(cocktailPic);
     uploadTask.on('state_changed',
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -134,19 +207,20 @@ export default class Create extends Component {
       }, () => {
         // Upload completed successfully, now we can get the download URL
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log('File available at', downloadURL);
           const picUrl = downloadURL;
           const timestamp = Date.now();
           const tagsArray = cocktailTags.split(' ');
           const ingredientsArray = [];
           const measuresArray = [];
+          const cocktailIngredientsTypeArray = [];
 
           ingredientsInputFields.map((item) => {
             ingredientsArray.push(item.ingredientValue);
             measuresArray.push(item.measureValue);
+            cocktailIngredientsTypeArray.push(item.cocktailIngredientsType);
           });
           // 全部的創作酒譜
-          const docRef = firebase.db.collection('members_creations').doc();
+
           const fieldObj = {
             cocktail_IBA: null,
             cocktail_category: cocktailCategory,
@@ -156,7 +230,7 @@ export default class Create extends Component {
             cocktail_id: docRef.id,
             ref: firebase.db.doc(docRef.path),
             cocktail_ingredients: [...ingredientsArray],
-            cocktail_ingredients_type: [],
+            cocktail_ingredients_type: [...cocktailIngredientsTypeArray],
             cocktail_measures: [...measuresArray],
             cocktail_introduction: cocktailIntro,
             cocktail_name: cocktailName,
@@ -178,9 +252,157 @@ export default class Create extends Component {
                 })
                 .catch((error) => console.log(error));
             });
-          console.log(fieldObj);
         });
       });
+  }
+
+  updateDatabase(e) {
+    const { firebase, userData } = this.props;
+    const {
+      errors,
+      cocktailId,
+      cocktailName,
+      cocktailPic,
+      previewPic,
+      cocktailGlass,
+      cocktailGlassType,
+      cocktailCategory,
+      cocktailIngredientsType,
+      cocktailIntro,
+      cocktailTags,
+      ingredientsInputFields,
+      creations
+    } = this.state;
+
+    if (!this.validateForm(errors)) {
+      alert('Please complete the form.');
+      return;
+    }
+
+    this.setState({
+      isLoading: true
+    });
+
+    // 如果照片更新要先刪除 storage 舊有的照片再重新上傳
+    if (typeof (cocktailPic) !== 'string') {
+      const targetCreation = creations.filter((creation) => creation.cocktail_id === cocktailId);
+      firebase.storageRef.child(`user-recipe-images/${targetCreation[0].cocktail_id}`)
+        .delete()
+        .then(() => {
+          firebase.storageRef.child(`user-recipe-images/${cocktailId}`)
+            .put(cocktailPic)
+            .then((snapshot) => {
+              snapshot.ref.getDownloadURL().then((downloadURL) => {
+                const picUrl = downloadURL;
+                const tagsArray = cocktailTags.split(' ');
+                const ingredientsArray = [];
+                const measuresArray = [];
+                const cocktailIngredientsTypeArray = [];
+
+                ingredientsInputFields.map((item) => {
+                  ingredientsArray.push(item.ingredientValue);
+                  measuresArray.push(item.measureValue);
+                  cocktailIngredientsTypeArray.push(item.cocktailIngredientsType);
+                });
+                // 全部的創作酒譜
+                const fieldObj = {
+                  cocktail_category: cocktailCategory,
+                  cocktail_glass: cocktailGlass,
+                  cocktail_glass_type: cocktailGlassType,
+                  cocktail_ingredients: [...ingredientsArray],
+                  cocktail_ingredients_type: [...cocktailIngredientsTypeArray],
+                  cocktail_measures: [...measuresArray],
+                  cocktail_introduction: cocktailIntro,
+                  cocktail_name: cocktailName,
+                  cocktail_pic: picUrl,
+                  cocktail_prefix: this.upperCaseFirstLetter(cocktailName),
+                  cocktail_tag: [...tagsArray]
+                };
+                firebase.db.collection('members_creations').doc(cocktailId).update(fieldObj)
+                  .then((docref) => {
+                    firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
+                      .update(fieldObj)
+                      .then((doc) => {
+                        this.setState({
+                          isLoading: false
+                        });
+                        this.clearAllInput();
+                      })
+                      .catch((updateError) => console.log('updateError', updateError));
+                  });
+              });
+            })
+            .catch((uploadError) => console.log('uploadError', uploadError));
+        })
+        .catch((deletError) => console.log('deletError', deletError));
+    } else {
+      const tagsArray = cocktailTags.split(' ');
+      const ingredientsArray = [];
+      const measuresArray = [];
+      const cocktailIngredientsTypeArray = [];
+
+      ingredientsInputFields.map((item) => {
+        ingredientsArray.push(item.ingredientValue);
+        measuresArray.push(item.measureValue);
+        cocktailIngredientsTypeArray.push(item.cocktailIngredientsType);
+      });
+      // 全部的創作酒譜
+      const fieldObj = {
+        cocktail_category: cocktailCategory,
+        cocktail_glass: cocktailGlass,
+        cocktail_glass_type: cocktailGlassType,
+        cocktail_ingredients: [...ingredientsArray],
+        cocktail_ingredients_type: [...cocktailIngredientsTypeArray],
+        cocktail_measures: [...measuresArray],
+        cocktail_introduction: cocktailIntro,
+        cocktail_name: cocktailName,
+        cocktail_pic: cocktailPic,
+        cocktail_prefix: this.upperCaseFirstLetter(cocktailName),
+        cocktail_tag: [...tagsArray]
+      };
+      firebase.db.collection('members_creations').doc(cocktailId).update(fieldObj)
+        .then(() => {
+          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
+            .update(fieldObj)
+            .then(() => {
+              this.setState({
+                isLoading: false
+              });
+              this.clearAllInput();
+            })
+            .catch((updateError) => console.log('updateError', updateError));
+        });
+    }
+  }
+
+  deleteDatabase(e) {
+    const { firebase, userData } = this.props;
+    const { cocktailId, cocktailName } = this.state;
+
+    // eslint-disable-next-line no-restricted-globals
+    const ifDelete = confirm(`Are you sure to delete ${cocktailName}?`);
+    if (ifDelete) {
+      this.setState({
+        isLoading: true
+      });
+      firebase.storageRef.child(`user-recipe-images/${cocktailId}`)
+        .delete()
+        .then(() => {
+          firebase.db.collection('members_creations').doc(cocktailId)
+            .delete()
+            .then(() => {
+              firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
+                .delete()
+                .then(() => {
+                  this.clearAllInput();
+                  this.setState({
+                    isLoading: false
+                  });
+                });
+            });
+        })
+        .catch((delError) => console.log('delError', delError));
+    }
   }
 
   clearAllInput(e) {
@@ -188,19 +410,24 @@ export default class Create extends Component {
     errors.cocktailName = '';
     errors.cocktailPic = 'Size: < 1MB, < 700X700, > 400X400, only accept .jpg file.';
     errors.cocktailCategory = 'Shot, Party Drink, Ordinary Drink etc.';
-    errors.cocktailIngredients.map((item) => item.ingredient = 'Choose a ingredient name.');
-    errors.cocktailMeasures.map((item) => item.measure = '1 oz or 1mL etc.');
     errors.cocktailIntro = 'Steps for making your cocktail.';
     errors.cocktailTags = 'Use blank space to divide your input:Sour Sweet etc.';
-    ingredientsInputFields.map((item) => {
-      item.ingredientValue = '';
-      item.measureValue = '';
-      item.key = generateKey('ingredient');
+    errors.cocktailIngredients.splice(0, errors.cocktailIngredients.length);
+    errors.cocktailMeasures.splice(0, errors.cocktailMeasures.length);
+    errors.cocktailIngredients.push({ ingredient: 'Choose a ingredient name.' });
+    errors.cocktailMeasures.push({ measure: '1 oz or 1mL etc.' });
+    ingredientsInputFields.splice(0, ingredientsInputFields.length);
+    ingredientsInputFields.push({
+      cocktailIngredientsType: '',
+      ingredientValue: '',
+      measureValue: '',
+      key: generateKey('ingredient')
     });
     this.setState({
-      ...INITAIL_STATE,
+      ...FORM_INITAIL_STATE,
       errors,
-      ingredientsInputFields
+      ingredientsInputFields,
+      filter: 'creating-mode'
     });
   }
 
@@ -335,7 +562,7 @@ export default class Create extends Component {
   }
 
   // 輸入的值在 state 中存為陣列
-  onInputChangeAry(name, value, index) {
+  onInputChangeAry(name, value, index, type) {
     const { ingredientsInputFields, errors } = this.state;
     const { DataInSessionStorage } = this.props;
     switch (name) {
@@ -346,8 +573,6 @@ export default class Create extends Component {
           errors.cocktailIngredients[index].ingredient = 'Cannot find in Data Base';
         } else if (value.trim() === '') {
           errors.cocktailIngredients[index].ingredient = 'Required Field';
-        } else if (this.ifNum(value)) {
-          errors.cocktailCategory[index].ingredient = 'Numbers and markers are invalid.';
         } else {
           errors.cocktailIngredients[index].ingredient = 'OK';
         }
@@ -366,12 +591,10 @@ export default class Create extends Component {
       default:
         break;
     }
-    console.log(value);
-    console.log(index);
     const targetArray = ingredientsInputFields.filter((item, i) => index === i);
-    console.log(targetArray);
     if (name === 'cocktailIngredients') {
       targetArray[0].ingredientValue = value;
+      targetArray[0].cocktailIngredientsType = type;
     } else if (name === 'cocktailMeasures') {
       targetArray[0].measureValue = value;
     }
@@ -398,6 +621,7 @@ export default class Create extends Component {
     ingredientsInputFields.push({
       ingredientValue: '',
       measureValue: '',
+      cocktailIngredientsType: '',
       key: generateKey('ingredient')
     });
     this.setState({
@@ -475,7 +699,9 @@ export default class Create extends Component {
       cocktailTags,
       errors,
       ingredientsInputFields,
-      previewPic
+      previewPic,
+      creations,
+      filter
     } = this.state;
     const { DataInSessionStorage } = this.props;
     return (
@@ -621,11 +847,86 @@ Introduction for Cocktail
 
             </div>
             <div className="related-buttons">
-              <button className="add" type="button" onClick={(e) => this.writeInDatabase(e)}>Add</button>
+              {
+                filter === 'creating-mode'
+                  ? <button className="add" type="button" onClick={(e) => this.writeInDatabase(e)}>Add</button>
+                  : (
+                    <>
+                      <button className="update" type="button" onClick={(e) => this.updateDatabase(e)}>Update</button>
+                      <button className="delete" type="button" onClick={(e) => this.deleteDatabase(e)}>Delete</button>
+                    </>
+                  )
+              }
               <button className="clear" type="button" onClick={(e) => this.clearAllInput(e)}>Clear</button>
               <button className="Preview" type="button" onClick={(e) => this.previewCreation(e)}>Preview</button>
             </div>
           </form>
+
+          {/* Creation list */}
+          <div className="creations">
+            <h2>Your Creation</h2>
+            <div className="slide-box">
+              <button className="goBackward" type="button" data-target="creationsLi" onClick={(e) => this.slideBackward(e, creations.length)}>
+                <img src="/imgs/backward.png" alt="backward" data-target="creationsLi" />
+              </button>
+              <ul className="creations-list" ref={this.ulWidth}>
+                { creations === []
+                  ? <li>LOADING</li>
+                  : creations.map((item) => {
+                    let category;
+                    const condition = item.cocktail_ingredients_type[item.cocktail_ingredients_type.findIndex((ingredient) => ingredient !== 'other')];
+                    switch (condition) {
+                      case 'vodka':
+                        category = 'vodka';
+                        break;
+                      case 'gin':
+                        category = 'gin';
+                        break;
+                      case 'rum':
+                        category = 'rum';
+                        break;
+                      case 'tequila':
+                        category = 'tequila';
+                        break;
+                      case 'whisky':
+                        category = 'whisky';
+                        break;
+                      case 'liqueur':
+                        category = 'liqueur';
+                        break;
+                      case 'brandy':
+                        category = 'brandy';
+                        break;
+                      default:
+                        category = 'all';
+                        break;
+                    }
+                    return (
+                      <li key={item.cocktail_id}>
+                        <img src="../../imgs/edit.png" alt="edit" className="edit" onClick={(e) => this.editCreations(e, item.cocktail_id)} />
+                        <Link to={{
+                          pathname: '/cocktailDetail',
+                          search: item.cocktail_id,
+                          state: {
+                            cocktailID: item.cocktail_id,
+                            ifClassic: false,
+                            isCollected: false
+                          }
+                        }}
+                        >
+                          <img src={`../../imgs/${category}.png`} alt="icon" />
+                          <h5>{item.cocktail_name}</h5>
+                        </Link>
+                      </li>
+                    );
+                  })}
+              </ul>
+              <button className="goForward" type="button" data-target="creationsLi" onClick={(e) => this.slideForward(e, creations.length)}>
+                <img src="/imgs/forward.png" alt="forward" data-target="creationsLi" />
+              </button>
+            </div>
+
+          </div>
         </div>
       </>
     );
@@ -672,7 +973,8 @@ class Ingredients extends Component {
   chooseSuggestion(e) {
     const { onInputChangeAry } = this.props;
     const { dataset } = e.target;
-    onInputChangeAry('cocktailIngredients', dataset.value, Number(dataset.index));
+    onInputChangeAry('cocktailIngredients', dataset.value, Number(dataset.index), dataset.type);
+
     this.setState({
       isFocused: false
     });

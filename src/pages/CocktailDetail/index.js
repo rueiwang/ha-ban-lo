@@ -28,7 +28,9 @@ class CocktailDetailPage extends Component {
     this.state = {
       cocktailId: '',
       isCollected: false,
-      index: 0
+      index: 0,
+      ifClassic: true,
+      creations: []
     };
 
     this.getLastCocktail = this.getLastCocktail.bind(this);
@@ -36,30 +38,57 @@ class CocktailDetailPage extends Component {
   }
 
   componentDidMount() {
-    const { location } = this.props;
-    this.setState({
-      cocktailId: location.state.cocktailID
-    });
+    const { location, firebase } = this.props;
+    if (location.state.ifClassic) {
+      this.setState({
+        cocktailId: location.state.cocktailID,
+        ifClassic: location.state.ifClassic
+      });
+    } else {
+      firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
+        .then((docSnapshot) => {
+          const newAry = [];
+          docSnapshot.forEach((doc) => {
+            newAry.push(doc.data());
+          });
+          this.setState({
+            cocktailId: location.state.cocktailID,
+            ifClassic: location.state.ifClassic,
+            creations: [...newAry]
+          });
+        });
+    }
   }
 
   getLastCocktail(e) {
     e.preventDefault();
     const { DataInSessionStorage } = this.props;
-    const { cocktailId, index } = this.state;
-    const targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
-    if (DataInSessionStorage.cacheData[targetIndex - 1] === 'undefiend') {
+    const {
+      cocktailId, index, creations, ifClassic
+    } = this.state;
+    let targetIndex;
+    let source;
+    if (ifClassic) {
+      targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
+      source = DataInSessionStorage.cacheData;
+    } else {
+      targetIndex = creations.findIndex((item) => item.cocktail_id === cocktailId);
+      source = creations;
+    }
+
+    if (source[targetIndex - 1] === undefined) {
       alert('There is no more cocktail');
       return;
     }
-    // console.log(targetIndex);
+
     if (index === 0) {
       this.setState({
-        cocktailId: DataInSessionStorage.cacheData[targetIndex - 1].cocktail_id,
+        cocktailId: source[targetIndex - 1].cocktail_id,
         index: targetIndex - 1
       });
     } else {
       this.setState({
-        cocktailId: DataInSessionStorage.cacheData[index - 1].cocktail_id,
+        cocktailId: source[index - 1].cocktail_id,
         index: index - 1
       });
     }
@@ -68,33 +97,52 @@ class CocktailDetailPage extends Component {
   getNextCocktail(e) {
     e.preventDefault();
     const { DataInSessionStorage } = this.props;
-    const { cocktailId, index } = this.state;
-    const targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
+    const {
+      cocktailId, index, creations, ifClassic
+    } = this.state;
+    // const targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
     // console.log(targetIndex);
+    let targetIndex;
+    let source;
+    if (ifClassic) {
+      targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
+      source = DataInSessionStorage.cacheData;
+    } else {
+      targetIndex = creations.findIndex((item) => item.cocktail_id === cocktailId);
+      source = creations;
+    }
+    if (source[targetIndex + 1] === undefined) {
+      alert('There is no more cocktail');
+      return;
+    }
     if (index === 0) {
       this.setState({
-        cocktailId: DataInSessionStorage.cacheData[targetIndex + 1].cocktail_id,
+        cocktailId: source[targetIndex + 1].cocktail_id,
         index: targetIndex + 1
       });
     } else {
       this.setState({
-        cocktailId: DataInSessionStorage.cacheData[index + 1].cocktail_id,
+        cocktailId: source[index + 1].cocktail_id,
         index: index + 1
       });
     }
   }
 
   render() {
-    const { cocktailId } = this.state;
+    const { cocktailId, creations, ifClassic } = this.state;
     return (
       <>
         <div className="wrap-detail">
+          <div className="changeContent">
+            <button className="classic" type="button">CLASSIC</button>
+            <button className="ideas" type="button">IDEAS</button>
+          </div>
           <main className="main-detail">
             <button className="last" onClick={(e) => this.getLastCocktail(e)} type="button">last</button>
             <div className="detail-box">
               <div className="pic" />
               <div className="blank" />
-              <Content cocaktailId={cocktailId} />
+              <Content cocaktailId={cocktailId} creations={creations} ifClassic={ifClassic} />
             </div>
             <button className="next" onClick={(e) => this.getNextCocktail(e)} type="button">next</button>
           </main>
@@ -272,8 +320,15 @@ class ContentBase extends Component {
   }
 
   render() {
-    const { DataInSessionStorage, cocaktailId } = this.props;
-    const targetDetail = DataInSessionStorage.cacheData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
+    const {
+      DataInSessionStorage, cocaktailId, creations, ifClassic
+    } = this.props;
+    let targetDetail;
+    if (ifClassic) {
+      targetDetail = DataInSessionStorage.cacheData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
+    } else {
+      targetDetail = creations.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
+    }
     return (
       targetDetail.map((item) => (
         <div className="content" key={item.cocktail_id}>
@@ -288,7 +343,16 @@ class ContentBase extends Component {
           <h2>
             {item.cocktail_name}
           </h2>
-          <CollectButton cocaktailId={cocaktailId} />
+          {
+            ifClassic ? <CollectButton cocaktailId={cocaktailId} />
+              : (
+                <div className="item-creator">
+                  <p>{item.cocktail_creator_name}</p>
+                  <img src="./imgs/bartender.png" alt="" />
+                </div>
+              )
+          }
+
           <p>{item.cocktail_category}</p>
           <div className="ingredient-content">
             <div className="ingredient-description">
@@ -319,12 +383,17 @@ class ContentBase extends Component {
           </div>
           <Link
             className="back-to-gallery"
-            to={{
-              pathname: '/gallery',
-              state: {
-                searchTarget: undefined
-              }
-            }}
+            to={
+              ifClassic ? ({
+                pathname: '/gallery',
+                state: {
+                  searchTarget: undefined
+                }
+              })
+                : ({
+                  pathname: '/bartending-ideas'
+                })
+            }
           >
 ← Go Back
           </Link>

@@ -4,11 +4,25 @@
     /* display: flex;
     flex-wrap: wrap; */
 }
-.create-wrap>h2 {
+.create-wrap>h2,
+.create-wrap>.creations>h2 {
     font-size: 30px;
     font-weight: 900;
     margin-bottom: 20px;
+    padding-bottom: 10px;
     width: 100%;
+    position: relative;
+}
+
+.create-wrap>h2:after,
+.create-wrap>.creations>h2:after {
+    position: absolute;
+    background-color: #000000;
+    height: 5px;
+    width: 100px;
+    content: '';
+    bottom: -10px;
+    left: 0;
 }
 
 
@@ -43,6 +57,7 @@
     padding: 30px 0;
     width: 80%;
     position: relative;
+    margin-bottom: 50px;
 }
 
 .create-wrap>.create-form p.create-remind {
@@ -335,4 +350,83 @@
     border: none;
     border-bottom: 2px solid red;
     background-color: rgb(214, 175, 175);
+}
+
+
+/* creations list */
+.create-wrap>.creations>.slide-box {
+    overflow: hidden;
+    height: 150px;
+    position: relative;
+}
+
+.create-wrap>.creations>.slide-box button {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: none;
+    cursor: pointer;
+    display: none;
+}
+
+.create-wrap>.creations>.slide-box button img{
+    width: 28px;
+}
+
+.create-wrap>.creations>.slide-box:hover button {
+    display: block;
+    z-index: 50;
+}
+
+.create-wrap>.creations>.slide-box .goBackward {
+    left: 0;
+}
+
+.create-wrap>.creations>.slide-box .goForward {
+    right: 0;
+}
+
+.create-wrap>.creations>.slide-box>ul {
+    display: flex;
+    overflow-x: scroll;
+    padding-right: 40px;
+}
+
+.create-wrap>.creations>.slide-box>ul>li {
+    text-align: center;
+    padding: 30px;
+    transition: ease .5s;
+    position: relative;
+}
+
+.create-wrap>.creations>.slide-box>ul>li:hover {
+    background-color: rgba(102, 78, 14, .1);
+}
+
+
+.create-wrap>.creations>.slide-box>ul>li>.edit {
+    width: 30px;
+    position: absolute;
+    right: 4px;
+    top: 6px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.create-wrap>.creations>.slide-box>ul>li>.edit:hover {
+    box-shadow: 1px 1px 1px #555;
+    right: 5px;
+    top: 5px;
+}
+
+.create-wrap>.creations>.slide-box>ul>li img {
+    width: 72px;
+    margin-bottom: 10px;
+    z-index: 0;
+}
+
+.create-wrap>.creations>.slide-box>ul>li a {
+    text-decoration: none;
+    letter-spacing: 2px;
+    color: #000000;
 }

@@ -129,7 +129,24 @@
         transform: rotate(-0.05turn);
     }
 }
+.main-detail>.detail-box>.content>.item-creator {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center
+}
 
+.main-detail>.detail-box>.content>.item-creator>img {
+    width: 40px;
+}
+
+.main-detail>.detail-box>.content>.item-creator>p {
+    font-size: 18px;
+    margin-right: 5px;
+}
 .main-detail>.detail-box>.content>h2 {
     font-size: 30px;
     letter-spacing: 2px;

@@ -36,7 +36,8 @@ class Item extends Component {
             search: recipe.cocktail_id,
             state: {
               cocktailID: recipe.cocktail_id,
-              isCollected: collected
+              isCollected: collected,
+              ifClassic: false
             }
           }}
           >
@@ -90,7 +91,7 @@ class IdeasPage extends Component {
         isLoading: true
       });
       if (next === 0) {
-        firebase.db.collection('members_creations').limit(20).get()
+        firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').limit(20).get()
           .then((docSnapshot) => {
             const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
             docSnapshot.forEach((doc) => {

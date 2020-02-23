@@ -45,6 +45,7 @@ module.exports = {
         "jsx-a11y/label-has-associated-control": "off",
         "max-classes-per-file": "off",
         "prefer-destructuring": "off",
-        "react/sort-comp": "off"
+        "react/sort-comp": "off",
+        "no-alert": "off"
   },
 };

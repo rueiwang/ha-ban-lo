@@ -54,7 +54,8 @@ export default function MyCollection(props) {
                       pathname: '/cocktailDetail',
                       search: item.cocktail_id,
                       state: {
-                        cocktailID: item.cocktail_id
+                        cocktailID: item.cocktail_id,
+                        ifClassic: true
                       }
                     }}
                     >

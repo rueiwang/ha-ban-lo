@@ -94,7 +94,8 @@ class Item extends Component {
                 search: recipe.cocktail_id,
                 state: {
                   cocktailID: recipe.cocktail_id,
-                  isCollected: collected
+                  isCollected: collected,
+                  ifClassic: true
                 }
               }}
               >
