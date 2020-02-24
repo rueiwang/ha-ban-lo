@@ -35,29 +35,23 @@ class CocktailDetailPage extends Component {
 
     this.getLastCocktail = this.getLastCocktail.bind(this);
     this.getNextCocktail = this.getNextCocktail.bind(this);
+    this.switchContent = this.switchContent.bind(this);
   }
 
   componentDidMount() {
     const { location, firebase } = this.props;
-    if (location.state.ifClassic) {
-      this.setState({
-        cocktailId: location.state.cocktailID,
-        ifClassic: location.state.ifClassic
-      });
-    } else {
-      firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
-        .then((docSnapshot) => {
-          const newAry = [];
-          docSnapshot.forEach((doc) => {
-            newAry.push(doc.data());
-          });
-          this.setState({
-            cocktailId: location.state.cocktailID,
-            ifClassic: location.state.ifClassic,
-            creations: [...newAry]
-          });
+    firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
+      .then((docSnapshot) => {
+        const newAry = [];
+        docSnapshot.forEach((doc) => {
+          newAry.push(doc.data());
         });
-    }
+        this.setState({
+          cocktailId: location.state.cocktailID,
+          ifClassic: location.state.ifClassic,
+          creations: [...newAry]
+        });
+      });
   }
 
   getLastCocktail(e) {
@@ -128,23 +122,46 @@ class CocktailDetailPage extends Component {
     }
   }
 
+  switchContent(e, boolean) {
+    // const { dataset } = e.target;
+    const { DataInSessionStorage, location } = this.props;
+    const { creations } = this.state;
+    let id;
+    if (boolean) {
+      id = DataInSessionStorage.cacheData[0].cocktail_id;
+    } else {
+      id = creations[0].cocktail_id;
+    }
+    location.state.cocktailID = id;
+    location.search = `?${id}`;
+    this.setState({
+      ifClassic: boolean,
+      cocktailId: id,
+      index: 0
+    });
+  }
+
   render() {
     const { cocktailId, creations, ifClassic } = this.state;
     return (
       <>
         <div className="wrap-detail">
-          <div className="changeContent">
-            <button className="classic" type="button">CLASSIC</button>
-            <button className="ideas" type="button">IDEAS</button>
+          <div className="switchContent">
+            <button className={ifClassic ? 'current' : ''} type="button" onClick={(e) => this.switchContent(e, true)}>CLASSIC</button>
+            <button className={ifClassic ? '' : 'current'} type="button" onClick={(e) => this.switchContent(e, false)}>IDEAS</button>
           </div>
           <main className="main-detail">
-            <button className="last" onClick={(e) => this.getLastCocktail(e)} type="button">last</button>
+            <button className="last" onClick={(e) => this.getLastCocktail(e)} type="button">
+              <img src="../../imgs/arrow-left.png" alt="" onClick={(e) => this.getLastCocktail(e)} />
+            </button>
             <div className="detail-box">
               <div className="pic" />
               <div className="blank" />
               <Content cocaktailId={cocktailId} creations={creations} ifClassic={ifClassic} />
             </div>
-            <button className="next" onClick={(e) => this.getNextCocktail(e)} type="button">next</button>
+            <button className="next" onClick={(e) => this.getNextCocktail(e)} type="button">
+              <img src="../../imgs/arrow-right.png" alt="" onClick={(e) => this.getNextCocktail(e)} />
+            </button>
           </main>
           {/* <Footer /> */}
         </div>
@@ -333,7 +350,8 @@ class ContentBase extends Component {
       targetDetail.map((item) => (
         <div className="content" key={item.cocktail_id}>
           <img
-            src={`${item.cocktail_pic}?time=${new Date().valueOf()}`}
+            src={ifClassic ? `${item.cocktail_pic}?time=${new Date().valueOf()}`
+              : `${item.cocktail_pic}`}
             ref={this.img}
             alt="none"
             className="invisibleImg"

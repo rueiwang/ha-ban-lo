@@ -1,3 +1,29 @@
+.wrap-detail {
+    position: relative;
+}
+
+.wrap-detail>.switchContent {
+    position: absolute;
+    top: 50px;
+    left: 18%;
+}
+
+.wrap-detail>.switchContent>button {
+    padding: 0 25px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    height: 50px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.wrap-detail>.switchContent>button.current {
+
+    background-color: #ffffff;
+    color: #000000;
+}
 .main-detail {
     background-image: linear-gradient(to bottom,#F0AD5F 50%, #413d40 50%);
     display: flex;
@@ -30,14 +56,20 @@
 
 .main-detail>.last,
 .main-detail>.next {
-    padding: 0 25px;
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #ffffff;
     border: 2px solid #000000;
-    height: 50px;
-    letter-spacing: 4px;
+    height: 100px;
     cursor: pointer;
-    font-weight: 900;
+}
+
+.main-detail>.last img,
+.main-detail>.next img {
+    width: 40px;
+}
+
+.main-detail>.last:hover,
+.main-detail>.next:hover {
+    background-color: #413d40;
 }
 
 
@@ -45,17 +77,26 @@
     .main-detail>.detail-box {
         width: 70%;
     }
+    .wrap-detail>.switchContent {
+        left: 16%;
+    }
 }
 
 @media (max-width: 1600px) {
     .main-detail>.detail-box {
         width: 75%;
     }
+    .wrap-detail>.switchContent {
+        left: 13.5%;
+    }
 }
 
 @media (max-width: 1400px) {
     .main-detail>.detail-box {
         width: 80%;
+    }
+    .wrap-detail>.switchContent {
+        left: 11%;
     }
 }
 
@@ -65,6 +106,7 @@
         padding: 100px 3%;
     }
     .main-detail>.detail-box {
+        margin-top: 50px;
         width: 90%;
     }
     .main-detail>.detail-box>.pic {
@@ -78,6 +120,9 @@
 @media (max-width: 1100px) {
     .main-detail>.detail-box {
         width: 100%;
+    }
+    .wrap-detail>.switchContent {
+        left: 12%;
     }
 }
 
@@ -252,6 +297,9 @@
     .main-detail>.detail-box>.content>a {
         transform: translateX(0);
     }
+    .wrap-detail>.switchContent {
+        left: 15%;
+    }
 }
 
 @media (max-width: 680px) {
@@ -265,14 +313,19 @@
     .main-detail>.next {
         position: absolute;
         z-index: 3;
-        top: 340px;
+        top: 350px;
     }
-    .main-detail>.last {
+    .main-detail>.next {
         right: 8%;
     }
 
-    .main-detail>.next {
+    .main-detail>.last {
         left: 8%;
+    }
+
+    .wrap-detail>.switchContent {
+        left: 3%;
+        z-index: 5;
     }
 }
 

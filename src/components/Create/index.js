@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Prompt } from 'react-router-dom';
+import { Dialog } from 'evergreen-ui';
 import photo from './assets/photo-camera.png';
 import correct from './assets/correct.png';
 import required from './assets/required.png';
@@ -15,6 +16,7 @@ function generateKey(pre) {
 }
 
 const FORM_INITAIL_STATE = {
+  inputing: false,
   cocktailId: '',
   cocktailName: '',
   cocktailPic: '',
@@ -26,7 +28,7 @@ const FORM_INITAIL_STATE = {
   cocktailTags: [],
   errors: {
     cocktailName: '',
-    cocktailPic: 'Size: < 1MB, < 700X700, > 400X400, only accept .jpg file.',
+    cocktailPic: 'Only accept jpg file.',
     cocktailCategory: 'Shot, Party Drink, Ordinary Drink etc.',
     cocktailIngredients: [{
       ingredient: 'Choose a ingredient name.'
@@ -59,7 +61,6 @@ export default class Create extends Component {
     this.onInputChangeAry = this.onInputChangeAry.bind(this);
     this.addNewIngredientInput = this.addNewIngredientInput.bind(this);
     this.removeIngredientInput = this.removeIngredientInput.bind(this);
-    this.previewPic = this.previewPic.bind(this);
     this.clearAllInput = this.clearAllInput.bind(this);
     this.writeInDatabase = this.writeInDatabase.bind(this);
     this.img = React.createRef();
@@ -71,6 +72,7 @@ export default class Create extends Component {
 
   componentDidMount() {
     this.getCreations();
+    this.clearAllInput();
   }
 
   componentWillUnmount() {
@@ -78,6 +80,7 @@ export default class Create extends Component {
     // 若尚未發布就離開記得提醒
     // eslint-disable-next-line no-restricted-globals
     // const ifExist = confirm('Are yiu sure to quit this page?');
+    this.clearAllInput();
     this.setState = (state, callback) => {
       // eslint-disable-next-line no-useless-return
       return;
@@ -163,12 +166,6 @@ export default class Create extends Component {
     return valid;
   }
 
-  previewCreation(e) {
-    const { errors } = this.state;
-    console.log(this.validateForm(errors));
-  }
-
-
   writeInDatabase(e) {
     const { firebase, userData } = this.props;
     const {
@@ -240,6 +237,7 @@ export default class Create extends Component {
             cocktail_creator_id: userData.authUser.uid,
             cocktail_creator_name: userData.authUser.displayName
           };
+          this.clearAllInput();
           docRef.set(fieldObj)
             .then((docref) => {
               firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(docRef.id)
@@ -248,7 +246,6 @@ export default class Create extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  this.clearAllInput();
                 })
                 .catch((error) => console.log(error));
             });
@@ -282,7 +279,6 @@ export default class Create extends Component {
     this.setState({
       isLoading: true
     });
-
     // 如果照片更新要先刪除 storage 舊有的照片再重新上傳
     if (typeof (cocktailPic) !== 'string') {
       const targetCreation = creations.filter((creation) => creation.cocktail_id === cocktailId);
@@ -325,8 +321,8 @@ export default class Create extends Component {
                       .then((doc) => {
                         this.setState({
                           isLoading: false
-                        });
-                        this.clearAllInput();
+                        })
+
                       })
                       .catch((updateError) => console.log('updateError', updateError));
                   });
@@ -368,7 +364,7 @@ export default class Create extends Component {
               this.setState({
                 isLoading: false
               });
-              this.clearAllInput();
+
             })
             .catch((updateError) => console.log('updateError', updateError));
         });
@@ -380,35 +376,35 @@ export default class Create extends Component {
     const { cocktailId, cocktailName } = this.state;
 
     // eslint-disable-next-line no-restricted-globals
-    const ifDelete = confirm(`Are you sure to delete ${cocktailName}?`);
-    if (ifDelete) {
-      this.setState({
-        isLoading: true
-      });
-      firebase.storageRef.child(`user-recipe-images/${cocktailId}`)
-        .delete()
-        .then(() => {
-          firebase.db.collection('members_creations').doc(cocktailId)
-            .delete()
-            .then(() => {
-              firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
-                .delete()
-                .then(() => {
-                  this.clearAllInput();
-                  this.setState({
-                    isLoading: false
-                  });
+    // const ifDelete = confirm(`Are you sure to delete ${cocktailName}?`);
+    // if (ifDelete) {
+    // }
+    this.setState({
+      isLoading: true
+    });
+    this.clearAllInput();
+    firebase.storageRef.child(`user-recipe-images/${cocktailId}`)
+      .delete()
+      .then(() => {
+        firebase.db.collection('members_creations').doc(cocktailId)
+          .delete()
+          .then(() => {
+            firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
+              .delete()
+              .then(() => {
+                this.setState({
+                  isLoading: false
                 });
-            });
-        })
-        .catch((delError) => console.log('delError', delError));
-    }
+              });
+          });
+      })
+      .catch((delError) => console.log('delError', delError));
   }
 
   clearAllInput(e) {
     const { errors, ingredientsInputFields } = this.state;
     errors.cocktailName = '';
-    errors.cocktailPic = 'Size: < 1MB, < 700X700, > 400X400, only accept .jpg file.';
+    errors.cocktailPic = 'Only accept jpg file.';
     errors.cocktailCategory = 'Shot, Party Drink, Ordinary Drink etc.';
     errors.cocktailIntro = 'Steps for making your cocktail.';
     errors.cocktailTags = 'Use blank space to divide your input:Sour Sweet etc.';
@@ -557,7 +553,7 @@ export default class Create extends Component {
         cocktailGlass: value
       });
     } else {
-      this.setState({ errors, [name]: value });
+      this.setState({ errors, [name]: value, inputing: true });
     }
   }
 
@@ -626,7 +622,8 @@ export default class Create extends Component {
     });
     this.setState({
       errors,
-      ingredientsInputFields: [...ingredientsInputFields]
+      ingredientsInputFields: [...ingredientsInputFields],
+      inputing: true
     });
   }
 
@@ -682,7 +679,7 @@ export default class Create extends Component {
     || errorMessage === 'Use blank space to divide your input:Sour Sweet etc.'
     || errorMessage === 'Choose a ingredient name.'
     || errorMessage === '1 oz or 1mL etc.'
-    || errorMessage === 'Size: < 1MB, < 700X700, > 400X400, only accept .jpg file.') {
+    || errorMessage === 'Only accept jpg file.') {
       return '';
     }
     return 'wrong';
@@ -701,7 +698,9 @@ export default class Create extends Component {
       ingredientsInputFields,
       previewPic,
       creations,
-      filter
+      filter,
+      inputing,
+      ifDelete
     } = this.state;
     const { DataInSessionStorage } = this.props;
     return (
@@ -821,7 +820,6 @@ Introduction for Cocktail
               <div className="ingredients-area">
                 <label htmlFor="create-cocktail-ingredient">
               Ingredients for Cocktail
-                  <span>( Max 6 items )</span>
                   <button className="plus" type="button" onClick={(e) => this.addNewIngredientInput()}>+</button>
                 </label>
                 {/* 最少兩樣原料、不能空白、只能跟資料庫符合 */}
@@ -858,7 +856,6 @@ Introduction for Cocktail
                   )
               }
               <button className="clear" type="button" onClick={(e) => this.clearAllInput(e)}>Clear</button>
-              <button className="Preview" type="button" onClick={(e) => this.previewCreation(e)}>Preview</button>
             </div>
           </form>
 

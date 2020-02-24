@@ -6,7 +6,8 @@ import {
   Switch,
   Route,
   useRouteMatch,
-  Link
+  Link,
+  BrowserRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
 

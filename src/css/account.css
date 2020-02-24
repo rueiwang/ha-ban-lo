@@ -76,7 +76,7 @@
     width: calc(100vw - 200px);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .wrap-accounting {
         flex-wrap: wrap;
     }
@@ -102,16 +102,26 @@
         flex: 1;
         text-align: center;
     }
+    .wrap-accounting>.main-account {
+        width: 100%;
+    }
+    
+    .wrap-accounting>.side-bar>.sign-out {
+        position: fixed;
+        width: 85px;
+        bottom: 30px;
+        right: 25px;
+        z-index: 5;
+    }
+} 
 
+@media (max-width: 600px) {
     .wrap-accounting>.side-bar>.sign-out {
         position: absolute;
         width: 85px;
         top: 30px;
         right: 25px;
+        bottom: unset;
     }
-    .wrap-accounting>.main-account {
-        width: 100%;
-    }
-    
-} 
+}
 
