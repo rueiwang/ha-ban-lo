@@ -83,7 +83,7 @@ class Navigation extends Component {
             <img src="https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Ficon_menu_black.png?alt=media&token=7f30038f-dc13-491b-b5a1-aea205eb347f" alt="" />
             <a href="#">MENU</a>
           </div>
-          <h1>hā-pan</h1>
+          <h1><Link to="/">hā-pan</Link></h1>
           <button type="button" className="member-btn">
             <HashLink to={userData.authUser ? `/account/${userData.authUser.uid}` : '/#member'}>YOUR DRINK</HashLink>
           </button>
@@ -131,7 +131,7 @@ CLASSIC COCKTAIL
                 <Link
                   onClick={this.closeMenu}
                   to={{
-                    pathname: '/gallery/#cocktails',
+                    pathname: '/gallery',
                     state: {
                       searchTarget: value
                     }
@@ -140,12 +140,6 @@ CLASSIC COCKTAIL
 search
                 </Link>
               </button>
-            </form>
-            <form className="language">
-              <select name="language" id="">
-                <option value="EN">English</option>
-                <option value="zh-tw">繁體中文</option>
-              </select>
             </form>
           </div>
         </div>

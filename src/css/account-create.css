@@ -349,10 +349,42 @@
 
 .create-wrap>.create-form>.bottom>.ingredients-area>label {
     align-items: center;
+    position: relative;
 }
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label>.two-ingredient-prompt {
+    position: absolute;
+    right: 55px;
+    font-size: 14px;
+    background-color: rgb(240, 95, 95);
+    padding: 10px;
+    border-radius: 3px 0 0 3px;
+    transition: all .5s;
+    transform: translateX(100px);
+    opacity: 0;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label>.two-ingredient-prompt::after {
+    content: '';
+    position: absolute;
+    border-bottom: 16.5px solid transparent;
+    border-left: 16.5px solid rgb(240, 95, 95);
+    border-top: 16.5px solid transparent;
+    right: -16px;
+    bottom: 0px;
+}
+
+.create-wrap>.create-form>.bottom>.ingredients-area>label>.two-ingredient-prompt.show {
+    transform: translateX(0px);
+    opacity: 1;
+}
+
+
+
 
 .create-wrap>.create-form>.bottom>.ingredients-area>label>button {
     margin-left: auto;
+    z-index: 5;
 }
 
 .create-wrap>.create-form>.bottom>.ingredients-area>label>span {

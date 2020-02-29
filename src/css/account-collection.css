@@ -1,6 +1,6 @@
 
 .collection-wine-cabinet {
-    width: 80%;
+    width: 90%;
     margin: auto;
     overflow: hidden;
     /* border-bottom: 5px solid #664e0e; */
@@ -10,16 +10,18 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: stretch;
+    padding: 5%;
 }
 
 .collection-wine-cabinet ul li {
     padding: 30px 20px;
     text-align: center;
-    cursor: pointer;
     border: 2px solid #664e0e;
     background-color: rgba(102, 78, 14, .1);
     margin: 10px;
     flex: auto;
+    position: relative;
+    min-width: 15%;
 }
 
 .collection-wine-cabinet ul li a {
@@ -40,6 +42,89 @@
     margin-bottom: 20px;
 }
 
+.collection-wine-cabinet ul li>.alert-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 32px;
+}
+
+.collection-wine-cabinet ul li>.more-info-cover {
+    position: absolute;
+    width: 120%;
+    max-width: 300px;
+    right: 10px;
+    top: 40px;
+    padding: 15px;
+    background-color: #664e0e;
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 16px; 
+    display: none;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    border-radius: 8px 0 8px 8px;
+}
+
+.collection-wine-cabinet ul li>.more-info-cover.show {
+    display: flex;
+}
+/* width */
+.collection-wine-cabinet ul li>.more-info-cover::-webkit-scrollbar {
+    height: 5px;
+  }
+  
+  /* Track */
+  .collection-wine-cabinet ul li>.more-info-cover::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-sizing: 0 0 3px 3px;
+    border-radius: 0 0 5px 5px;
+  }
+  
+  /* Handle */
+  .collection-wine-cabinet ul li>.more-info-cover::-webkit-scrollbar-thumb {
+    background: #888;
+    box-sizing: 0 0 3px 3px;
+    border-radius: 0 0 5px 5px;
+
+  }
+  
+  /* Handle on hover */
+  .collection-wine-cabinet ul li>.more-info-cover::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+
+.collection-wine-cabinet ul li>.more-info-cover span{
+    margin: 0 10px;
+}
+
+.collection-wine-cabinet ul li>.more-info-cover a{
+    display: block;
+    color: rgba(0, 0, 0, .5);
+    text-align: right !important;
+}
+
+.collection-wine-cabinet ul li>.more-info-cover a:hover{
+    color: #ffffff;
+}
+
+
+.collection-wine-cabinet ul li>.more-info-cover p {
+    margin-bottom: 10px;
+    /* white-space: nowrap; */
+
+}
+
+.collection-wine-cabinet ul li>.more-info-cover p,
+.collection-wine-cabinet ul li>.more-info-cover a{
+    text-align: left;
+    letter-spacing: 1px;
+    width: 100%;
+
+}
+
+
 .collection-wine-cabinet ul li.see-more {
     display: flex;
     justify-content: center;
@@ -50,7 +135,7 @@
     margin-bottom: 0;
 }
 
-
+/* 
 .wrap-accounting>.main-account>.collection-detail>.content {
     padding: 60px 3%;
     letter-spacing: 1px;
@@ -146,4 +231,4 @@
     margin-bottom: 20px;
 }
 .wrap-accounting>.main-account>.collection-detail>.content>.ingredient-content>.ingedient-info>.svg img{
-}
+} */

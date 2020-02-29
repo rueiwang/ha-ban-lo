@@ -1,18 +1,124 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import '../../css/account-collection.css';
 
+class CollectionItems extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      isShown: false,
+      restAmount: 0
+    };
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
 
-export default function MyCollection(props) {
-  const { userData, DataInSessionStorage } = props;
-  const matchData = [];
-  if (userData.authUser) {
+  showModal(e, ingredients) {
+    const { isShown } = this.state;
+    const { userIngredients } = this.props;
+    const userAlreadyHave = userIngredients.filter((item) => item.status === 1);
+    const matchArray = [];
+    ingredients.filter((name) => {
+      userAlreadyHave.map((ingredient) => {
+        if (ingredient.name === name) {
+          matchArray.push(ingredient.name);
+        }
+      });
+    });
+    const restAmount = ingredients.length - matchArray.length;
+    this.setState({
+      isShown: !isShown,
+      restAmount
+    });
+  }
+
+  closeModal(e) {
+    this.setState({
+      isShown: false
+    });
+  }
+
+  render() {
+    const { item, category } = this.props;
+    const { isShown, restAmount } = this.state;
+    return (
+      <li>
+        <input
+          type="image"
+          src="../imgs/alert.png"
+          alt=""
+          className="alert-btn"
+          onClick={(e) => this.showModal(e, item.cocktail_ingredients)}
+          onMouseOver={(e) => this.showModal(e, item.cocktail_ingredients)}
+          onFocus={(e) => this.showModal(e, item.cocktail_ingredients)}
+          onMouseOut={(e) => this.closeModal(e)}
+          onBlur={(e) => this.closeModal(e)}
+        />
+        <Link to={{
+          pathname: '/cocktailDetail',
+          search: item.cocktail_id,
+          state: {
+            cocktailID: item.cocktail_id,
+            ifClassic: true
+          }
+        }}
+        >
+          <img src={`../imgs/${category}.png`} alt="icon" />
+          <h5>{item.cocktail_name}</h5>
+        </Link>
+
+        <div className={`more-info-cover ${isShown ? 'show' : ''}`}>
+          {
+            restAmount === 0
+              ? (
+                <>
+                  <p>Congrat!</p>
+                  <p>
+you can make this by yourself!
+                  </p>
+                </>
+              )
+              : (
+                <>
+                  <p>To make this cocktail,</p>
+                  <p>
+You still have
+                    <span>{restAmount}</span>
+ingredients to buy!
+                  </p>
+                </>
+
+              )
+          }
+        </div>
+      </li>
+    );
+  }
+}
+export default class MyCollection extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      matchData: []
+    };
+  }
+
+  componentDidMount() {
+    const { userData, DataInSessionStorage } = this.props;
+    const matchData = [];
     userData.userCollections.map((usersItemId) => {
       matchData.push(DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === usersItemId)[0]);
     });
-    console.log(matchData);
+
+    this.setState({
+      matchData: [...matchData]
+    });
   }
-  if (matchData !== []) {
+
+  render() {
+    const { matchData } = this.state;
+    const { userData } = this.props;
     return (
       <>
         <div className="collection-wine-cabinet">
@@ -48,22 +154,12 @@ export default function MyCollection(props) {
                     break;
                 }
                 return (
-                  <li key={item.cocktail_id}>
-
-                    <Link to={{
-                      pathname: '/cocktailDetail',
-                      search: item.cocktail_id,
-                      state: {
-                        cocktailID: item.cocktail_id,
-                        ifClassic: true
-                      }
-                    }}
-                    >
-                      <img src={`../imgs/${category}.png`} alt="icon" />
-                      <h5>{item.cocktail_name}</h5>
-                    </Link>
-
-                  </li>
+                  <CollectionItems
+                    key={item.cocktail_id}
+                    item={item}
+                    category={category}
+                    userIngredients={userData.userIngredients}
+                  />
                 );
               })
             }
@@ -75,7 +171,7 @@ export default function MyCollection(props) {
                 }
               }}
               >
-                <img src="../imgs/plus.png" alt="plus" />
+                <img src="../imgs/plus-more-collection.png" alt="plus" />
               </Link>
             </li>
           </ul>
@@ -85,10 +181,4 @@ export default function MyCollection(props) {
 
     );
   }
-  return (
-    <>
-      <h2>There is no collection.</h2>
-      <Link to="/gallery">Go to Gallery</Link>
-    </>
-  );
 }

@@ -148,8 +148,8 @@ class IdeasPage extends Component {
               {this.renderItem()}
             </div>
           </main>
-          {/* <Footer /> */}
         </div>
+        <Footer />
       </>
     );
   }

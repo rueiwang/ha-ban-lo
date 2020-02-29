@@ -6,8 +6,7 @@ import {
   Switch,
   Route,
   useRouteMatch,
-  Link,
-  BrowserRouter
+  Link
 } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -17,7 +16,6 @@ import { cacheData } from '../../components/Context/DataInSessionStorage';
 import MyCollection from '../../components/MyCollection';
 import Note from '../../components/Note';
 import Create from '../../components/Create';
-import * as ROUTES from '../../constants/routes';
 
 import '../../css/account.css';
 
@@ -58,6 +56,7 @@ class AccountPageBase extends Component {
     const { filter } = this.state;
     return (
       <>
+        {/* <ShoppingList /> */}
         <div className="wrap-accounting">
           <div className="side-bar">
             <div className="member-info">
@@ -83,7 +82,7 @@ Hi!
           <main className="main-account">
             <Switch>
               <Route path={`${match.url}`} exact component={compose(cacheData, ifAuth)(MyCollection)} />
-              <Route path={`${match.url}/IngredientsNote`} component={compose(cacheData, ifAuth)(Note)} />
+              <Route path={`${match.url}/IngredientsNote`} component={compose(withFirebase, cacheData, ifAuth)(Note)} />
               <Route path={`${match.url}/Create`} component={compose(withFirebase, cacheData, ifAuth)(Create)} />
             </Switch>
           </main>

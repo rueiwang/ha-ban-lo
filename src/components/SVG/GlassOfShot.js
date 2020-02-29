@@ -15,29 +15,28 @@ class GlassOfShot extends Component {
 
   render() {
     const { mainColor } = this.props;
-
-    const { randomColor } = this.state;
     return (
       <svg
         version="1.1"
         id="圖層_1"
         x="0px"
         y="0px"
-        width="150px"
+        width="120px"
         height="175px"
         viewBox="9.584 -37.864 190.332 300.864"
       >
         <defs>
-          <linearGradient spreadMethod="pad" id="color-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+          <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.6">
             {mainColor !== [] ? (
-              mainColor.colorPlette.reverse().map((rgbAry, i) => {
-                const percent = (i / rgbAry.length) * 100;
+              mainColor.map((rgbAry, i) => {
+                const percent = (i / mainColor.length).toFixed(1);
 
                 return (
                   <stop
-                    offset={`${percent}%`}
+                    key={percent}
+                    offset={percent}
                     style={{
-                      stopColor: `rgb(${mainColor.colorPlette[i][0]}, ${mainColor.colorPlette[i][1]}, ${mainColor.colorPlette[i][2]})`,
+                      stopColor: `rgb(${mainColor[i][0]}, ${mainColor[i][1]}, ${mainColor[i][2]})`,
                       stopOpacity: 1
                     }}
                   />
@@ -45,6 +44,7 @@ class GlassOfShot extends Component {
               })
             )
               : ''}
+            <animate attributeName="y1" from="1" to="0" dur="3s" />
           </linearGradient>
         </defs>
         <polygon

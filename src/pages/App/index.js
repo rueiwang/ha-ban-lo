@@ -31,7 +31,8 @@ class App extends Component {
         authUser: '',
         userCollections: [],
         userIngredients: [],
-        userCreations: []
+        userCreations: [],
+        userShoplist: []
       },
       cacheData: [],
       ingredientData: []
@@ -70,7 +71,11 @@ class App extends Component {
             .onSnapshot((query) => {
               const IngredientsAry = [];
               query.forEach((doc) => {
-                IngredientsAry.push(doc.data().ingredient_name);
+                IngredientsAry.push({
+                  id: doc.data().ingredient_id,
+                  status: doc.data().status,
+                  name: doc.data().ingredient_name
+                });
               });
               this.setState((prevState) => ({
                 userData: {
@@ -109,7 +114,6 @@ class App extends Component {
 
       this.putAllRecipeToSessionStorage();
       this.putAllIngredientsToSessionStorage();
-      // this.putAllCreationsToSessionStorage();
     }
   }
 
@@ -117,25 +121,6 @@ class App extends Component {
     this.listener();
     this.isCancel = true;
   }
-
-  // 把創作存進 sessionStorage
-  // putAllCreationsToSessionStorage() {
-  //   const { firebase } = this.props;
-  //   let newAry = [];
-  //   const isDataInSessionStorage = sessionStorage.getItem('allCreations') !== null;
-  //   if (isDataInSessionStorage) {
-  //     const processAry = sessionStorage.getItem('allCreations').split('},').map((str, i) => {
-  //       if (i === (sessionStorage.getItem('allCreations').split('},').length) - 1) {
-  //         return str;
-  //       }
-  //       return (`${str}}`);
-  //     });
-  //     newAry = processAry.map((item) => JSON.parse(item));
-  //     this.setState({
-  //       creationsData: [...newAry]
-  //     });
-  //   }
-  // }
 
   putAllIngredientsToSessionStorage() {
     const { firebase } = this.props;
@@ -238,12 +223,41 @@ class App extends Component {
                 }}
               />
               <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
-              <Route path="/gallery" render={(props) => (userData.authUser ? <GalleryPage {...props} /> : <GalleryPage {...props} />)} />
-              <Route path="/bartending-ideas" component={IdeasPage} />
-              <Route path="/cocktailDetail" component={CocktailDetailPage} />
-              <Route path="/taiwanbar" component={TaiwanBarPage} />
-              {/* <Route path="/taiwanbar/:pubdetail" component={TaiwanBarPage} /> */}
-              <Route path="/bartendingvedio" component={BartendingVideo} />
+              <Route
+                path="/gallery"
+                render={(props) => {
+                  this.isLoading = false;
+                  return <GalleryPage {...props} />;
+                }}
+              />
+              <Route
+                path="/bartending-ideas"
+                render={(props) => {
+                  this.isLoading = false;
+                  return <IdeasPage {...props} />;
+                }}
+              />
+              <Route
+                path="/cocktailDetail"
+                render={(props) => {
+                  this.isLoading = false;
+                  return <CocktailDetailPage {...props} />;
+                }}
+              />
+              <Route
+                path="/taiwanbar"
+                render={(props) => {
+                  this.isLoading = false;
+                  return <TaiwanBarPage {...props} />;
+                }}
+              />
+              <Route
+                path="/bartendingvedio"
+                render={(props) => {
+                  this.isLoading = false;
+                  return <BartendingVideo {...props} />;
+                }}
+              />
             </Switch>
           </BrowserRouter>
         </DataInSessionStorageContext.Provider>

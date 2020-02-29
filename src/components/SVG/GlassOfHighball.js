@@ -28,16 +28,17 @@ class GlassOfHighball extends Component {
         viewBox="0 0 209.5 477.5"
       >
         <defs>
-          <linearGradient spreadMethod="pad" id="color-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+          <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.6">
             {mainColor !== [] ? (
-              mainColor.colorPlette.reverse().map((rgbAry, i) => {
-                const percent = (i / rgbAry.length) * 100;
+              mainColor.map((rgbAry, i) => {
+                const percent = (i / mainColor.length).toFixed(1);
 
                 return (
                   <stop
-                    offset={`${percent}%`}
+                    key={percent}
+                    offset={percent}
                     style={{
-                      stopColor: `rgb(${mainColor.colorPlette[i][0]}, ${mainColor.colorPlette[i][1]}, ${mainColor.colorPlette[i][2]})`,
+                      stopColor: `rgb(${mainColor[i][0]}, ${mainColor[i][1]}, ${mainColor[i][2]})`,
                       stopOpacity: 1
                     }}
                   />
@@ -45,6 +46,7 @@ class GlassOfHighball extends Component {
               })
             )
               : ''}
+            <animate attributeName="y1" from="1" to="0" dur="2s" />
           </linearGradient>
         </defs>
         <rect x="2.5" y="5" fill="url(#color-gradient)" stroke="#000000" strokeWidth="5" strokeMiterlimit="10" width="204.5" height="426.5" />

@@ -1,24 +1,18 @@
 import React from 'react';
+import '../../css/common.css';
 
 const Footer = () => (
   <footer>
-    <div className="view">
-      <div className="link link-0">
-        <div className="item">About</div>
-        <div className="item">Service</div>
-        <div className="item">Privacy</div>
-      </div>
-      <div className="link link-1">
-        <div className="item">Contact</div>
-        <div className="item">FAQ</div>
-      </div>
-      <div className="social">
-        <img src="../imgs/line.png" alt="..." />
-        <img src="../imgs/twitter.png" alt="..." />
-        <img src="../imgs/facebook.png" alt="..." />
-      </div>
+    <div className="footer-container">
       <div className="copyright">
-            &copy; 2020. All rights reserved.
+        <p>&copy; 2020 hā-pan | Ruei-Tian Wang</p>
+        {' '}
+        <a href="mailto:want2813@gmail.com&subject=About hā-pan" target="_blank">
+          <img src="./imgs/email.png" alt="" />
+        </a>
+        <a href="https://github.com/Ruei-Tian" target="_blank">
+          <img src="./imgs/github.png" alt="" />
+        </a>
       </div>
     </div>
   </footer>

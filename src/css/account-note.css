@@ -1,6 +1,173 @@
 .ingredients-wrap {
-    width: 80%;
-    margin: auto;
+    width: 60%;
+    margin: 0 5%;
+    position: relative;
+}
+
+/* shopping list */
+
+.ingredients-wrap>.shopping-list-area{
+    position: fixed;
+    right: 5%;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #FFBA84;
+    height: 300px;
+    -webkit-box-shadow: 0 8px 10px -7px #999;
+	-moz-box-shadow: 0 8px 10px -7px #999;
+	box-shadow: 0 8px 10px -7px #999;
+	-webkit-border-bottom-right-radius: 60px 10px;
+	-moz-border-radius-bottomright: 60px 10px;
+    border-bottom-right-radius: 60px 10px;
+    max-width: 250px;
+}
+/* hide shopping list area */
+.ingredients-wrap>.shopping-list-area>.hide-list-area {
+    position: absolute;
+    top: -50px;
+}
+.ingredients-wrap>.shopping-list-area>.hide-list-area>.count {
+    position: absolute;
+    background-color: red;
+    color: #ffffff;
+    font-size: 14px;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid #000000;
+    bottom: 0px;
+    left: 0px;
+}
+.ingredients-wrap>.shopping-list-area>.hide-list-area>.hide-list-btn {
+    width: 50px;
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list {
+    padding: 0px 30px 10px 30px;
+    max-height: 210px;
+    overflow-y: scroll;
+}
+.ingredients-wrap>.shopping-list-area>.shopping-list::-webkit-scrollbar {
+    width:  5px;
+  }
+  
+  /* Track */
+  .ingredients-wrap>.shopping-list-area>.shopping-list::-webkit-scrollbar-track {
+    background: #FFBA84;
+  }
+  
+  /* Handle */
+  .ingredients-wrap>.shopping-list-area>.shopping-list::-webkit-scrollbar-thumb {
+    background: #B17844;
+  }
+
+
+.ingredients-wrap>.shopping-list-area>h3 {
+    border-top-width: 2px;
+    border-top-style: dotted;
+    border-top-color: #B17844;
+	margin: 20px 5px 0 5px;
+    padding: 15px 5px 15px 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 900;
+    font-size: 20px;
+}
+.ingredients-wrap>.shopping-list-area>.shopping-list>label {
+    display: block;
+    padding: 5px 0;
+    position: relative;
+    padding-left: 5px;
+    letter-spacing: 2px;
+    line-height: 20px;
+    text-overflow: ellipsis;
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>label input[type=checkbox]{
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>label .deleteBtn {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 0;
+    right: -20px;
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>label:hover .deleteBtn {
+    opacity: 1;
+}
+
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>label .checkmark{
+    position: absolute;
+    top: 2px;
+    left: -20px;
+    height: 23px;
+    width: 23px;
+    background-color: #ffffff;
+    border: 3px solid #B17844;
+    cursor: pointer;
+}
+
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>label .checkmark:after {
+    content: "";
+    position: absolute;
+    display: block;
+    left: 3px;
+    top: 0px;
+    width: 10px;
+    height: 13px;
+    border: solid #ffffff;
+    border-width: 0px 4px 4px 0px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    border-radius: 2px;
+}
+
+/* .ingredients-wrap>.shopping-list-area>.shopping-list>label:hover .checkmark, */
+.ingredients-wrap>.shopping-list-area>.shopping-list>label>input[type=checkbox]:checked ~ .checkmark {
+    background-color:  rgba(253,162,49,.5);
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>label button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    position: absolute;
+    right: -30px;
+    display: none;
+}
+.ingredients-wrap>.shopping-list-area>.shopping-list>label:hover button {
+    display: inline-block;
+    z-index: 5;
+}
+.ingredients-wrap>.shopping-list-area>.shopping-list>label img{
+    width: 100%;
+}
+
+/* shopping list pin */
+.ingredients-wrap>.shopping-list-area>.pinned-area {
+    position: absolute;
+    width: 30px;
+    top: -15px;
+    right: calc(50% - 20px);
+    cursor: grab;
+}
+
+.ingredients-wrap>.shopping-list-area>.pinned-area img{
+    width: 100%;
 }
 
 .ingredients-wrap>div {
@@ -57,6 +224,7 @@
     padding: 30px;
     transition: ease .5s;
     /* transform: translateX(100px); */
+    position: relative;
 }
 
 
@@ -64,4 +232,22 @@
     width: 72px;
     margin-bottom: 10px;
     z-index: 0;
+}
+
+.ingredients-wrap>div>.slide-box>ul>li>.deleteBtn {
+    position: absolute;
+    width: 20px;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    bottom: unset;
+    display: none;
+}
+
+.ingredients-wrap>div>.slide-box>ul>li>.deleteBtn img{
+    width: 100%;
+}
+
+.ingredients-wrap>div>.slide-box>ul>li:hover .deleteBtn{
+    display: block;
 }

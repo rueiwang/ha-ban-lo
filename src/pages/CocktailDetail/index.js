@@ -21,6 +21,7 @@ import {
 
 import '../../css/cocktailDetail.css';
 import Loading from '../../components/Loading';
+import Footer from '../../components/Footer';
 
 class CocktailDetailPage extends Component {
   constructor(props) {
@@ -163,8 +164,8 @@ class CocktailDetailPage extends Component {
               <img src="../../imgs/arrow-right.png" alt="" onClick={(e) => this.getNextCocktail(e)} />
             </button>
           </main>
-          {/* <Footer /> */}
         </div>
+        <Footer />
       </>
     );
   }
@@ -231,115 +232,128 @@ class CollectButtonBase extends Component {
     );
   }
 }
-
 const CollectButton = compose(withFirebase, cacheData, ifAuth)(CollectButtonBase);
-
-class AddButtonBase extends Component {
+class IngredientItemBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collected: false,
-      ingredientId: ''
+      ifOwned: false,
+      status: -1,
+      ingredientDetail: null,
+      isLoading: false
     };
 
     this.addIngredients = this.addIngredients.bind(this);
   }
 
   componentDidMount() {
-    const { userData, target } = this.props;
-    if (userData.authUser) {
-      const isCollected = userData.userIngredients.findIndex((name) => name === target) !== -1;
-      if (isCollected) {
-        this.setState({
-          collected: true
-        });
-      }
-    }
+    const { DataInSessionStorage, userData } = this.props;
+    const { ingredient } = this.props;
+    const tagertIngredient = DataInSessionStorage.ingredientData.filter((item) => item.ingredient_name === ingredient)[0];
+    const IndexInUserData = userData.userIngredients.findIndex((item) => item.id === tagertIngredient.ingredient_id);
+    const ifOwned = IndexInUserData !== -1;
+    let status;
+    ifOwned ? status = userData.userIngredients[IndexInUserData].status : status = -1;
+    this.setState({
+      ifOwned,
+      ingredientDetail: { ...tagertIngredient },
+      status
+    });
   }
 
-  addIngredients(e) {
-    e.preventDefault();
-    const { collected, ingredientId } = this.state;
-    const { target, userData, firebase } = this.props;
-    console.log(target);
+  addIngredients(e, statusNum) {
+    const { firebase, userData } = this.props;
+    const { ifOwned, ingredientDetail, status } = this.state;
     if (userData.authUser === null) {
       alert('Please Sign in!');
       return;
     }
-    if (collected) {
-      console.log(userData.authUser.uid);
-      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').where('ingredient_name', '==', target)
-        .get()
-        .then((docQuery) => {
-          let targetObj = null;
-          docQuery.forEach((doc) => {
-            targetObj = doc.data();
-          });
-          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(targetObj.ingredient_id)
-            .delete()
-            .then(() => {
-              this.setState({
-                collected: false,
-                ingredientId: targetObj.ingredient_id
-              });
+    if (ifOwned) {
+      if (status === statusNum) {
+        firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientDetail.ingredient_id)
+          .delete()
+          .then(() => {
+            this.setState({
+              ifOwned: false,
+              status: -1
             });
-        });
+          });
+      } else {
+        firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientDetail.ingredient_id)
+          .update({ status: statusNum })
+          .then(() => {
+            this.setState({
+              status: statusNum
+            });
+          });
+      }
     } else {
-      firebase.db.collection('all_ingredient').where('ingredient_name', '==', target)
-        .get()
-        .then((docQuery) => {
-          let targetObj = null;
-          docQuery.forEach((doc) => {
-            targetObj = doc.data();
-          });
-          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(targetObj.ingredient_id)
-            .set(targetObj)
-            .then(() => {
-              this.setState({
-                collected: true,
-                ingredientId: targetObj.ingredient_id
-              });
-            });
+      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientDetail.ingredient_id)
+        .set({
+          ...ingredientDetail,
+          status: statusNum
         })
-        .catch(() => alert('Sorry, something wrong, try to reload your page!'));
+        .then(() => {
+          this.setState({
+            ifOwned: true,
+            status: statusNum
+          });
+        });
     }
   }
 
   render() {
-    const { collected } = this.state;
+    const { ingredient, measure } = this.props;
+    const { ifOwned, status } = this.state;
     return (
-      <div className={`add-to-my-ingredients ${collected ? 'collected' : ''}`} onClick={(e) => this.addIngredients(e)}>
-        <img src={collected ? '../imgs/ok.png' : '../imgs/plus.png'} alt="plus" />
-      </div>
+      <li className={`item ${ifOwned ? '' : 'showIcon'}`}>
+        <div className="btn btn-already-had" onClick={(e) => this.addIngredients(e, 1)}>
+          <img src={status === 1 ? '../imgs/ok.png' : '../imgs/plus.png'} alt="plus" />
+        </div>
+        <span className="measure">{measure}</span>
+        <span className="name">{ingredient}</span>
+        <div className={`btn btn-need-to-buy ${status === 2 ? 'pinned' : ''}`} onClick={(e) => this.addIngredients(e, 2)}>
+          <img src={status === 2 ? '../imgs/shop-list-already.png' : '../imgs/shopping-list.png'} alt="plus" />
+        </div>
+      </li>
     );
   }
 }
-const AddButton = compose(withFirebase, cacheData, ifAuth)(AddButtonBase);
+
+const IngredientItem = compose(withFirebase, cacheData, ifAuth)(IngredientItemBase);
 
 class ContentBase extends Component {
   constructor(props) {
     super(props);
+    const targetDetail = this.props;
     this.state = {
       colorPlette: [],
-      isCollected: false
+      isCollected: false,
+      currentId: ''
     };
     this.img = React.createRef();
     this.getImgColor = this.getImgColor.bind(this);
   }
 
-  getImgColor(e, length) {
-    const colorThief = new ColorThief();
-    const img = this.img.current;
-    const colorPletteRGB = colorThief.getPalette(img, length);
-    this.setState({
-      colorPlette: [...colorPletteRGB]
-    });
+  getImgColor(e, length, id) {
+    const { colorPlette, currentId } = this.state;
+    if (colorPlette.length === 0 || id !== currentId) {
+      const colorThief = new ColorThief();
+      const img = this.img.current;
+      const colorPletteRGB = colorThief.getPalette(img, length);
+      console.log(colorPletteRGB);
+      this.setState({
+        colorPlette: [...colorPletteRGB],
+        currentId: id
+      });
+    }
   }
 
   render() {
     const {
       DataInSessionStorage, cocaktailId, creations, ifClassic
     } = this.props;
+    const { colorPlette } = this.state;
     let targetDetail;
     if (ifClassic) {
       targetDetail = DataInSessionStorage.cacheData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
@@ -351,11 +365,11 @@ class ContentBase extends Component {
         <div className="content" key={item.cocktail_id}>
           <img
             src={ifClassic ? `${item.cocktail_pic}?time=${new Date().valueOf()}`
-              : `${item.cocktail_pic}`}
+              : `${item.cocktail_pic}&time=${new Date().valueOf()}`}
             ref={this.img}
             alt="none"
             className="invisibleImg"
-            onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length)}
+            onLoad={(e) => this.getImgColor(e, item.cocktail_ingredients.length, item.cocktail_pic)}
             crossOrigin="anonymous"
           />
           <h2>
@@ -378,11 +392,7 @@ class ContentBase extends Component {
               <ul className="ingredient-list">
                 {
                 item.cocktail_ingredients.map((ingredient, i) => (
-                  <li className="item" key={`${item.cocktail_ingredients_type[i]}+${i}`}>
-                    <span className="measure">{item.cocktail_measures[i]}</span>
-                    <span className="name">{ingredient}</span>
-                    <AddButton target={ingredient} />
-                  </li>
+                  <IngredientItem ingredient={ingredient} measure={item.cocktail_measures[i]} key={`${item.cocktail_id + i}`} />
                 ))
               }
               </ul>
@@ -392,7 +402,7 @@ class ContentBase extends Component {
             <div className="ingedient-info">
               <div className="svg">
                 <img src="./imgs/shaker.png" alt="" className="cover-shaker" />
-                <GlassComponent glassType={item.cocktail_glass_type} colors={this.state} />
+                <GlassComponent glassType={item.cocktail_glass_type} colors={colorPlette} />
               </div>
               <div className="glass">
                 <p>{item.cocktail_glass}</p>

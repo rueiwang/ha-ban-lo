@@ -392,7 +392,13 @@ class GalleryPage extends Component {
               </button>
               {
               this.categoryAry.map((category) => (
-                <li className={`item ${filter === category ? 'current' : ''}`} onClick={(e) => this.changeFilter(e)}>{category}</li>
+                <li
+                  key={category}
+                  className={`item ${filter === category ? 'current' : ''}`}
+                  onClick={(e) => this.changeFilter(e)}
+                >
+                  {category}
+                </li>
               ))
             }
             </ul>
@@ -400,8 +406,8 @@ class GalleryPage extends Component {
               {this.renderItem()}
             </div>
           </main>
-          {/* <Footer /> */}
         </div>
+        <Footer />
       </>
     );
   }

@@ -27,16 +27,17 @@ class GlassOfBrandy extends Component {
         viewBox="0 0 336.854 399.479"
       >
         <defs>
-          <linearGradient spreadMethod="pad" id="color-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+          <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.6">
             {mainColor !== [] ? (
-              mainColor.colorPlette.reverse().map((rgbAry, i) => {
-                const percent = (i / rgbAry.length) * 100;
+              mainColor.map((rgbAry, i) => {
+                const percent = (i / mainColor.length).toFixed(1);
 
                 return (
                   <stop
-                    offset={`${percent}%`}
+                    key={percent}
+                    offset={percent}
                     style={{
-                      stopColor: `rgb(${mainColor.colorPlette[i][0]}, ${mainColor.colorPlette[i][1]}, ${mainColor.colorPlette[i][2]})`,
+                      stopColor: `rgb(${mainColor[i][0]}, ${mainColor[i][1]}, ${mainColor[i][2]})`,
                       stopOpacity: 1
                     }}
                   />
@@ -44,6 +45,7 @@ class GlassOfBrandy extends Component {
               })
             )
               : ''}
+            <animate attributeName="y1" from="1" to="0" dur="2s" />
           </linearGradient>
         </defs>
         <rect x="76.652" y="380.103" fill="none" stroke="#070001" strokeWidth="5" strokeMiterlimit="10" width="183.549" height="6.766" />

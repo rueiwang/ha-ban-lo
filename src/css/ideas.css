@@ -1,14 +1,14 @@
 .wrap-ideas>.intro-area {
     height: 500px;
     color: #ffffff;
-    background-image: url('/imgs/bg-ideas.jpg');
+    background-image: url('/imgs/bg-account.jpg');
     background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     /* padding-bottom: 100px; */
-    margin-bottom: 50px;
+    margin-bottom: 100px;
     background-size: cover;
 }
 

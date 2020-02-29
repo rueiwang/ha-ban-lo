@@ -1,7 +1,8 @@
 .wrap-landing>.intro-area {
-    height: 500px;
+    height: 400px;
     color: #ffffff;
     background-image: url('/imgs/bg-index.jpg');
+    background-attachment: fixed;
     background-position: center;
     background-size: contain;
     display: flex;
@@ -61,20 +62,231 @@
 }
 
 .wrap-landing>.main-landing {
-    padding: 100px 0;
+    padding: 50px 0;
     
 }
 
+/* intro classic */
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container {
+    display: flex;
+    max-width: 70%;
+    margin: auto;
+    margin-bottom: 80px;
+    height: 300px;
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list{
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    width: 50%;
+    justify-content: flex-start;
+}
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li{
+    width: 28%;
+    padding: 60px 0;
+    /* height: 150px; */
+    border: 2px solid #282828;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    margin: 10px 2%;
+}
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li>.cover{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #282828;
+    transition: all 1s;
+    opacity: 1;
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li:nth-child(odd)>.cover {
+    background-color: #ffffff;
+    
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li>.cover img{
+    width: 80px; 
+    margin-bottom: 10px;
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li>.cover a{
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    color: #ffffff;
+    font-weight: 900;
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li:nth-child(odd)>.cover a {
+    color: #282828;
+}
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li:hover .cover{
+    transform:rotateY(180deg);
+    opacity: 0;
+}
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li.item1 { background-image:url('/imgs/bg-brandy.png'); }
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li.item2 { background-image:url('/imgs/bg-rum.png'); }
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li.item3 { background-image:url('/imgs/bg-gin.png'); }
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li.item4 { background-image:url('/imgs/bg-whisky.png'); }
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li.item5 { background-image:url('/imgs/bg-tequila.png'); }
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li.item6 { background-image:url('/imgs/bg-vodka.png'); }
+
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation{
+    display: flex;
+    /* align-items: flex-end; */
+    justify-content: center;
+    width: 50%;
+    position: relative;
+
+}
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description{
+    position: absolute;
+    background-color: #ffffff;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description h3,
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description p{
+  font-size: 24px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description h3{
+   font-size: 3.5em;
+}
+
+
+.wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation svg{
+    width: 100px;
+    height: 100px;
+}
+
+@media (max-width: 1250px) {
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description h3,
+        .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description p{
+        font-size: 20px;
+        margin-bottom: 10px;
+        }
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation>.description h3{
+        font-size: 2.5em;
+     }  
+}
+
+/* intro-searchBar */
+.wrap-landing>.main-landing>.intro-searchBar {
+    background-image: url('/imgs/bg-member-1.png');
+    background-attachment: fixed;
+    height: 500px;
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 80px;
+}
+
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container {
+    display: flex;
+    max-width: 70%;
+    margin: auto;
+    padding: 50px 0;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>div {
+    width: 50%;
+    height: 300px;
+}
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description {
+    background-color: rgba(255, 255, 255, .3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+}
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description p,
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description h3{
+    font-size: 24px;
+    letter-spacing: 2px;
+   margin-bottom: 10px;
+}
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description h3{
+    font-size: 3.5em;
+}
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.image{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.image img{
+    width: 100px;
+}
+
+@media (max-width: 1250px) {
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container,
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container {
+        max-width: unset;
+        width: 90%;
+    }
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description h3,
+        .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description p{
+        font-size: 20px;
+        margin-bottom: 10px;
+        }
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description h3{
+        font-size: 2.5em;
+     }  
+}
+
+@media (max-width: 650px) {
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container,
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container {
+        flex-direction: column;
+        align-items: center;
+        height: unset;
+    }
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list,
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation,
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>div {
+        width: 90%;
+        height: 300px;
+    }
+
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation {
+        order: 0;
+    }
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list {
+        order: 1;
+    }
+     
+}
+
+/* Sign in sign up */
 .wrap-landing>.main-landing>.member-area {
     width: 60%;
     margin: auto;
     position: relative;
+
 }
 
 .wrap-landing>.main-landing>.member-area>.member-message {
     display: flex;
     padding: 30px;
-    background-color: #000000;
+    background-color: #282828;
     color: #ffffff;
     height: 350px;
     align-items: center;
@@ -91,6 +303,7 @@
 .wrap-landing>.main-landing>.member-area>.member-message p {
     font-size: 20px;
     margin-bottom: 20px;
+    line-height: 24px;
 }
 
 .wrap-landing>.main-landing>.member-area>.member-message>div {
@@ -123,7 +336,7 @@
 
 @media (max-width: 1000px) {
     .wrap-landing>.main-landing>.member-area {
-        width: 85%;
+        width: 90%;
     }
     .wrap-landing>.main-landing>.member-area>.member-message>div {
         width: 40%;

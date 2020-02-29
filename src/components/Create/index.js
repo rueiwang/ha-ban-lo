@@ -55,7 +55,8 @@ export default class Create extends Component {
       ...FORM_INITAIL_STATE,
       isLoading: false,
       creations: [],
-      filter: 'creating-mode'
+      filter: 'creating-mode',
+      isShown: false
     };
     this.onInputChangeStr = this.onInputChangeStr.bind(this);
     this.onInputChangeAry = this.onInputChangeAry.bind(this);
@@ -71,8 +72,8 @@ export default class Create extends Component {
   }
 
   componentDidMount() {
-    this.getCreations();
     this.clearAllInput();
+    this.getCreations();
   }
 
   componentWillUnmount() {
@@ -182,6 +183,13 @@ export default class Create extends Component {
       ingredientsInputFields
     } = this.state;
 
+    if (ingredientsInputFields.length < 2) {
+      this.setState({
+        isShown: true
+      });
+      return;
+    }
+
     if (!this.validateForm(errors)) {
       alert('Please complete the form.');
       return;
@@ -244,7 +252,8 @@ export default class Create extends Component {
                 .set(fieldObj)
                 .then((doc) => {
                   this.setState({
-                    isLoading: false
+                    isLoading: false,
+                    isShown: false
                   });
                 })
                 .catch((error) => console.log(error));
@@ -271,6 +280,13 @@ export default class Create extends Component {
       creations
     } = this.state;
 
+
+    if (ingredientsInputFields.length < 2) {
+      this.setState({
+        isShown: true
+      });
+      return;
+    }
     if (!this.validateForm(errors)) {
       alert('Please complete the form.');
       return;
@@ -320,9 +336,9 @@ export default class Create extends Component {
                       .update(fieldObj)
                       .then((doc) => {
                         this.setState({
-                          isLoading: false
-                        })
-
+                          isLoading: false,
+                          isShown: false
+                        });
                       })
                       .catch((updateError) => console.log('updateError', updateError));
                   });
@@ -632,6 +648,7 @@ export default class Create extends Component {
     console.log(index);
     const { ingredientsInputFields, errors } = this.state;
     if (ingredientsInputFields.length === 1) {
+      console.log('不能刪除');
       return;
     }
     errors.cocktailIngredients.splice(index, 1);
@@ -700,7 +717,8 @@ export default class Create extends Component {
       creations,
       filter,
       inputing,
-      ifDelete
+      ifDelete,
+      isShown
     } = this.state;
     const { DataInSessionStorage } = this.props;
     return (
@@ -820,6 +838,9 @@ Introduction for Cocktail
               <div className="ingredients-area">
                 <label htmlFor="create-cocktail-ingredient">
               Ingredients for Cocktail
+                  <div className={`two-ingredient-prompt ${isShown ? 'show' : ''}`}>
+                    <p>at least 2 items!</p>
+                  </div>
                   <button className="plus" type="button" onClick={(e) => this.addNewIngredientInput()}>+</button>
                 </label>
                 {/* 最少兩樣原料、不能空白、只能跟資料庫符合 */}
