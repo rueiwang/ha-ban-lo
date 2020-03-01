@@ -230,7 +230,9 @@
 .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.image{
     display: flex;
     align-items: flex-end;
-    justify-content: center;
+    justify-content: space-around;
+    overflow: hidden;
+    padding: 0 5%;
 }
 .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.image img{
     width: 100px;
@@ -246,6 +248,7 @@
         .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description p{
         font-size: 20px;
         margin-bottom: 10px;
+
         }
     .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description h3{
         font-size: 2.5em;
@@ -274,6 +277,80 @@
     }
      
 }
+
+/* Road sign */
+.road-sign{ 
+    height: 200px; 
+    width: 10px;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    font-size: 12px;   
+    border-radius: 8px 8px 0 0; 
+    transform: translateY(50px);
+  }
+  .road-sign:nth-child(1){ 
+    transform: translateY(60px);
+  }
+  .road-sign:nth-child(2){ 
+    transform: translateY(70px);
+  }
+  .road-sign:nth-child(3){ 
+    transform: translateY(50px);
+  }
+  .road-sign:nth-child(4){ 
+    transform: translateY(80px);
+  }  
+  .road-sign>.item {
+    width: 90px;
+    padding: 5px;
+    border: 3px outset #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+    transform-origin: center;   
+  }
+
+  .road-sign>.item a{ 
+    color: #000000;   
+    text-decoration: none;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+  }
+  .road-sign>.right{  
+    transform: translate(-40px, 30px);    
+    background-color: crimson; 
+    border-radius: 10px 50px 50px 10px;
+  }
+  .road-sign>.left{
+    transform: translate(-50px, 40px);
+    background-color: teal; 
+    border-radius: 50px 10px 10px 50px;   
+  }
+  .road-sign:nth-child(3)>.left{ 
+    background-color: #eea60b; 
+    transform: translate(-50px, 40px) rotate(10deg);
+  }
+  .road-sign:nth-child(1)>.right{ 
+    background-color: #ffe75e; 
+    transform: translate(-40px, 30px) rotate(-5deg);
+
+  }
+  .road-sign:nth-child(1)>.left{ 
+    background-color: #5b8c5a;
+
+  }
+  .road-sign:nth-child(4)>.left{ 
+    background-color: #ba6b57;
+    transform: translate(-50px, 40px) rotate(-5deg);
+
+  }
+  .road-sign:nth-child(3)>.right{ 
+    background-color: #eb9788; 
+    transform: translate(-40px, 30px) rotate(-10deg);
+  }
+
+  
+  
 
 /* Sign in sign up */
 .wrap-landing>.main-landing>.member-area {
@@ -334,7 +411,7 @@
     }
 } 
 
-@media (max-width: 1000px) {
+@media (max-width: 1250px) {
     .wrap-landing>.main-landing>.member-area {
         width: 90%;
     }

@@ -235,7 +235,6 @@ footer>.footer-container {
     max-width: 70%;
     margin: auto;
     padding: 15px 0;
-
 }
 
 
@@ -265,8 +264,22 @@ footer>.footer-container>.copyright a>img{
     width: 28px;
 }
 
+@media (max-width: 1250px) {
+    footer>.footer-container{
+        max-width: unset;
+        width: 90%;
+    }
+   
+}
+
 @media (max-width: 600px) {
     footer {
         margin-bottom: 60px !important;
     }
+    footer>.footer-container>.copyright p{
+        width: 100%;
+    }
+        
+   
+  
 }

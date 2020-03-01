@@ -114,6 +114,17 @@
     flex-wrap: wrap;
     justify-content: space-around;
 }
+/* mobile filter bar */
+@media (max-width: 1000px) {
+    .wrap-gallery>.main-gallery>.gallery-item {
+        width: 90%;
+    }
+}
+@media (max-width: 768px) {
+    .wrap-gallery>.main-gallery>.gallery-item {
+        width: 98%;
+    }
+}
 
 .wrap-gallery>.main-gallery>.gallery-item>.item {
     display: flex;

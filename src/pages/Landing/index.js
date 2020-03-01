@@ -8,7 +8,7 @@ import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 
 import Footer from '../../components/Footer';
-import Loading from '../../components/Loading';
+import RoadSign from '../../components/RoadSign';
 import {
   GlassOfBrandy,
   GlassOfChampagne,
@@ -132,7 +132,9 @@ IDEAS
                 <div className="borber-horizontal" />
                 <div className="borber-vertical" />
               </div>
-              <div className="image" />
+              <div className="image">
+                <RoadSign />
+              </div>
             </div>
           </div>
           <div className="member-area" id="member">

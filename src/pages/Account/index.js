@@ -68,7 +68,7 @@ Hi!
             </div>
             <ul className="menu">
               <li className={filter === '' ? 'current' : ''}>
-                <Link to={`${match.url}`} onClick={(e) => this.changeFilter(e, '')}>My collection</Link>
+                <Link to={`${match.url}`} onClick={(e) => this.changeFilter(e, '')}>My Collection</Link>
               </li>
               <li className={filter === 'IngredientsNote' ? 'current' : ''}>
                 <Link to={`${match.url}/IngredientsNote`} onClick={(e) => this.changeFilter(e, 'IngredientsNote')}>Ingredients Note</Link>
@@ -77,7 +77,28 @@ Hi!
                 <Link to={`${match.url}/Create`} onClick={(e) => this.changeFilter(e, 'Create')}>Create Recipe</Link>
               </li>
             </ul>
+            <ul className="menu-mobile">
+              <li className={filter === '' ? 'current' : ''}>
+                <Link to={`${match.url}`} onClick={(e) => this.changeFilter(e, '')}>
+                  <img src="../imgs/hearts.png" alt="" />
+                  <p>COLLECTION</p>
+                </Link>
+              </li>
+              <li className={filter === 'IngredientsNote' ? 'current' : ''}>
+                <Link to={`${match.url}/IngredientsNote`} onClick={(e) => this.changeFilter(e, 'IngredientsNote')}>
+                  <img src="../imgs/shop-list-already.png" alt="" />
+                  <p>NOTE</p>
+                </Link>
+              </li>
+              <li className={filter === 'Create' ? 'current' : ''}>
+                <Link to={`${match.url}/Create`} onClick={(e) => this.changeFilter(e, 'Create')}>
+                  <img src="../imgs/create.png" alt="" />
+                  <p>CREATE</p>
+                </Link>
+              </li>
+            </ul>
             <button type="button" onClick={(e) => this.onClick(e)} className="sign-out">Sign Out</button>
+            <input type="image" src="../imgs/sign-out.png" alt="" className="mobile-sign-out" onClick={(e) => this.onClick(e)} />
           </div>
           <main className="main-account">
             <Switch>

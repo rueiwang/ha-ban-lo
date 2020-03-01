@@ -52,7 +52,8 @@ export default class Note extends Component {
       tobuy: [],
       translate: 0,
       slideTarget: 'basewineLi',
-      randomSuggestions: []
+      randomSuggestions: [],
+      isShown: true
     };
 
     this.ulWidth = React.createRef();
@@ -61,6 +62,7 @@ export default class Note extends Component {
     this.slideBackward = this.slideBackward.bind(this);
     this.slideForward = this.slideForward.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
+    this.showShoppingList = this.showShoppingList.bind(this);
   }
 
   componentDidMount() {
@@ -164,19 +166,32 @@ export default class Note extends Component {
     }
   }
 
+  showShoppingList() {
+    const { isShown } = this.state;
+    this.setState({
+      isShown: !isShown
+    });
+  }
+
   render() {
     const {
-      baseWine, liqueur, other, translate, slideTarget, tobuy
+      baseWine, liqueur, other, translate, slideTarget, tobuy, isShown
     } = this.state;
     return (
       <>
         <div className="ingredients-wrap">
-          <div className="shopping-list-area">
-            <div className="hide-list-area">
-              <div className="count">{tobuy.length}</div>
-              <input type="image" src="../../imgs/shop-list-already.png" alt="" className="hide-list-btn" />
-            </div>
-            <input type="image" src="../../imgs/nail.png" alt="" className="pinned-area" />
+          <div className="hide-list-area" onClick={this.showShoppingList}>
+            <div className="count">{tobuy.length}</div>
+            <input type="image" src="../../imgs/shop-list-already.png" alt="" className="hide-list-btn" />
+          </div>
+          <div className={`shopping-list-area ${isShown ? 'show' : ''}`}>
+            <input
+              type="image"
+              src="../../imgs/nail.png"
+              alt=""
+              className="pinned-area"
+              onClick={this.showShoppingList}
+            />
             <h3>Shopping List</h3>
             <form className="shopping-list">
               { tobuy === []
@@ -200,6 +215,7 @@ export default class Note extends Component {
                   </label>
                 ))}
             </form>
+
           </div>
 
           <div className="basewine">
