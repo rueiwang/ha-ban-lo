@@ -26,9 +26,9 @@ class GlassOfWhisky extends Component {
         viewBox="0 0 265 263"
       >
         <defs>
-          <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.6">
+          <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.8">
             {mainColor !== [] ? (
-              mainColor.map((rgbAry, i) => {
+              mainColor.reverse().map((rgbAry, i) => {
                 const percent = (i / mainColor.length).toFixed(1);
 
                 return (

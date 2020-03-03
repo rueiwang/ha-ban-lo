@@ -5,7 +5,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { withFirebase } from '../Context/Firebase';
-import * as ROUTES from '../../constants/routes';
 
 
 const INITIAL_STATE = {
@@ -21,13 +20,13 @@ const SignIn = (props) => (
 class SignInFormBase extends Component {
   constructor(props) {
     super(props);
-
     this.state = { ...INITIAL_STATE };
   }
 
   onClick = (e) => {
     const { email, password } = this.state;
     const { firebase, history } = this.props;
+    e.preventDefault();
 
     firebase.doSignInWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -37,12 +36,21 @@ class SignInFormBase extends Component {
       .catch((error) => {
         this.setState({ error });
       });
-
-    e.preventDefault();
   }
 
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  resetPassword = (e) => {
+    const { email, password } = this.state;
+    const { firebase, history } = this.props;
+    firebase.auth.sendPasswordResetEmail(email).then(() => {
+      // 更改密碼確認信已寄送
+      console.log('信件已寄出');
+    }, (error) => {
+      this.setState({ error });
+    });
   }
 
   render() {
@@ -58,31 +66,34 @@ class SignInFormBase extends Component {
     || email.trim() === '';
 
     return (
-      <form className={`sign-in-with-email ${slip === 'signIn' || slip === 'mobile-signIn' ? 'slip' : ''}`}>
-        <h3>SIGN IN</h3>
-        <input
-          type="text"
-          id="email"
-          placeholder="Email"
-          name="email"
-          value={email}
-          onChange={this.onChange}
-        />
-        <input
-          type="password"
-          id="pwd"
-          placeholder="Password"
-          value={password}
-          name="password"
-          onChange={this.onChange}
-        />
+      <>
+        <form className={`sign-in-with-email ${slip === 'signIn' || slip === 'mobile-signIn' ? 'slip' : ''}`}>
+          <h3>SIGN IN</h3>
+          <input
+            type="text"
+            id="email"
+            placeholder="Email"
+            name="email"
+            value={email}
+            onChange={this.onChange}
+          />
+          <input
+            type="password"
+            id="pwd"
+            placeholder="Password"
+            value={password}
+            name="password"
+            onChange={this.onChange}
+          />
 
-        <a href="#">Forgot your password?</a>
-        <div className="btn-area">
-          <button id="sign-in" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
-        </div>
-        {error && <p>{error.message}</p>}
-      </form>
+          <a onClick={(e) => this.resetPassword(e)}>Forgot your password?</a>
+
+          <div className="btn-area">
+            <button id="sign-in" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
+          </div>
+          {error && <p>{error.message}</p>}
+        </form>
+      </>
     );
   }
 }

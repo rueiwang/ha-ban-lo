@@ -16,10 +16,12 @@ import { cacheData } from '../../components/Context/DataInSessionStorage';
 import MyCollection from '../../components/MyCollection';
 import Note from '../../components/Note';
 import Create from '../../components/Create';
+import VerifiedEmail from '../../components/VerifiedEmail';
 
 import '../../css/account.css';
 
 const AccountPage = (props) => {
+  const { userData } = props;
   const { path, url } = useRouteMatch();
   return (
     <Switch>
@@ -45,7 +47,7 @@ class AccountPageBase extends Component {
     history.push('/');
   }
 
-  changeFilter(e, filter) {
+  changeFilter = (e, filter) => {
     this.setState({
       filter
     });

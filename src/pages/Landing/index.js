@@ -132,9 +132,7 @@ IDEAS
                 <div className="borber-horizontal" />
                 <div className="borber-vertical" />
               </div>
-              <div className="image">
-                <RoadSign />
-              </div>
+              <RoadSign />
             </div>
           </div>
           <div className="member-area" id="member">

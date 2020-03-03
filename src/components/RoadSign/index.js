@@ -1,5 +1,6 @@
 /* eslint-disable no-tabs */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class RoadSign extends Component {
   constructor(props) {
@@ -9,51 +10,62 @@ class RoadSign extends Component {
     };
   }
 
-
   render() {
     return (
-      <>
-        <div className="road-sign">
-          <div className="item right">
-            <a className="sign-link" href="#">taipei</a>
-            <div className="right-arrow" />
-          </div>
-          <div className="item left">
-            <a className="sign-link" href="#">taichung</a>
-            <div className="left-arrow" />
-          </div>
-        </div>
-        <div className="road-sign">
-          <div className="item right">
-            <a className="sign-link" href="#">Hualien</a>
-            <div className="right-arrow" />
-          </div>
-          <div className="item left">
-            <a className="sign-link" href="#">Kaohsiung</a>
-            <div className="left-arrow" />
+      <div className="image">
+        <div>
+          <div className="road-sign">
+            <div className="item right">
+              <Link className="sign-link" to="/taiwanbar">taipei</Link>
+              <div className="right-arrow" />
+            </div>
+            <div className="item left">
+              <Link className="sign-link" to="/taiwanbar">taichung</Link>
+              <div className="left-arrow" />
+            </div>
           </div>
         </div>
-        <div className="road-sign">
-          <div className="item right">
-            <a className="sign-link" href="#">Nantou</a>
-            <div className="right-arrow" />
-          </div>
-          <div className="item left">
-            <a className="sign-link" href="#">Hsinchu</a>
-            <div className="left-arrow" />
-          </div>
-        </div>
-        <div className="road-sign">
-          <div className="item right">
-            <a className="sign-link" href="#">Tainan</a>
-            <div className="right-arrow" />
-          </div>
-          <div className="item left">
-            <a className="sign-link" href="#">Taoyuan</a>
-            <div className="left-arrow" />
+
+        <div>
+          <div className="road-sign">
+            <div className="item right">
+              <Link className="sign-link" to="/taiwanbar">Hualien</Link>
+              <div className="right-arrow" />
+            </div>
+            <div className="item left">
+              <Link className="sign-link" to="/taiwanbar">Kaohsiung</Link>
+              <div className="left-arrow" />
+            </div>
           </div>
         </div>
-      </>
+
+        <div>
+          <div className="road-sign">
+            <div className="item right">
+              <Link className="sign-link" to="/taiwanbar">Nantou</Link>
+              <div className="right-arrow" />
+            </div>
+            <div className="item left">
+              <Link className="sign-link" to="/taiwanbar">Hsinchu</Link>
+              <div className="left-arrow" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="road-sign">
+            <div className="item right">
+              <Link className="sign-link" to="/taiwanbar">Tainan</Link>
+              <div className="right-arrow" />
+            </div>
+            <div className="item left">
+              <Link className="sign-link" to="/taiwanbar">Taoyuan</Link>
+              <div className="left-arrow" />
+            </div>
+          </div>
+        </div>
+
+      </div>
 
     );
   }

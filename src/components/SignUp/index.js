@@ -27,13 +27,24 @@ class SignUpFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
-  onClick = (event) => {
+  onClick = (e) => {
+    e.preventDefault();
     const { memberName, memberEmail, memberPassword } = this.state;
     const { firebase, history } = this.props;
-
     firebase.doCreateUserWithEmailAndPassword(memberEmail, memberPassword)
       .then((authUser) => {
         console.log(authUser);
+        // const actionCodeSettings = {
+        //   url: `https://ha-ban-lo.firebaseapp.com/account/${firebase.auth.currentUser.uid}`,
+        //   handleCodeInApp: false
+        // };
+        // authUser.user.sendEmailVerification(actionCodeSettings).then(() => {
+        //   // Email sent.
+        //   console.log('send');
+        // }).catch((error) => {
+        //   // An error happened.
+        //   this.setState({ error });
+        // });
         authUser.user.updateProfile({
           displayName: memberName
         });
@@ -53,9 +64,6 @@ class SignUpFormBase extends Component {
       .catch((error) => {
         this.setState({ error });
       });
-
-    console.log('hi');
-    event.preventDefault();
   }
 
   onChange = (event) => {

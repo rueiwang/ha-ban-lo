@@ -8,10 +8,11 @@ import AccountPage from '../Account';
 import GalleryPage from '../Gallery';
 import IdeasPage from '../BartendingIdeas';
 import TaiwanBarPage from '../TaiwanBar';
-import BartendingVideo from '../BartendingVideo';
+import ResetPassword from '../../components/ResetPassword';
 import CocktailDetailPage from '../CocktailDetail';
 import Navigation from '../../components/Navigation';
 import Loading from '../../components/Loading';
+import BackToTop from '../../components/BackToTop';
 
 
 import * as ROUTES from '../../constants/routes';
@@ -204,11 +205,12 @@ class App extends Component {
         >
           <BrowserRouter>
             <Navigation />
-            {this.isLoading ? <Loading /> : ''}
+            {/* {this.isLoading ? <Loading /> : ''} */}
             <Switch>
               <Route
                 exact
                 path="/"
+                // component={LandingPage}
                 render={(props) => {
                   if (userData.authUser === '') {
                     this.isLoading = false;
@@ -252,13 +254,14 @@ class App extends Component {
                 }}
               />
               <Route
-                path="/bartendingvedio"
+                path="/reset-password"
                 render={(props) => {
                   this.isLoading = false;
-                  return <BartendingVideo {...props} />;
+                  return <ResetPassword {...props} />;
                 }}
               />
             </Switch>
+            <BackToTop />
           </BrowserRouter>
         </DataInSessionStorageContext.Provider>
       </AuthUserContext.Provider>

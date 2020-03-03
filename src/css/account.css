@@ -121,7 +121,7 @@
         display: block;
         width: 85px;
         bottom: 30px;
-        right: 25px;
+        left: 25px;
         z-index: 5;
     }
 } 

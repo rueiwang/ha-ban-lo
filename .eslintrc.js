@@ -34,6 +34,7 @@ module.exports = {
         "no-labels": "off",
         "no-unused-expressions" : "off",
         "no-unused-vars": "warn",
+        "no-nested-ternary": "off",
         "max-len": ["error", { "code": 150 }],
         "jsx-a11y/anchor-is-valid": "off",
         "react/jsx-props-no-spreading": "off",
@@ -46,6 +47,7 @@ module.exports = {
         "max-classes-per-file": "off",
         "prefer-destructuring": "off",
         "react/sort-comp": "off",
-        "no-alert": "off"
+        "no-alert": "off",
+        "max-classes-per-file": "off"
   },
 };

@@ -1,15 +1,19 @@
 .wrap-ideas>.intro-area {
     height: 500px;
     color: #ffffff;
-    background-image: url('/imgs/bg-account.jpg');
+    background-image: url('/imgs/bg-account.png');
     background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    /* padding-bottom: 100px; */
     margin-bottom: 100px;
     background-size: cover;
+}
+@media (max-width: 768px) {
+    .wrap-ideas>.intro-area {
+        background-image: url('/imgs/bg-account-mobile.png');
+    }
 }
 
 .wrap-ideas>.intro-area>h2 {

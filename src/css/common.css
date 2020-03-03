@@ -97,7 +97,7 @@ nav>.click-to-close-nav-menu.open {
     background-color: #000000;
     color: #ffffff;
     border: 2px solid #000000;
-    height: 45px;
+    height: 50px;
     letter-spacing: 4px;
     cursor: pointer;
     font-weight: 900;
@@ -199,15 +199,45 @@ nav>.click-to-close-nav-menu.open {
     background-color: #ffffff;
     border: 2px solid #000000;
     border-top: none;
-    width: 310px;
+    width: 315px;
     max-height: 300px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
+/* width */
+.nav-containter>.menu>form .search-suggestion::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .nav-containter>.menu>form .search-suggestion::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-sizing: 0 0 5px 5px;
+  }
+  
+  /* Handle */
+  .nav-containter>.menu>form .search-suggestion::-webkit-scrollbar-thumb {
+    background: #000000;
+    box-sizing: 0 0 5px 5px;
+  }
+  
+  /* Handle on hover */
+  .nav-containter>.menu>form .search-suggestion::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 
 .nav-containter>.menu>form .search-suggestion li {
     border-bottom: 2px solid #000000;
     padding: 10px 5px;
     cursor: pointer;
+}
+
+/* to top btn */
+.to-top-btn {
+    position: fixed;
+    width: 32px;
+    bottom: 65px;
+    right: 15px;
+
 }
 
 /* loading */
@@ -279,7 +309,4 @@ footer>.footer-container>.copyright a>img{
     footer>.footer-container>.copyright p{
         width: 100%;
     }
-        
-   
-  
 }

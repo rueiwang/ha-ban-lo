@@ -11,11 +11,11 @@
     flex-wrap: wrap;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .wrap-landing>.intro-area {
         padding-left: 20px;
         padding-right: 20px;
-
+        background-image: url('/imgs/bg-index-mobile.png');
     }
 }
 
@@ -197,6 +197,12 @@
     margin-bottom: 80px;
 }
 
+@media (max-width: 768px) {
+    .wrap-landing>.main-landing>.intro-searchBar {
+        background-image: url('/imgs/bg-member-1-mobile.png');
+    }  
+}
+
 .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container {
     display: flex;
     max-width: 70%;
@@ -205,6 +211,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    cursor: url(/imgs/cursor.png), auto;
 }
 .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>div {
     width: 50%;
@@ -233,6 +240,7 @@
     justify-content: space-around;
     overflow: hidden;
     padding: 0 5%;
+    z-index: 10;
 }
 .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.image img{
     width: 100px;
@@ -263,11 +271,21 @@
         height: unset;
     }
     .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list,
-    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation,
-    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>div {
+    .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation {
         width: 90%;
         height: 300px;
     }
+    
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.description {
+        width: 90%;
+        height: 400px;
+    }
+    .wrap-landing>.main-landing>.intro-searchBar>.intro-searchBar-container>.image{
+        position: absolute;
+        width: 80%;
+        height: 400px
+    }
+
 
     .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-animation {
         order: 0;
@@ -279,7 +297,14 @@
 }
 
 /* Road sign */
-.road-sign{ 
+.image>div{
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
+}
+.image>div>.road-sign{ 
     height: 200px; 
     width: 10px;
     background-color: #ffffff;
@@ -287,66 +312,76 @@
     font-size: 12px;   
     border-radius: 8px 8px 0 0; 
     transform: translateY(50px);
+    transition: ease-in .3s;
   }
-  .road-sign:nth-child(1){ 
+  .image>div:nth-child(1)>.road-sign{ 
     transform: translateY(60px);
   }
-  .road-sign:nth-child(2){ 
+  .image>div:nth-child(2)>.road-sign{ 
     transform: translateY(70px);
   }
-  .road-sign:nth-child(3){ 
+  .image>div:nth-child(3)>.road-sign{ 
     transform: translateY(50px);
   }
-  .road-sign:nth-child(4){ 
+  .image>div:nth-child(4)>.road-sign{ 
     transform: translateY(80px);
   }  
-  .road-sign>.item {
+  .image>div>.road-sign>.item {
     width: 90px;
     padding: 5px;
-    border: 3px outset #000000;
+    border: 2px outset #000000;
     display: flex;
     align-items: center;
     justify-content: center;  
     transform-origin: center;   
   }
+  .image>div:hover .road-sign{
+    transform: translateY(40px);
+  }
 
-  .road-sign>.item a{ 
+
+  .image>div>.road-sign>.item a{ 
     color: #000000;   
     text-decoration: none;
     text-transform: capitalize;
     letter-spacing: 2px;
   }
-  .road-sign>.right{  
+  .image>div>.road-sign>.right{  
     transform: translate(-40px, 30px);    
     background-color: crimson; 
     border-radius: 10px 50px 50px 10px;
   }
-  .road-sign>.left{
+  .image>div>.road-sign>.left{
     transform: translate(-50px, 40px);
     background-color: teal; 
     border-radius: 50px 10px 10px 50px;   
   }
-  .road-sign:nth-child(3)>.left{ 
+  .image>div:nth-child(3)>.road-sign>.left{ 
     background-color: #eea60b; 
     transform: translate(-50px, 40px) rotate(10deg);
   }
-  .road-sign:nth-child(1)>.right{ 
+  .image>div:nth-child(1)>.road-sign>.right{ 
     background-color: #ffe75e; 
     transform: translate(-40px, 30px) rotate(-5deg);
-
   }
-  .road-sign:nth-child(1)>.left{ 
+  .image>div:nth-child(1)>.road-sign>.left{ 
     background-color: #5b8c5a;
-
   }
-  .road-sign:nth-child(4)>.left{ 
+  .image>div:nth-child(4)>.road-sign>.left{ 
     background-color: #ba6b57;
     transform: translate(-50px, 40px) rotate(-5deg);
-
   }
-  .road-sign:nth-child(3)>.right{ 
+  .image>div:nth-child(3)>.road-sign>.right{ 
     background-color: #eb9788; 
     transform: translate(-40px, 30px) rotate(-10deg);
+  }
+
+  .image>div:hover .road-sign .right{
+    transform: translate(-40px, 30px) rotate(-15deg);
+  }
+  .image>div:hover .road-sign .left{
+    transform: translate(-50px, 40px) rotate(5deg);
+
   }
 
   
@@ -604,5 +639,4 @@
     color: pink;
     line-height: 16px;
 }
-
 

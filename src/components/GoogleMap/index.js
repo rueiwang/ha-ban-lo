@@ -1,20 +1,100 @@
 /* eslint-disable react/no-this-in-sfc */
-/* eslint-disable max-classes-per-file */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
-/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import {
-  GoogleMap, LoadScript, Polygon, InfoWindow, StandaloneSearchBox, Marker, Autocomplete
+  GoogleMap, LoadScript, Polygon, Marker
 } from '@react-google-maps/api';
 import TaiwanCountryData from './taiwanCities.geojson.json';
-import Loading from '../Loading';
 import '../../css/taiwan-bar.css';
 
 const libraries = ['places'];
+const customMapStyle = {
+  disableDefaultUI: true,
+  mapTypeControlOptions: {
+    mapTypeIds: ['roadmap']
+  },
+  styles: [{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+    {
+      featureType: 'administrative.locality',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#d59563' }]
+    },
+    {
+      featureType: 'poi',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#d59563' }]
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'geometry',
+      stylers: [{ color: '#263c3f' }]
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#6b9a76' }]
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry',
+      stylers: [{ color: '#38414e' }]
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry.stroke',
+      stylers: [{ color: '#212a37' }]
+    },
+    {
+      featureType: 'road',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#9ca5b3' }]
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry',
+      stylers: [{ color: '#746855' }]
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry.stroke',
+      stylers: [{ color: '#1f2835' }]
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#f3d19c' }]
+    },
+    {
+      featureType: 'transit',
+      elementType: 'geometry',
+      stylers: [{ color: '#2f3948' }]
+    },
+    {
+      featureType: 'transit.station',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#d59563' }]
+    },
+    {
+      featureType: 'water',
+      elementType: 'geometry',
+      stylers: [{ color: '#17263c' }]
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: '#515c6d' }]
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.stroke',
+      stylers: [{ color: '#17263c' }]
+    }]
+};
 class MapContainer extends Component {
   constructor(props) {
     super(props);
-    this.processData = this.processData.bind(this);
     this.state = {
       taiwan: [],
       name: []
@@ -22,12 +102,12 @@ class MapContainer extends Component {
   }
 
   componentDidMount() {
-    this.processData();
+    this.transformGeojsonFileToPaths();
   }
 
-  processData() {
-    const { taiwan, name, polygonPath } = this.state;
-    TaiwanCountryData.features.map((item, i) => {
+  transformGeojsonFileToPaths = () => {
+    const { taiwan, name } = this.state;
+    TaiwanCountryData.features.map((item) => {
       name.push(item.properties.name);
       if (item.geometry.coordinates.length === 1) {
         // 如果行政區域只有一塊，例如南投縣
@@ -68,14 +148,12 @@ class MapContainer extends Component {
 
       this.setState({
         taiwan: [...taiwan],
-        name: [...name],
-        polygonPath: [...taiwan]
+        name: [...name]
       });
     });
   }
 
   render() {
-    const { google } = this.props;
     const { taiwan, name } = this.state;
     return (
       <LoadScript
@@ -89,56 +167,58 @@ class MapContainer extends Component {
     );
   }
 }
-function handleMouseOver(e) {
-  this.setOptions({
-    fillColor: '#000'
-  });
+
+function handleMouseOver() {
+  this.setOptions({ fillColor: '#000' });
 }
 
-function handleMouseOut(e) {
-  this.setOptions({
-    fillColor: '#fff'
-  });
+function handleMouseOut() {
+  this.setOptions({ fillColor: '#fff' });
 }
-
-
 class Map extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      mousePosition: {
+      mapCenter: {
+        lat: 23.605525, lng: 119.610184
+      },
+      markerPosition: {
         lat: 23.858987,
         lng: 120.917631
       },
       targetName: 'Nantou City',
       isMapLoad: false,
       resultPlaces: [],
-      openList: false
+      isListOpen: false
     };
 
     this.places = null;
-    this.getPosition = this.getPosition.bind(this);
-    this.getStars = this.getStars.bind(this);
-    this.loadMap = this.loadMap.bind(this);
-    this.openList = this.openList.bind(this);
     this.container = React.createRef();
   }
 
   componentDidMount() {
-
+    window.addEventListener('resize', this.getNewCenterWithRWD);
+    this.getNewCenterWithRWD();
   }
 
   componentDidUpdate() {
     const { isMapLoad } = this.state;
     if (isMapLoad) {
-      console.log('update');
       this.places = new window.google.maps.places.PlacesService(this.container.current);
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.getNewCenterWithRWD);
+  }
 
-  getPosition(e, where) {
+  getNewCenterWithRWD = () => {
+    const ifMobile = window.innerWidth < 768;
+    ifMobile ? this.setState({ mapCenter: { lat: 23.858987, lng: 120.917631 } })
+      : this.setState({ mapCenter: { lat: 23.605525, lng: 119.610184 } });
+  }
+
+  getMousePosition = (e, where) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
     const mylocation = new window.google.maps.LatLng(lat, lng);
@@ -148,61 +228,44 @@ class Map extends Component {
       query: `bar in ${where}`
     };
     this.places.textSearch(requestObj, (results, status) => {
-      console.log('status', status);
-      console.log('Retrieved data:');
-      console.log(results);
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
         this.setState({
-          mousePosition: {
+          markerPosition: {
             lat,
             lng
           },
           targetName: where,
           resultPlaces: [...results],
-          openList: true
+          isListOpen: true
         });
       }
     });
   }
 
-  getStars(rating) {
+  getStarsIconsByRating = (rating) => {
     const ratingInteger = Math.floor(rating);
     const imgTag = [];
     for (let i = 0; i < ratingInteger; i += 1) {
-      imgTag.push(<img src="./imgs/star.png" alt="star" />);
+      imgTag.push(<img src="./imgs/star.png" alt="star" key={i} />);
     }
     return imgTag;
   }
 
-  loadMap() {
-    this.setState({
-      isMapLoad: true
-    });
-  }
+  loadMap = () => this.setState({ isMapLoad: true });
 
-  openList() {
-    const { openList } = this.state;
-    if (openList) {
-      this.setState({
-        openList: false
-      });
-    } else {
-      this.setState({
-        openList: true
-      });
-    }
+  openList = () => {
+    const { isListOpen } = this.state;
+    this.setState({ isListOpen: !isListOpen });
   }
-
 
   render() {
     const { taiwan, name } = this.props;
-    const { openList } = this.state;
     const {
-      mousePosition, resultPlaces, targetName
+      markerPosition, resultPlaces, targetName, mapCenter, isListOpen
     } = this.state;
     return (
       <>
-        <ul className={`results-list ${openList ? 'open' : ''}`}>
+        <ul className={`results-list ${isListOpen ? 'open' : ''}`}>
           <div className="title" onClick={this.openList}>
             <h2>Which City do you want to go?</h2>
             <p>
@@ -213,132 +276,14 @@ Bar in
           {
             resultPlaces.length === 0
               ? <h3>Click the Map!</h3>
-              : resultPlaces.map((result, i) => (
-                <li key={result.id}>
-                  <a href={`https://www.google.com/maps?daddr=${result.geometry.location.lat()},${result.geometry.location.lng()}&hl=en`} title="Check on Google" target="_blank">
-                    <h3>{result.name}</h3>
-                    <div className="result-description">
-                      <p className="rating">
-                        {result.rating}
-                        <span className="stars">
-                          {this.getStars(result.rating)}
-                        </span>
-                        (
-                        {result.user_ratings_total}
-)
-                      </p>
-                      <p className="address">
-                        {result.price_level}
-                        {result.formatted_address}
-                      </p>
-                      {
-                          result.opening_hours
-                            ? result.opening_hours.open_now ? (<p className="is-open open">OPEN</p>) : (<p className="is-open">CLOSED</p>)
-                            : ''
-                    }
-                    </div>
-                    <div className="result-pic">
-                      {
-                      result.photos
-                        ? <img src={result.photos[0].getUrl()} alt={result.name} />
-                        : <img src="./imgs/beer.png" alt={result.name} />
-                    }
-                    </div>
-                  </a>
-                </li>
-              ))
+              : <SearchResultOfBar resultPlaces={resultPlaces} getStarsIconsByRating={this.getStarsIconsByRating} />
           }
         </ul>
         <GoogleMap
           zoom={8}
-          center={{
-            lat: 23.605525, lng: 119.610184
-          }}
+          center={mapCenter}
           id="map"
-          options={{
-            disableDefaultUI: true,
-            mapTypeControlOptions: {
-              mapTypeIds: ['roadmap']
-            },
-            styles: [{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
-              { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-              { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-              {
-                featureType: 'administrative.locality',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#d59563' }]
-              },
-              {
-                featureType: 'poi',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#d59563' }]
-              },
-              {
-                featureType: 'poi.park',
-                elementType: 'geometry',
-                stylers: [{ color: '#263c3f' }]
-              },
-              {
-                featureType: 'poi.park',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#6b9a76' }]
-              },
-              {
-                featureType: 'road',
-                elementType: 'geometry',
-                stylers: [{ color: '#38414e' }]
-              },
-              {
-                featureType: 'road',
-                elementType: 'geometry.stroke',
-                stylers: [{ color: '#212a37' }]
-              },
-              {
-                featureType: 'road',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#9ca5b3' }]
-              },
-              {
-                featureType: 'road.highway',
-                elementType: 'geometry',
-                stylers: [{ color: '#746855' }]
-              },
-              {
-                featureType: 'road.highway',
-                elementType: 'geometry.stroke',
-                stylers: [{ color: '#1f2835' }]
-              },
-              {
-                featureType: 'road.highway',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#f3d19c' }]
-              },
-              {
-                featureType: 'transit',
-                elementType: 'geometry',
-                stylers: [{ color: '#2f3948' }]
-              },
-              {
-                featureType: 'transit.station',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#d59563' }]
-              },
-              {
-                featureType: 'water',
-                elementType: 'geometry',
-                stylers: [{ color: '#17263c' }]
-              },
-              {
-                featureType: 'water',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#515c6d' }]
-              },
-              {
-                featureType: 'water',
-                elementType: 'labels.text.stroke',
-                stylers: [{ color: '#17263c' }]
-              }]
-          }}
+          options={customMapStyle}
           onLoad={this.loadMap}
         >
           {
@@ -346,7 +291,7 @@ Bar in
           <Polygon
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
-            onClick={(e) => this.getPosition(e, `${name[i]}`)}
+            onClick={(e) => this.getMousePosition(e, `${name[i]}`)}
             paths={country}
             options={{
               strokeColor: '#000',
@@ -361,7 +306,7 @@ Bar in
       }
           <Marker
             icon="./imgs/placeholder.png"
-            position={mousePosition}
+            position={markerPosition}
             animation={1}
           />
           <div className="place-service-container" ref={this.container} />
@@ -371,6 +316,53 @@ Bar in
     );
   }
 }
+
+const SearchResultOfBar = (props) => {
+  const { resultPlaces, getStarsIconsByRating } = props;
+  return (
+    resultPlaces.map((result) => (
+      <li key={result.id}>
+        <a
+          href={`https://www.google.com/maps?daddr=${result.geometry.location.lat()},${result.geometry.location.lng()}&hl=en`}
+          title="Check on Google"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h3>{result.name}</h3>
+          <div className="result-description">
+            <p className="rating">
+              {result.rating}
+              <span className="stars">
+                {getStarsIconsByRating(result.rating)}
+              </span>
+              (
+              {result.user_ratings_total}
+              )
+            </p>
+            <p className="address">
+              {result.price_level}
+              {result.formatted_address}
+            </p>
+            {
+              result.opening_hours
+                ? result.opening_hours.open_now
+                  ? (<p className="is-open open">OPEN</p>)
+                  : (<p className="is-open">CLOSED</p>)
+                : ''
+                      }
+          </div>
+          <div className="result-pic">
+            {
+              result.photos
+                ? <img src={result.photos[0].getUrl()} alt={result.name} />
+                : <img src="./imgs/beer.png" alt={result.name} />
+                      }
+          </div>
+        </a>
+      </li>
+    ))
+  );
+};
 
 
 export default MapContainer;

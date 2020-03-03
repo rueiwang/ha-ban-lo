@@ -1,15 +1,20 @@
 .wrap-gallery>.intro-area {
     height: 500px;
     color: #ffffff;
-    background-image: url('/imgs/bg-classic.jpg');
+    background-image: url('/imgs/bg-classic.png');
     background-position: center;
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    /* padding-bottom: 100px; */
 }
+@media (max-width: 768x) {
+    .wrap-gallery>.intro-area {
+        background-image: url('/imgs/bg-classic-mobile.png');
+    }
+}
+
 
 .wrap-gallery>.intro-area>h2 {
     color: #ffffff;

@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
-import { Link, Prompt } from 'react-router-dom';
-import { Dialog } from 'evergreen-ui';
+import { Link } from 'react-router-dom';
 import photo from './assets/photo-camera.png';
 import correct from './assets/correct.png';
 import required from './assets/required.png';
@@ -11,9 +10,7 @@ import Loading from '../Loading';
 import '../../css/account-create.css';
 
 
-function generateKey(pre) {
-  return `${pre}_${Date.now()}`;
-}
+const generateKey = (pre) => `${pre}_${Date.now()}`;
 
 const FORM_INITAIL_STATE = {
   inputing: false,
@@ -58,17 +55,7 @@ export default class Create extends Component {
       filter: 'creating-mode',
       isShown: false
     };
-    this.onInputChangeStr = this.onInputChangeStr.bind(this);
-    this.onInputChangeAry = this.onInputChangeAry.bind(this);
-    this.addNewIngredientInput = this.addNewIngredientInput.bind(this);
-    this.removeIngredientInput = this.removeIngredientInput.bind(this);
-    this.clearAllInput = this.clearAllInput.bind(this);
-    this.writeInDatabase = this.writeInDatabase.bind(this);
     this.img = React.createRef();
-
-    this.editCreations = this.editCreations.bind(this);
-    this.updateDatabase = this.updateDatabase.bind(this);
-    this.deleteDatabase = this.deleteDatabase.bind(this);
   }
 
   componentDidMount() {
@@ -77,18 +64,11 @@ export default class Create extends Component {
   }
 
   componentWillUnmount() {
-    // eslint-disable-next-line no-restricted-globals
-    // 若尚未發布就離開記得提醒
-    // eslint-disable-next-line no-restricted-globals
-    // const ifExist = confirm('Are yiu sure to quit this page?');
     this.clearAllInput();
-    this.setState = (state, callback) => {
-      // eslint-disable-next-line no-useless-return
-      return;
-    };
+    this.setState = (state, callback) => '';
   }
 
-  editCreations(e, id) {
+  editCreations = (e, id) => {
     const { creations, ingredientsInputFields, errors } = this.state;
     const targetCreation = creations.filter((creation) => creation.cocktail_id === id);
     ingredientsInputFields.splice(0, ingredientsInputFields.length);
@@ -132,7 +112,7 @@ export default class Create extends Component {
     });
   }
 
-  getCreations() {
+  getCreations = () => {
     const { firebase, userData } = this.props;
     const { creations } = this.state;
     console.log(userData.authUser.uid);
@@ -146,7 +126,7 @@ export default class Create extends Component {
       });
   }
 
-  validateForm(errors) {
+  validateForm = (errors) => {
     let valid = true;
     Object.values(errors).forEach(
       // if we have an error string set valid to false
@@ -167,31 +147,26 @@ export default class Create extends Component {
     return valid;
   }
 
-  writeInDatabase(e) {
+  writeInDatabase = (e) => {
     const { firebase, userData } = this.props;
     const {
       errors,
       cocktailName,
       cocktailPic,
-      previewPic,
       cocktailGlass,
       cocktailGlassType,
       cocktailCategory,
-      cocktailIngredientsType,
       cocktailIntro,
       cocktailTags,
-      ingredientsInputFields
+      ingredientsInputFields,
+      isShown
     } = this.state;
 
-    if (ingredientsInputFields.length < 2) {
-      this.setState({
-        isShown: true
-      });
-      return;
-    }
-
-    if (!this.validateForm(errors)) {
+    if (!this.validateForm(errors) || !isShown) {
       alert('Please complete the form.');
+      this.setState({
+        isShown: !isShown
+      });
       return;
     }
 
@@ -262,33 +237,28 @@ export default class Create extends Component {
       });
   }
 
-  updateDatabase(e) {
+  updateDatabase = (e) => {
     const { firebase, userData } = this.props;
     const {
       errors,
       cocktailId,
       cocktailName,
       cocktailPic,
-      previewPic,
       cocktailGlass,
       cocktailGlassType,
       cocktailCategory,
-      cocktailIngredientsType,
       cocktailIntro,
       cocktailTags,
       ingredientsInputFields,
-      creations
+      creations,
+      isShown
     } = this.state;
 
-
-    if (ingredientsInputFields.length < 2) {
-      this.setState({
-        isShown: true
-      });
-      return;
-    }
-    if (!this.validateForm(errors)) {
+    if (!this.validateForm(errors) || !isShown) {
       alert('Please complete the form.');
+      this.setState({
+        isShown: !isShown
+      });
       return;
     }
 
@@ -358,7 +328,7 @@ export default class Create extends Component {
         measuresArray.push(item.measureValue);
         cocktailIngredientsTypeArray.push(item.cocktailIngredientsType);
       });
-      // 全部的創作酒譜
+
       const fieldObj = {
         cocktail_category: cocktailCategory,
         cocktail_glass: cocktailGlass,
@@ -380,21 +350,16 @@ export default class Create extends Component {
               this.setState({
                 isLoading: false
               });
-
             })
             .catch((updateError) => console.log('updateError', updateError));
         });
     }
   }
 
-  deleteDatabase(e) {
+  deleteDatabase = (e) => {
     const { firebase, userData } = this.props;
-    const { cocktailId, cocktailName } = this.state;
+    const { cocktailId } = this.state;
 
-    // eslint-disable-next-line no-restricted-globals
-    // const ifDelete = confirm(`Are you sure to delete ${cocktailName}?`);
-    // if (ifDelete) {
-    // }
     this.setState({
       isLoading: true
     });
@@ -417,7 +382,7 @@ export default class Create extends Component {
       .catch((delError) => console.log('delError', delError));
   }
 
-  clearAllInput(e) {
+  clearAllInput = (e) => {
     const { errors, ingredientsInputFields } = this.state;
     errors.cocktailName = '';
     errors.cocktailPic = 'Only accept jpg file.';
@@ -443,26 +408,23 @@ export default class Create extends Component {
     });
   }
 
-  previewPic(e) {
+  previewPic = (e) => {
     const { files } = e.target;
     const { errors } = this.state;
     if (!files) {
       errors.cocktailPic = 'Requiered Field';
       return;
     }
-    // const imgUrl = URL.createObjectURL(files[0]);
-    console.log(files[0]);
     const reader = new FileReader();
     reader.readAsDataURL(files[0]);
-    reader.onload = (e) => {
-      const imgUrl = e.target.result;
+    reader.onload = (event) => {
+      const imgUrl = event.target.result;
       const { size } = files[0];
-      console.log(files[0]);
       this.ifPicValid(imgUrl, size, files[0]);
     };
   }
 
-  ifPicValid(imgUrl, size, file) {
+  ifPicValid = (imgUrl, size, file) => {
     let isValid = false;
     const { errors } = this.state;
     // 檔案大小限制 1MB
@@ -474,10 +436,10 @@ export default class Create extends Component {
     img.onload = () => {
       const picWidth = img.width;
       const picHeight = img.height;
-      const picRatio = picWidth / picHeight;
+      const ifSquarePic = picWidth / picHeight !== 1;
       if (size > maxSize) {
         errors.cocktailPic = 'Invalid size. Must small than 1 MB.';
-      } else if (picRatio !== 1) {
+      } else if (ifSquarePic) {
         errors.cocktailPic = 'Must be a square photo.';
       } else if (picWidth > maxWidth || picWidth < minWidth) {
         errors.cocktailPic = 'Invalid size. Need to be 400x400 to 700x700';
@@ -496,21 +458,19 @@ export default class Create extends Component {
           errors,
           previewPic: null
         });
-        return isValid;
       }
     };
   }
 
   // 輸入的值在 state 中存為字串
-  onInputChangeStr(e) {
+  onInputChangeStr = (e) => {
     const { name, value } = e.target;
-    const { ingredients, errors } = this.state;
+    const { errors } = this.state;
     const { DataInSessionStorage } = this.props;
-
+    const ifRepeated = DataInSessionStorage.cacheData.findIndex((item) => this.noSpace(item.cocktail_name) === this.noSpace(value)) !== -1;
     switch (name) {
       case 'cocktailName':
         // 去除空白+變小寫
-        const ifRepeated = DataInSessionStorage.cacheData.findIndex((item, i) => this.noSpace(item.cocktail_name) === this.noSpace(value)) !== -1;
         if (ifRepeated) {
           errors.cocktailName = 'Already in Data Base';
         } else if (value.trim() === '') {
@@ -569,19 +529,19 @@ export default class Create extends Component {
         cocktailGlass: value
       });
     } else {
-      this.setState({ errors, [name]: value, inputing: true });
+      this.setState({ errors, [name]: value });
     }
   }
 
   // 輸入的值在 state 中存為陣列
-  onInputChangeAry(name, value, index, type) {
+  onInputChangeAry = (name, value, index, type) => {
     const { ingredientsInputFields, errors } = this.state;
     const { DataInSessionStorage } = this.props;
+    const ifRepeated = DataInSessionStorage.ingredientData.findIndex((item) => this.noSpace(item.ingredient_name) === this.noSpace(value)) === -1;
+    const ifTwoIngredient = ingredientsInputFields.length < 2;
     switch (name) {
       case 'cocktailIngredients':
-        // 去除空白+變小寫
-        const ifRepeated = DataInSessionStorage.ingredientData.findIndex((item, i) => this.noSpace(item.ingredient_name) === this.noSpace(value)) !== -1;
-        if (!ifRepeated) {
+        if (ifRepeated) {
           errors.cocktailIngredients[index].ingredient = 'Cannot find in Data Base';
         } else if (value.trim() === '') {
           errors.cocktailIngredients[index].ingredient = 'Required Field';
@@ -611,15 +571,15 @@ export default class Create extends Component {
       targetArray[0].measureValue = value;
     }
     ingredientsInputFields[index] = targetArray[0];
-    console.log(ingredientsInputFields);
     this.setState({
       errors,
-      ingredientsInputFields: [...ingredientsInputFields]
+      ingredientsInputFields: [...ingredientsInputFields],
+      isShown: ifTwoIngredient
     });
   }
 
   // 點擊按鈕新增原料輸入框，最多六項
-  addNewIngredientInput(index) {
+  addNewIngredientInput = (index) => {
     const { ingredientsInputFields, errors } = this.state;
     if (ingredientsInputFields.length > 5) {
       return;
@@ -644,11 +604,9 @@ export default class Create extends Component {
   }
 
   // 點擊刪除原料輸入框，不能小於一
-  removeIngredientInput(index) {
-    console.log(index);
+  removeIngredientInput = (index) => {
     const { ingredientsInputFields, errors } = this.state;
     if (ingredientsInputFields.length === 1) {
-      console.log('不能刪除');
       return;
     }
     errors.cocktailIngredients.splice(index, 1);
@@ -659,34 +617,18 @@ export default class Create extends Component {
     });
   }
 
-  // 包含數字及符號為 true 表示 invalid
-  ifNum(value) {
-    const reg = new RegExp(/[0-9]|[%&';=$、+@*()x22]/);
-    return reg.test(value);
-  }
+  ifNum = (value) => new RegExp(/[0-9]|[%&';=$、+@*()x22]/).test(value);
 
-  // 只有數字
-  onlyNum(value) {
-    const reg = new RegExp(/^[0-9]?.*\w$/);
-    return reg.test(value);
-  }
+  onlyNum = (value) => new RegExp(/^[0-9]?.*\w$/).test(value);
 
-  // 去除空白+變小寫
-  noSpace(str) {
-    return str.replace(/[\s]*$/g, '').toLowerCase();
-  }
+  noSpace = (str) => str.replace(/[\s]*$/g, '').toLowerCase();
 
-  upperCaseFirstLetter(str) {
-    const array = str.split('');
-    return array[0].toUpperCase();
-  }
+  strTransformToArray = (value) => value.split(' ');
 
-  // string to array
-  strTransformToArray(value) {
-    return value.split(' ');
-  }
+  upperCaseFirstLetter = (str) => this.strTransformToArray(str)[0].toUpperCase();
 
-  validStatus(errorMessage) {
+
+  validStatus = (errorMessage) => {
     if (errorMessage === 'OK') {
       return 'correct';
     }
@@ -706,7 +648,6 @@ export default class Create extends Component {
     const {
       isLoading,
       cocktailName,
-      cocktailPic,
       cocktailGlass,
       cocktailCategory,
       cocktailIntro,
@@ -716,8 +657,6 @@ export default class Create extends Component {
       previewPic,
       creations,
       filter,
-      inputing,
-      ifDelete,
       isShown
     } = this.state;
     const { DataInSessionStorage } = this.props;
@@ -729,7 +668,6 @@ export default class Create extends Component {
           <form className="create-form" key={formKey}>
             <div className="top">
               <div className="text-area">
-                {/* 不能空白、名字不能與資料庫重複、不能有數字 */}
                 <label htmlFor="create-cocktail-name">
 Cocktail Name
                 </label>
@@ -746,7 +684,6 @@ Cocktail Name
                   <img src={this.validStatus(errors.cocktailName) === 'correct' ? correct : required} className="correct" alt="" />
                 </label>
                 <p className="create-remind">{errors.cocktailName}</p>
-                {/* 不能空白、必須是英文字母、三個單字以下 */}
                 <label htmlFor="create-cocktail-category">
 Cocktail Category
                 </label>
@@ -763,7 +700,6 @@ Cocktail Category
                   <img src={this.validStatus(errors.cocktailCategory) === 'correct' ? correct : required} className="correct" alt="" />
                 </label>
                 <p className="create-remind">{errors.cocktailCategory}</p>
-                {/* 不能空白、必須是英文字母、三個單字以下 */}
                 <label htmlFor="create-cocktail-tag">
 Flavor of Cocktail
                 </label>
@@ -803,7 +739,6 @@ Glass for Cocktail
                 <p className="create-remind">{errors.cocktailGlassType}</p>
               </div>
               <div className="upload-pic">
-                {/* 不能空白、尺寸 */}
                 <label htmlFor="create-cocktail-pic" className={`${this.validStatus(errors.cocktailPic)}`}>
                   <div className="preview-pic">
                     <img src={previewPic} alt="" ref={this.img} />
@@ -821,7 +756,6 @@ Glass for Cocktail
             </div>
             <div className="bottom">
               <div className="intro-area">
-                {/* 不能空白，最少 10 個單字、最多有 100 個單字，以空格計算 */}
                 <label htmlFor="create-cocktail-intro">
 Introduction for Cocktail
                 </label>
@@ -843,7 +777,6 @@ Introduction for Cocktail
                   </div>
                   <button className="plus" type="button" onClick={(e) => this.addNewIngredientInput()}>+</button>
                 </label>
-                {/* 最少兩樣原料、不能空白、只能跟資料庫符合 */}
                 {
                 ingredientsInputFields.map((item, i) => (
                   <Ingredients
@@ -879,8 +812,6 @@ Introduction for Cocktail
               <button className="clear" type="button" onClick={(e) => this.clearAllInput(e)}>Clear</button>
             </div>
           </form>
-
-          {/* Creation list */}
           <div className="creations">
             <h2>Your Creation</h2>
             <div className="slide-box">
@@ -951,7 +882,6 @@ Introduction for Cocktail
   }
 }
 
-
 class Ingredients extends Component {
   constructor(props) {
     super(props);
@@ -960,10 +890,6 @@ class Ingredients extends Component {
       ingredientInputValue: '',
       updateSuggestion: []
     };
-
-    this.onChange = this.onChange.bind(this);
-    this.anotherField = this.anotherField.bind(this);
-    this.renderOptions = this.renderOptions.bind(this);
   }
 
   componentDidMount() {
@@ -971,16 +897,14 @@ class Ingredients extends Component {
   }
 
   // 輸入的值在 state 中存為陣列
-  onChange(e, index) {
+  onChange = (e, index) => {
     e.preventDefault();
     const { onInputChangeAry } = this.props;
     const { name, value } = e.target;
     onInputChangeAry(name, value, index);
     if (name === 'cocktailIngredients') {
       this.setState({
-        isFocused: true
-      });
-      this.setState({
+        isFocused: true,
         ingredientInputValue: value
       });
       this.renderOptions();
@@ -988,17 +912,16 @@ class Ingredients extends Component {
   }
 
   // 點擊選擇建議
-  chooseSuggestion(e) {
+  chooseSuggestion = (e) => {
     const { onInputChangeAry } = this.props;
     const { dataset } = e.target;
     onInputChangeAry('cocktailIngredients', dataset.value, Number(dataset.index), dataset.type);
-
     this.setState({
       isFocused: false
     });
   }
 
-  renderOptions() {
+  renderOptions = () => {
     const { ingredientsData } = this.props;
     const { ingredientInputValue } = this.state;
     const updateData = ingredientsData
@@ -1014,7 +937,7 @@ class Ingredients extends Component {
     }
   }
 
-  anotherField(e, index) {
+  anotherField = (e, index) => {
     const { removeIngredientInput } = this.props;
     removeIngredientInput(index);
   }
@@ -1035,7 +958,6 @@ class Ingredients extends Component {
         <div className="create-cocktail-ingredient-field">
           <div className="field">
             <label className="input-icon">
-              {/* 唯讀，只能選資料庫有的原料 */}
               <input
                 name="cocktailIngredients"
                 onChange={(e) => this.onChange(e, index)}
@@ -1044,10 +966,9 @@ class Ingredients extends Component {
                 type="text"
                 value={ingredientValue}
               />
-              {/* eslint-disable-next-line react/self-closing-comp */}
               <ul className={`auto-complete-list ${isFocused ? 'down' : ''}`}>
                 {
-                  updateSuggestion.map((updateItem, i) => (
+                  updateSuggestion.map((updateItem) => (
                     <li
                       data-value={updateItem.ingredient_name}
                       data-type={updateItem.ingredient_type}

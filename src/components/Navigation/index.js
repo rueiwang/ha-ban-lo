@@ -110,9 +110,6 @@ CLASSIC COCKTAIL
               <li>
                 <Link to="/taiwanbar">TAIWAN BAR</Link>
               </li>
-              <li>
-                <Link to="/bartendingvedio">LEARN BARTENDING</Link>
-              </li>
             </ul>
             <form className="search">
               <div className="search-auto-complete">
