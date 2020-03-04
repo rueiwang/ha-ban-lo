@@ -156,6 +156,28 @@
     font-weight: 900;
     font-size: 20px;
 }
+
+.ingredients-wrap>.shopping-list-area>.shopping-list {
+    min-height: 200px;
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>.empty-shopping-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.ingredients-wrap>.shopping-list-area>.shopping-list>.empty-shopping-list h3 {
+    font-size: 12px;
+    width: 150px;
+    text-align: center;
+}
+.ingredients-wrap>.shopping-list-area>.shopping-list>.empty-shopping-list img {
+    width: 50px;
+    margin-bottom: 10px;
+}
 .ingredients-wrap>.shopping-list-area>.shopping-list>label {
     display: block;
     padding: 5px 0;
@@ -215,7 +237,6 @@
     border-radius: 2px;
 }
 
-/* .ingredients-wrap>.shopping-list-area>.shopping-list>label:hover .checkmark, */
 .ingredients-wrap>.shopping-list-area>.shopping-list>label>input[type=checkbox]:checked ~ .checkmark {
     background-color:  rgba(253,162,49,.5);
 }
@@ -255,6 +276,7 @@
 
 }
 
+
 .ingredients-wrap>div {
     margin-bottom: 30px;
 }
@@ -263,6 +285,7 @@
     font-weight: 900;
     font-size: 32px;
     margin-bottom: 10px;
+    text-transform: capitalize;
 }
 
 
@@ -270,6 +293,7 @@
     overflow: hidden;
     height: 150px;
     position: relative;
+    padding-right: 40px;
 }
 
 .ingredients-wrap>div>.slide-box button {

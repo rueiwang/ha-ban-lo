@@ -1,10 +1,5 @@
-/* eslint-disable max-classes-per-file */
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-
 import { withFirebase } from '../Context/Firebase';
-import * as ROUTES from '../../constants/routes';
 
 const SignInWithAccount = () => (
   <>
@@ -13,12 +8,10 @@ const SignInWithAccount = () => (
   </>
 );
 
-function signIn(firebase, provider, history, account) {
+const signInWithAccount = (firebase, provider, account) => {
   firebase.doSignInWithAccount(provider)
     .then((result) => {
-      // The signed-in user info.
       const { user } = result;
-      console.log(user);
       const documentRefString = firebase.db.collection('members').doc(`${user.uid}`);
       const recipeRef = firebase.db.doc(documentRefString.path);
       const token = `${account}Token`;
@@ -29,62 +22,60 @@ function signIn(firebase, provider, history, account) {
         ref: recipeRef,
         [token]: result.credential.accessToken
       });
-      firebase.member(user.uid).collection('member_ingredient');
-      firebase.member(user.uid).collection('member_collection_cocktail');
-      history.push(`/account/${user.uid}`);
     })
-    // .then((s) => {
-    //   console.log(s);
-    // })
     .catch((error) => {
-      alert(error.message);
+      console.log(error.message);
     });
-}
+};
 
 class SignInWithGoogleBase extends Component {
-  onClick = (e) => {
+  singnInWithGoogle = (e) => {
     e.preventDefault();
-    console.log('hi');
-    const { firebase, history } = this.props;
+    const { firebase } = this.props;
     const provider = new firebase.account.GoogleAuthProvider();
-    signIn(firebase, provider, history, 'google');
+    signInWithAccount(firebase, provider, 'google');
   }
 
   render() {
     return (
-      <button type="button" id="google" onClick={this.onClick}>
-        <img src="../imgs/icon_google.png" alt="FB" />
-      </button>
+      <>
+        <input
+          id="google"
+          type="image"
+          src="../imgs/icon_google.png"
+          alt=""
+          onClick={this.singnInWithGoogle}
+        />
+      </>
     );
   }
 }
 
-const SignInWithGoogle = compose(
-  withRouter,
-  withFirebase
-)(SignInWithGoogleBase);
+const SignInWithGoogle = withFirebase(SignInWithGoogleBase);
 
 class SignInWithFbBase extends Component {
-  onClick = (e) => {
+  signInWithFb = (e) => {
     e.preventDefault();
-    console.log('hi');
-    const { firebase, history } = this.props;
+    const { firebase } = this.props;
     const provider = new firebase.account.FacebookAuthProvider();
-    signIn(firebase, provider, history, 'fb');
+    signInWithAccount(firebase, provider, 'fb');
   }
 
   render() {
     return (
-      <button type="button" id="facebook" onClick={this.onClick}>
-        <img src="../imgs/icon_fb.png" alt="FB" />
-      </button>
+      <>
+        <input
+          id="facebook"
+          type="image"
+          src="../imgs/icon_fb.png"
+          alt=""
+          onClick={this.signInWithFb}
+        />
+      </>
     );
   }
 }
 
-const SignInWithFb = compose(
-  withRouter,
-  withFirebase
-)(SignInWithFbBase);
+const SignInWithFb = withFirebase(SignInWithFbBase);
 
 export default SignInWithAccount;

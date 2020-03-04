@@ -2,19 +2,45 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import '../../css/account-collection.css';
 
-class CollectionItems extends Component {
+const MoreInfoAboutThisItem = (props) => {
+  const { isShown, restIngredientsAmount } = props;
+  return (
+    <div className={`more-info-cover ${isShown ? 'show' : ''}`}>
+      {
+      restIngredientsAmount === 0
+        ? (
+          <>
+            <p>Congrat!</p>
+            <p>
+you can make this by yourself!
+            </p>
+          </>
+        )
+        : (
+          <>
+            <p>To make this cocktail,</p>
+            <p>
+You still have
+              <span>{restIngredientsAmount}</span>
+ingredients to buy!
+            </p>
+          </>
+
+        )
+    }
+    </div>
+  );
+};
+class CollectionItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
       isShown: false,
-      restAmount: 0
+      restIngredientsAmount: 0
     };
-    this.showModal = this.showModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
   }
 
-  showModal(e, ingredients) {
+  showModal = (e, ingredients) => {
     const { isShown } = this.state;
     const { userIngredients } = this.props;
     const userAlreadyHave = userIngredients.filter((item) => item.status === 1);
@@ -26,22 +52,18 @@ class CollectionItems extends Component {
         }
       });
     });
-    const restAmount = ingredients.length - matchArray.length;
+    const restIngredientsAmount = ingredients.length - matchArray.length;
     this.setState({
       isShown: !isShown,
-      restAmount
+      restIngredientsAmount
     });
   }
 
-  closeModal(e) {
-    this.setState({
-      isShown: false
-    });
-  }
+  closeModal = () => this.setState({ isShown: false });
 
   render() {
     const { item, category } = this.props;
-    const { isShown, restAmount } = this.state;
+    const { isShown, restIngredientsAmount } = this.state;
     return (
       <li>
         <input
@@ -52,8 +74,8 @@ class CollectionItems extends Component {
           onClick={(e) => this.showModal(e, item.cocktail_ingredients)}
           onMouseOver={(e) => this.showModal(e, item.cocktail_ingredients)}
           onFocus={(e) => this.showModal(e, item.cocktail_ingredients)}
-          onMouseOut={(e) => this.closeModal(e)}
-          onBlur={(e) => this.closeModal(e)}
+          onMouseOut={this.closeModal}
+          onBlur={this.closeModal}
         />
         <Link to={{
           pathname: '/cocktailDetail',
@@ -67,31 +89,7 @@ class CollectionItems extends Component {
           <img src={`../imgs/${category}.png`} alt="icon" />
           <h5>{item.cocktail_name}</h5>
         </Link>
-
-        <div className={`more-info-cover ${isShown ? 'show' : ''}`}>
-          {
-            restAmount === 0
-              ? (
-                <>
-                  <p>Congrat!</p>
-                  <p>
-you can make this by yourself!
-                  </p>
-                </>
-              )
-              : (
-                <>
-                  <p>To make this cocktail,</p>
-                  <p>
-You still have
-                    <span>{restAmount}</span>
-ingredients to buy!
-                  </p>
-                </>
-
-              )
-          }
-        </div>
+        <MoreInfoAboutThisItem isShown={isShown} restIngredientsAmount={restIngredientsAmount} />
       </li>
     );
   }
@@ -110,7 +108,6 @@ export default class MyCollection extends Component {
     userData.userCollections.map((usersItemId) => {
       matchData.push(DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === usersItemId)[0]);
     });
-
     this.setState({
       matchData: [...matchData]
     });
@@ -119,6 +116,7 @@ export default class MyCollection extends Component {
   render() {
     const { matchData } = this.state;
     const { userData } = this.props;
+    const ifNoCollection = matchData.length === 0;
     return (
       <>
         <div className="collection-wine-cabinet">
@@ -154,7 +152,7 @@ export default class MyCollection extends Component {
                     break;
                 }
                 return (
-                  <CollectionItems
+                  <CollectionItem
                     key={item.cocktail_id}
                     item={item}
                     category={category}
@@ -162,7 +160,7 @@ export default class MyCollection extends Component {
                   />
                 );
               })
-            }
+              }
             <li className="see-more">
               <Link to={{
                 pathname: '/gallery',
@@ -175,7 +173,6 @@ export default class MyCollection extends Component {
               </Link>
             </li>
           </ul>
-
         </div>
       </>
 

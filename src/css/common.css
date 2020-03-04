@@ -202,6 +202,10 @@ nav>.click-to-close-nav-menu.open {
     width: 315px;
     max-height: 300px;
     overflow-y: scroll;
+    display: none;
+}
+.nav-containter>.menu>form .search-suggestion.down {
+    display: block;
 }
 /* width */
 .nav-containter>.menu>form .search-suggestion::-webkit-scrollbar {
@@ -309,4 +313,23 @@ footer>.footer-container>.copyright a>img{
     footer>.footer-container>.copyright p{
         width: 100%;
     }
+}
+
+/* verified-prompt */
+.verified-prompt {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.verified-prompt P{
+    line-height: 36px;
+    font-size: 30px;
+}
+.verified-prompt P:nth-child(2){
+    margin-bottom: 30px;
+}
+.verified-prompt button{
+    display: none;
 }

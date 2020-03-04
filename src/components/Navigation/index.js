@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { compose } from 'recompose';
 
 import { ifAuth } from '../Context/AuthUser';
 import { withFirebase } from '../Context/Firebase';
 import { cacheData } from '../Context/DataInSessionStorage';
-import * as ROUTES from '../../constants/routes';
 
 import '../../css/common.css';
 
@@ -15,69 +14,62 @@ class Navigation extends Component {
     super(props);
     this.state = {
       value: '',
-      isSearching: false,
-      clickToggle: false,
-      suggestionLength: 0
+      isSuggestionShown: false,
+      isMenuOpen: false,
+      suggestionList: []
     };
-
-    this.openMenu = this.openMenu.bind(this);
-    this.closeMenu = this.closeMenu.bind(this);
   }
 
-  openMenu(e) {
+  openMenu = (e) => {
     e.preventDefault();
     this.setState({
-      clickToggle: true
+      isMenuOpen: true
     });
   }
 
-  closeMenu(e) {
+  closeMenu = (e) => {
     this.setState({
-      clickToggle: false,
-      isSearching: false,
+      isMenuOpen: false,
+      isSuggestionShown: false,
       value: ''
     });
   }
 
-  inputChange(e) {
+  inputChange = (e) => {
     this.setState({
-      isSearching: true,
+      isSuggestionShown: true,
       value: e.target.value
     });
+    this.renderSuggestionsList();
   }
 
-  changeValue(e) {
+  clickSuggestion = (e) => {
     this.setState({
-      isSearching: false,
+      isSuggestionShown: false,
       value: e.target.textContent
     });
   }
 
-  renderlist() {
+  renderSuggestionsList = () => {
     const { DataInSessionStorage } = this.props;
     const { value } = this.state;
     const updataData = DataInSessionStorage.cacheData
       .filter((item) => item.cocktail_name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-
-    const data = updataData
-      .map((item, i) => (
-        <li
-          className="item"
-          key={i}
-          onClick={(e) => this.changeValue(e)}
-        >
-          {item.cocktail_name}
-        </li>
-      ));
-    return data;
+    const ifSuggestions = updataData.length > 0;
+    this.setState({
+      isSuggestionShown: ifSuggestions,
+      suggestionList: [...updataData]
+    });
   }
 
   render() {
     const { userData } = this.props;
-    const { value, isSearching, clickToggle } = this.state;
+    const {
+      value, isSuggestionShown, isMenuOpen, suggestionList
+    } = this.state;
     return (
       <nav className="scroll">
-        <div className={`click-to-close-nav-menu ${clickToggle ? 'open' : ''}`} onClick={(e) => this.closeMenu(e)} />
+        <div className={`click-to-close-nav-menu ${isMenuOpen ? 'open' : ''}`} onClick={(e) => this.closeMenu(e)} />
         <div className="nav-containter">
           <div className="menu-toggle" onClick={(e) => this.openMenu(e)}>
             <img src="https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Ficon_menu_black.png?alt=media&token=7f30038f-dc13-491b-b5a1-aea205eb347f" alt="" />
@@ -87,7 +79,7 @@ class Navigation extends Component {
           <button type="button" className="member-btn">
             <HashLink to={userData.authUser ? `/account/${userData.authUser.uid}` : '/#member'}>YOUR DRINK</HashLink>
           </button>
-          <div className={`menu ${clickToggle ? 'open' : ''}`}>
+          <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
             <div className="close" onClick={(e) => this.closeMenu(e)}>
               <img src="https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Fclose.png?alt=media&token=c47d304f-dcbb-4166-b8cc-ed2bbf5cb727" alt="" />
             </div>
@@ -114,13 +106,19 @@ CLASSIC COCKTAIL
             <form className="search">
               <div className="search-auto-complete">
                 <input type="text" name="search" id="search" autoComplete="off" value={value} onChange={(e) => this.inputChange(e)} placeholder="Cocktail Name" />
-                {isSearching
-                  ? (
-                    <ul className="search-suggestion">
-                      {this.renderlist()}
-                    </ul>
-                  )
-                  : ''}
+                <ul className={`search-suggestion ${isSuggestionShown ? 'down' : ''}`}>
+                  {
+                    suggestionList.map((item, i) => (
+                      <li
+                        className="item"
+                        key={i}
+                        onClick={(e) => this.clickSuggestion(e)}
+                      >
+                        {item.cocktail_name}
+                      </li>
+                    ))
+                  }
+                </ul>
               </div>
               <button
                 type="button"

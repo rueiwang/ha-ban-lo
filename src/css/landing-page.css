@@ -599,6 +599,7 @@
 
 .wrap-landing>.main-landing>.member-area>form>.btn-area{
     display: flex;
+    margin: 30px 0;
 }
 .wrap-landing>.main-landing>.member-area>form button {
     background-color: #000000;
@@ -609,7 +610,6 @@
     font-weight: 900;
     border-radius: 3px;
     border: none;
-    margin: 30px 0;
 }
 
 .wrap-landing>.main-landing>.member-area>form #sign-up,
@@ -621,10 +621,12 @@
 .wrap-landing>.main-landing>.member-area>form #google {
     border: none;
     background-color: #ffffff;
+    margin: 0;
+    width: 40px;
 }
 
-.wrap-landing>.main-landing>.member-area>form button img {
-    width: 32px;
+.wrap-landing>.main-landing>.member-area>form input[type="image"] {
+    
 } 
 
 .wrap-landing>.main-landing>.member-area>form a {

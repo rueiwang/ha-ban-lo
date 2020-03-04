@@ -10,18 +10,17 @@ class LoadingIcon extends Component {
       shadowArray: ['#352F3F', '#ffffff', '#ffffff'],
       index: 1
     };
-    this.indexCount = this.indexCount.bind(this);
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.indexCount, 300);
+    this.interval = setInterval(this.changeColorByTime, 300);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  indexCount() {
+  changeColorByTime = () => {
     const { index, colorArray, shadowArray } = this.state;
     const replaceArray = ['#4A4256', '#FFE5B8', '#FFA022', '#B0EFFE', '#A3E5EF', '#90D8E0'];
     const replaceShadowArray = ['#352F3F', '#EDD0A6', '#E57F23'];
@@ -48,7 +47,6 @@ class LoadingIcon extends Component {
 
   render() {
     const { colorArray, shadowArray } = this.state;
-    console.log('render');
     return (
       <svg
         version="1.1"
@@ -56,7 +54,6 @@ class LoadingIcon extends Component {
         width={200}
         viewBox="0 0 512 512"
       >
-        {/* 火焰淺藍 */}
         <path
           fill={colorArray[5]}
           d="M358.583,184.493c5.325-27.606-9.692-57.146-55.105-83.399
@@ -83,26 +80,22 @@ class LoadingIcon extends Component {
 	c0,4.316,39.481,7.814,88.184,7.814s88.184-3.498,88.184-7.814c0-106.511,23.285-290.359,27.099-319.757
 	c0.277-2.133-1.386-4.016-3.537-4.016L143.305,172.884L143.305,172.884z"
         />
-        {/* 第一層深橘 */}
         <path
           fill={colorArray[2]}
           d="M150.493,267.23H359.61l-0.001,0.011c3.192-29.224,6.194-54.228,8.293-71.14H142.2
 	c2.1,16.922,5.105,41.945,8.299,71.19C150.497,267.271,150.495,267.251,150.493,267.23z"
         />
-        {/* 第二層淺橘 */}
         <path
           fill={colorArray[1]}
           d="M160.975,376.487h188.153c-0.032,0.397-0.062,0.792-0.094,1.189
 	c3.069-38.477,6.944-77.193,10.576-110.445H150.493c3.632,33.252,7.507,71.968,10.576,110.445
 	C161.037,377.279,161.006,376.883,160.975,376.487z"
         />
-        {/* 最下層深灰 */}
         <path
           fill={colorArray[0]}
           d="M166.2,462.3c18.144,6.365,51.145,10.622,88.851,10.622s70.707-4.257,88.851-10.622
 	c0,0,2.671-53.956,5.225-85.813H160.975C163.53,408.352,166.2,462.3,166.2,462.3z"
         />
-        {/* 陰影 */}
         <path
           fill={shadowArray[2]}
           d="M312.429,196.102c-2.099,16.909-5.101,41.91-8.292,71.128h55.473
@@ -215,7 +208,6 @@ class LoadingIcon extends Component {
 	C362.934,182.769,362.585,185.512,362.2,188.571z"
         />
       </svg>
-
     );
   }
 }

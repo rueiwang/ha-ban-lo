@@ -1,13 +1,7 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-
 import { withFirebase } from '../Context/Firebase';
-import * as ROUTES from '../../constants/routes';
-
 import SignInWithAccount from '../SignInWithAccount';
+import Loading from '../Loading';
 
 const INITIAL_STATE = {
   memberName: '',
@@ -16,116 +10,111 @@ const INITIAL_STATE = {
   error: null
 };
 
-const SignUp = (props) => (
-  <SignUpForm slip={props.isShowUp} />
-);
+const SignUp = (props) => (<SignUpForm slip={props.isShowUp} />);
 
 class SignUpFormBase extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { ...INITIAL_STATE };
+    this.state = {
+      ...INITIAL_STATE,
+      isLoading: false
+    };
   }
 
-  onClick = (e) => {
+  signUp = (e) => {
     e.preventDefault();
     const { memberName, memberEmail, memberPassword } = this.state;
-    const { firebase, history } = this.props;
+    const { firebase } = this.props;
+
+    const isInvalid = memberPassword.trim() === '' || memberEmail.trim() === '' || memberName.trim() === '';
+    if (isInvalid) {
+      this.setState({ error: 'All fields are required.' });
+      return;
+    }
+
+    this.setState({ isLoading: true });
     firebase.doCreateUserWithEmailAndPassword(memberEmail, memberPassword)
       .then((authUser) => {
-        console.log(authUser);
-        // const actionCodeSettings = {
-        //   url: `https://ha-ban-lo.firebaseapp.com/account/${firebase.auth.currentUser.uid}`,
-        //   handleCodeInApp: false
-        // };
-        // authUser.user.sendEmailVerification(actionCodeSettings).then(() => {
-        //   // Email sent.
-        //   console.log('send');
-        // }).catch((error) => {
-        //   // An error happened.
-        //   this.setState({ error });
-        // });
-        authUser.user.updateProfile({
-          displayName: memberName
+        const actionCodeSettings = {
+          url: `https://ha-ban-lo.firebaseapp.com/#member`,
+          handleCodeInApp: false
+        };
+        authUser.user.sendEmailVerification(actionCodeSettings).then(() => {
+          authUser.user.updateProfile({
+            displayName: memberName
+          });
+          const documentRefString = firebase.db.collection('members').doc(`${authUser.user.uid}`);
+          const recipeRef = firebase.db.doc(documentRefString.path);
+          firebase.member(authUser.user.uid).set({
+            memberName,
+            memberEmail,
+            memberId: authUser.user.uid,
+            ref: recipeRef
+          });
+        }).catch((error) => {
+          this.setState({ error: error.message });
         });
-        const documentRefString = firebase.db.collection('members').doc(`${authUser.user.uid}`);
-        const recipeRef = firebase.db.doc(documentRefString.path);
-        firebase.member(authUser.user.uid).set({
-          memberName,
-          memberEmail,
-          memberId: authUser.user.uid,
-          ref: recipeRef
-        });
-        history.push(`/account/${authUser.user.uid}`);
-      })
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
       })
       .catch((error) => {
-        this.setState({ error });
+        this.setState({
+          error: error.message,
+          isLoading: false
+        });
       });
   }
 
-  onChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+  inputChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   render() {
     const {
       memberName,
       memberEmail,
       memberPassword,
-      error
+      error,
+      isLoading
     } = this.state;
 
     const { slip } = this.props;
-
-    const isInvalid = memberPassword.trim() === ''
-      || memberEmail.trim() === ''
-      || memberName.trim() === '';
-
     return (
-      <form className={`sign-up-with-email ${slip === 'signUp' || slip === 'mobile-signUp' ? 'slip' : ''}`}>
-        <h3>SIGN UP</h3>
-        <input
-          type="text"
-          id="new-name"
-          placeholder="Your name"
-          name="memberName"
-          value={memberName}
-          onChange={this.onChange}
-        />
-        <input
-          type="text"
-          id="new-email"
-          placeholder="Email"
-          name="memberEmail"
-          value={memberEmail}
-          onChange={this.onChange}
-        />
-        <input
-          type="password"
-          id="new-pwd"
-          placeholder="Password"
-          name="memberPassword"
-          value={memberPassword}
-          onChange={this.onChange}
-        />
+      <>
+        {isLoading ? <Loading /> : ''}
+        <form className={`sign-up-with-email ${slip === 'signUp' || slip === 'mobile-signUp' ? 'slip' : ''}`}>
+          <h3>SIGN UP</h3>
+          <input
+            type="text"
+            id="new-name"
+            placeholder="Your name"
+            name="memberName"
+            value={memberName}
+            onChange={this.inputChange}
+          />
+          <input
+            type="text"
+            id="new-email"
+            placeholder="Email"
+            name="memberEmail"
+            value={memberEmail}
+            onChange={this.inputChange}
+          />
+          <input
+            type="password"
+            id="new-pwd"
+            placeholder="Password"
+            name="memberPassword"
+            value={memberPassword}
+            onChange={this.inputChange}
+          />
 
-        <div className="btn-area">
-          <SignInWithAccount />
-          <button id="sign-up" type="button" disabled={isInvalid} onClick={this.onClick}>Sign up</button>
-        </div>
-        {error && <p>{error.message}</p>}
-      </form>
+          <div className="btn-area">
+            <SignInWithAccount />
+            <button id="sign-up" type="button" onClick={this.signUp}>Sign up</button>
+          </div>
+          {error && <p>{error}</p>}
+        </form>
+      </>
     );
   }
 }
 
-const SignUpForm = compose(
-  withRouter,
-  withFirebase
-)(SignUpFormBase);
-
-
+const SignUpForm = withFirebase(SignUpFormBase);
 export default SignUp;

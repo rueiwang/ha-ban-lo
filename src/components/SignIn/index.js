@@ -1,11 +1,6 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-
 import { withFirebase } from '../Context/Firebase';
-
+import Loading from '../Loading';
 
 const INITIAL_STATE = {
   email: '',
@@ -13,61 +8,80 @@ const INITIAL_STATE = {
   error: null
 };
 
-const SignIn = (props) => (
-  <SignInForm slip={props.isShowUp} />
-);
+const SignIn = (props) => <SignInForm slip={props.isShowUp} />;
 
 class SignInFormBase extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...INITIAL_STATE };
+    this.state = {
+      ...INITIAL_STATE,
+      isLoading: false
+    };
   }
 
-  onClick = (e) => {
+  signIn = (e) => {
     const { email, password } = this.state;
-    const { firebase, history } = this.props;
+    const { firebase } = this.props;
     e.preventDefault();
-
-    firebase.doSignInWithEmailAndPassword(email, password)
+    const isInvalid = password.trim() === '' || email.trim() === '';
+    if (isInvalid) {
+      this.setState({ error: 'All fields are required.' });
+      return;
+    }
+    this.setState({ isLoading: true });
+    firebase
+      .doSignInWithEmailAndPassword(email, password)
       .then((authUser) => {
         this.setState({ ...INITIAL_STATE });
-        history.push(`/account/${authUser.user.uid}`);
       })
       .catch((error) => {
-        this.setState({ error });
+        this.setState({
+          error: error.message,
+          isLoading: false
+        });
       });
-  }
+  };
 
-  onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  }
+  inputChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   resetPassword = (e) => {
-    const { email, password } = this.state;
-    const { firebase, history } = this.props;
-    firebase.auth.sendPasswordResetEmail(email).then(() => {
-      // 更改密碼確認信已寄送
-      console.log('信件已寄出');
-    }, (error) => {
-      this.setState({ error });
-    });
-  }
+    e.preventDefault();
+    const { email } = this.state;
+    const { firebase } = this.props;
+    const actionCodeSettings = {
+      url: 'https://ha-ban-lo.firebaseapp.com/',
+      handleCodeInApp: false
+    };
+    this.setState({ isLoading: true });
+    firebase.auth.sendPasswordResetEmail(email, actionCodeSettings).then(
+      () => {
+        this.setState({
+          error: 'Mail is send to your mail address, please check it!',
+          isLoading: false
+        });
+      },
+      (error) => {
+        this.setState({
+          error: error.message,
+          isLoading: false
+        });
+      }
+    );
+  };
 
   render() {
     const {
-      email,
-      password,
-      error
+      email, password, error, isLoading
     } = this.state;
-
     const { slip } = this.props;
-
-    const isInvalid = password.trim() === ''
-    || email.trim() === '';
-
     return (
       <>
-        <form className={`sign-in-with-email ${slip === 'signIn' || slip === 'mobile-signIn' ? 'slip' : ''}`}>
+        {isLoading ? <Loading /> : ''}
+        <form
+          className={`sign-in-with-email ${
+            slip === 'signIn' || slip === 'mobile-signIn' ? 'slip' : ''
+          }`}
+        >
           <h3>SIGN IN</h3>
           <input
             type="text"
@@ -75,7 +89,7 @@ class SignInFormBase extends Component {
             placeholder="Email"
             name="email"
             value={email}
-            onChange={this.onChange}
+            onChange={this.inputChange}
           />
           <input
             type="password"
@@ -83,24 +97,22 @@ class SignInFormBase extends Component {
             placeholder="Password"
             value={password}
             name="password"
-            onChange={this.onChange}
+            onChange={this.inputChange}
           />
-
-          <a onClick={(e) => this.resetPassword(e)}>Forgot your password?</a>
-
+          <a href="#" onClick={(e) => this.resetPassword(e)}>
+            Forgot your password?
+          </a>
           <div className="btn-area">
-            <button id="sign-in" type="button" disabled={isInvalid} onClick={this.onClick}>Sign In</button>
+            <button id="sign-in" type="button" onClick={this.signIn}>
+              Sign In
+            </button>
           </div>
-          {error && <p>{error.message}</p>}
+          {error && <p>{error}</p>}
         </form>
       </>
     );
   }
 }
 
-const SignInForm = compose(
-  withRouter,
-  withFirebase
-)(SignInFormBase);
-
+const SignInForm = withFirebase(SignInFormBase);
 export default SignIn;

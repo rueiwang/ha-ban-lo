@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { ifAuth } from '../../components/Context/AuthUser';
 
-import * as ROUTES from '../../constants/routes';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 
@@ -25,7 +24,7 @@ class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: 'signUp',
+      form: 'signIn',
       isLoading: false,
       colors: [[158, 198, 203], [175, 69, 44], [42, 41, 38]]
     };

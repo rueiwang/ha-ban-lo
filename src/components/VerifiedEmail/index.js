@@ -1,24 +1,13 @@
-/* eslint-disable no-tabs */
-import React, { Component } from 'react';
+import React from 'react';
 import '../../css/common.css';
+import SignOut from '../SignOut';
 
-class VerifiedEmail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false
-    };
-  }
-
-  render() {
-    return (
-      <form className="verrified-email-form">
-        <label htmlFor="verrified-email-link">
-          <input type="email" name="" id="verrified-email-link" />
-        </label>
-      </form>
-    );
-  }
-}
+const VerifiedEmail = () => (
+  <div className="verified-prompt">
+    <p>Verified email has been send to your email,</p>
+    <p>Please check it for verifying!</p>
+    <SignOut />
+  </div>
+);
 
 export default VerifiedEmail;

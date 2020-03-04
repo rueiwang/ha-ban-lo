@@ -8,20 +8,15 @@ import AccountPage from '../Account';
 import GalleryPage from '../Gallery';
 import IdeasPage from '../BartendingIdeas';
 import TaiwanBarPage from '../TaiwanBar';
-import ResetPassword from '../../components/ResetPassword';
 import CocktailDetailPage from '../CocktailDetail';
 import Navigation from '../../components/Navigation';
-import Loading from '../../components/Loading';
 import BackToTop from '../../components/BackToTop';
 
-
-import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../../components/Context/Firebase';
 import AuthUserContext from '../../components/Context/AuthUser';
 import DataInSessionStorageContext from '../../components/Context/DataInSessionStorage';
 
 import '../../css/reset.css';
-
 
 class App extends Component {
   constructor(props) {
@@ -40,90 +35,83 @@ class App extends Component {
     };
 
     this.isLoading = true;
-    this.putAllRecipeToSessionStorage = this.putAllRecipeToSessionStorage.bind(this);
-    this.putAllIngredientsToSessionStorage = this.putAllIngredientsToSessionStorage.bind(this);
   }
 
   componentDidMount() {
     const { firebase } = this.props;
+    // set authcontext value
+    this.listener = firebase.auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
+      if (authUser) {
+        firebase.db.collection('members').doc(authUser.uid).collection('member_collections')
+          .onSnapshot((query) => {
+            const collectionsAry = [];
+            query.forEach((doc) => {
+              collectionsAry.push(doc.data().cocktail_id);
+            });
+            this.setState((prevState) => ({
+              userData: {
+                authUser,
+                userCollections: [...collectionsAry],
+                userIngredients: prevState.userData.userIngredients,
+                userCreations: prevState.userData.userCreations
+              }
+            }));
+          });
+        firebase.db.collection('members').doc(authUser.uid).collection('member_ingredients')
+          .onSnapshot((query) => {
+            const IngredientsAry = [];
+            query.forEach((doc) => {
+              IngredientsAry.push({
+                id: doc.data().ingredient_id,
+                status: doc.data().status,
+                name: doc.data().ingredient_name
+              });
+            });
+            this.setState((prevState) => ({
+              userData: {
+                authUser,
+                userCollections: prevState.userData.userCollections,
+                userIngredients: [...IngredientsAry],
+                userCreations: prevState.userData.userCreations
+              }
+            }));
+          });
+        firebase.db.collection('members').doc(authUser.uid).collection('member_creations')
+          .onSnapshot((query) => {
+            const creationsAry = [];
+            query.forEach((doc) => {
+              creationsAry.push(doc.data().cocktail_id);
+            });
+            this.setState((prevState) => ({
+              userData: {
+                authUser,
+                userCollections: prevState.userData.userCollections,
+                userIngredients: prevState.userData.userIngredients,
+                userCreations: [...creationsAry]
+              }
+            }));
+          });
+      } else {
+        this.setState((prevState) => ({
+          userData: {
+            authUser: null,
+            userCollections: [],
+            userIngredients: []
+          }
+        }));
+      }
+    });
 
-    this.isCancel = false;
-    if (this.isCancel === false) {
-      // set authcontext value
-      this.listener = firebase.auth.onAuthStateChanged((authUser) => {
-        console.log(authUser);
-        if (authUser) {
-          firebase.db.collection('members').doc(authUser.uid).collection('member_collections')
-            .onSnapshot((query) => {
-              const collectionsAry = [];
-              query.forEach((doc) => {
-                collectionsAry.push(doc.data().cocktail_id);
-              });
-              this.setState((prevState) => ({
-                userData: {
-                  authUser,
-                  userCollections: [...collectionsAry],
-                  userIngredients: prevState.userData.userIngredients,
-                  userCreations: prevState.userData.userCreations
-                }
-              }));
-            });
-          firebase.db.collection('members').doc(authUser.uid).collection('member_ingredients')
-            .onSnapshot((query) => {
-              const IngredientsAry = [];
-              query.forEach((doc) => {
-                IngredientsAry.push({
-                  id: doc.data().ingredient_id,
-                  status: doc.data().status,
-                  name: doc.data().ingredient_name
-                });
-              });
-              this.setState((prevState) => ({
-                userData: {
-                  authUser,
-                  userCollections: prevState.userData.userCollections,
-                  userIngredients: [...IngredientsAry],
-                  userCreations: prevState.userData.userCreations
-                }
-              }));
-            });
-          firebase.db.collection('members').doc(authUser.uid).collection('member_creations')
-            .onSnapshot((query) => {
-              const creationsAry = [];
-              query.forEach((doc) => {
-                creationsAry.push(doc.data().cocktail_id);
-              });
-              this.setState((prevState) => ({
-                userData: {
-                  authUser,
-                  userCollections: prevState.userData.userCollections,
-                  userIngredients: prevState.userData.userIngredients,
-                  userCreations: [...creationsAry]
-                }
-              }));
-            });
-        } else {
-          this.setState((prevState) => ({
-            userData: {
-              authUser: null,
-              userCollections: [],
-              userIngredients: []
-            }
-          }));
-        }
-      });
-
-      this.putAllRecipeToSessionStorage();
-      this.putAllIngredientsToSessionStorage();
-    }
+    this.putAllRecipeToSessionStorage();
+    this.putAllIngredientsToSessionStorage();
   }
 
   componentWillUnmount() {
     this.listener();
-    this.isCancel = true;
   }
 
-  putAllIngredientsToSessionStorage() {
+  putAllIngredientsToSessionStorage = () => {
     const { firebase } = this.props;
     let newAry = [];
     const isDataInSessionStorage = sessionStorage.getItem('allIngredients') !== null;
@@ -159,7 +147,7 @@ class App extends Component {
     }
   }
 
-  putAllRecipeToSessionStorage() {
+  putAllRecipeToSessionStorage = () => {
     const { firebase } = this.props;
     let newAry = [];
     const isDataInSessionStorage = sessionStorage.getItem('allData') !== null;
@@ -251,13 +239,6 @@ class App extends Component {
                 render={(props) => {
                   this.isLoading = false;
                   return <TaiwanBarPage {...props} />;
-                }}
-              />
-              <Route
-                path="/reset-password"
-                render={(props) => {
-                  this.isLoading = false;
-                  return <ResetPassword {...props} />;
                 }}
               />
             </Switch>
