@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 
 import { ifAuth } from '../Context/AuthUser';
 import { withFirebase } from '../Context/Firebase';
-import { cacheData } from '../Context/DataInSessionStorage';
+import { allRecipeData } from '../Context/DataInSessionStorage';
 
 import '../../css/common.css';
 
@@ -53,7 +53,7 @@ class Navigation extends Component {
   renderSuggestionsList = () => {
     const { DataInSessionStorage } = this.props;
     const { value } = this.state;
-    const updataData = DataInSessionStorage.cacheData
+    const updataData = DataInSessionStorage.allRecipeData
       .filter((item) => item.cocktail_name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     const ifSuggestions = updataData.length > 0;
     this.setState({
@@ -145,5 +145,5 @@ search
 export default compose(
   ifAuth,
   withFirebase,
-  cacheData
+  allRecipeData
 )(Navigation);

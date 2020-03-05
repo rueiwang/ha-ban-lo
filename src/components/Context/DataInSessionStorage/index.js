@@ -1,4 +1,4 @@
-import DataInSessionStorageContext, { cacheData } from './context';
+import DataInSessionStorageContext, { allRecipeData } from './context';
 
 export default DataInSessionStorageContext;
-export { cacheData };
+export { allRecipeData };

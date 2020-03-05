@@ -10,7 +10,7 @@ import { compose } from 'recompose';
 
 import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
-import { cacheData } from '../../components/Context/DataInSessionStorage';
+import { allRecipeData } from '../../components/Context/DataInSessionStorage';
 import MyCollection from '../../components/MyCollection';
 import Note from '../../components/Note';
 import Create from '../../components/Create';
@@ -96,9 +96,9 @@ Hi!
             </div>
             <main className="main-account">
               <Switch>
-                <Route path={`${match.url}`} exact component={compose(cacheData, ifAuth)(MyCollection)} />
-                <Route path={`${match.url}/IngredientsNote`} component={compose(withFirebase, cacheData, ifAuth)(Note)} />
-                <Route path={`${match.url}/Create`} component={compose(withFirebase, cacheData, ifAuth)(Create)} />
+                <Route path={`${match.url}`} exact component={compose(allRecipeData, ifAuth)(MyCollection)} />
+                <Route path={`${match.url}/IngredientsNote`} component={compose(withFirebase, allRecipeData, ifAuth)(Note)} />
+                <Route path={`${match.url}/Create`} component={compose(withFirebase, allRecipeData, ifAuth)(Create)} />
               </Switch>
             </main>
           </div>
@@ -116,7 +116,7 @@ const Account = compose(
   withRouter,
   withFirebase,
   ifAuth,
-  cacheData
+  allRecipeData
 )(AccountPageBase);
 
 export default AccountPage;

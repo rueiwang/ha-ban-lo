@@ -42,8 +42,8 @@ class CollectionItem extends Component {
 
   showModal = (e, ingredients) => {
     const { isShown } = this.state;
-    const { userIngredients } = this.props;
-    const userAlreadyHave = userIngredients.filter((item) => item.status === 1);
+    const { member_ingredients } = this.props;
+    const userAlreadyHave = member_ingredients.filter((item) => item.status === 1);
     const matchArray = [];
     ingredients.filter((name) => {
       userAlreadyHave.map((ingredient) => {
@@ -105,8 +105,8 @@ export default class MyCollection extends Component {
   componentDidMount() {
     const { userData, DataInSessionStorage } = this.props;
     const matchData = [];
-    userData.userCollections.map((usersItemId) => {
-      matchData.push(DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === usersItemId)[0]);
+    userData.member_collections.map((usersItemId) => {
+      matchData.push(DataInSessionStorage.allRecipeData.filter((item) => item.cocktail_id === usersItemId)[0]);
     });
     this.setState({
       matchData: [...matchData]
@@ -156,7 +156,7 @@ export default class MyCollection extends Component {
                     key={item.cocktail_id}
                     item={item}
                     category={category}
-                    userIngredients={userData.userIngredients}
+                    member_ingredients={userData.member_ingredients}
                   />
                 );
               })

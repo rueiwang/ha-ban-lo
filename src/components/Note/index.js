@@ -33,7 +33,7 @@ export default class Note extends Component {
     const tobuyAry = [];
 
     // status 1: member already has it; status 2: member wants to buy it
-    userData.userIngredients.map((userItem) => {
+    userData.member_ingredients.map((userItem) => {
       DataInSessionStorage.ingredientData.map((item) => {
         if (item.ingredient_id === userItem.id) {
           if (userItem.status === 1) {
@@ -100,7 +100,7 @@ export default class Note extends Component {
     ));
   }
 
-  changeUserIngredientsStatus = (e, id, statusNum) => {
+  changeIngredientsStatus = (e, id, statusNum) => {
     e.preventDefault();
     const { firebase, userData } = this.props;
     // status -1: user doesn't need it
@@ -150,7 +150,7 @@ export default class Note extends Component {
                     src="../../imgs/delete.png"
                     alt=""
                     className="deleteBtn"
-                    onClick={(e) => this.changeUserIngredientsStatus(e, item.ingredient_id, 2)}
+                    onClick={(e) => this.changeIngredientsStatus(e, item.ingredient_id, 2)}
                   />
                   <img src={item.ingredient_pic} alt="icon" />
                   <h5>{item.ingredient_name}</h5>
@@ -176,7 +176,7 @@ export default class Note extends Component {
             tobuy={tobuy}
             isShoppingListShown={isShoppingListShown}
             showShoppingList={this.showShoppingList}
-            changeUserIngredientsStatus={this.changeUserIngredientsStatus}
+            changeIngredientsStatus={this.changeIngredientsStatus}
           />
 
           {this.renderSlideBoxByIngredientsType(baseWine, 'baseWine')}

@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import ColorThief from 'colorthief';
 import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
-import { cacheData } from '../../components/Context/DataInSessionStorage';
+import { allRecipeData } from '../../components/Context/DataInSessionStorage';
 import {
   GlassOfBrandy,
   GlassOfChampagne,
@@ -64,8 +64,8 @@ class CocktailDetailPage extends Component {
     let targetIndex;
     let source;
     if (ifClassic) {
-      targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
-      source = DataInSessionStorage.cacheData;
+      targetIndex = DataInSessionStorage.allRecipeData.findIndex((item) => item.cocktail_id === cocktailId);
+      source = DataInSessionStorage.allRecipeData;
     } else {
       targetIndex = creations.findIndex((item) => item.cocktail_id === cocktailId);
       source = creations;
@@ -95,13 +95,13 @@ class CocktailDetailPage extends Component {
     const {
       cocktailId, index, creations, ifClassic
     } = this.state;
-    // const targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
+    // const targetIndex = DataInSessionStorage.allRecipeData.findIndex((item) => item.cocktail_id === cocktailId);
     // console.log(targetIndex);
     let targetIndex;
     let source;
     if (ifClassic) {
-      targetIndex = DataInSessionStorage.cacheData.findIndex((item) => item.cocktail_id === cocktailId);
-      source = DataInSessionStorage.cacheData;
+      targetIndex = DataInSessionStorage.allRecipeData.findIndex((item) => item.cocktail_id === cocktailId);
+      source = DataInSessionStorage.allRecipeData;
     } else {
       targetIndex = creations.findIndex((item) => item.cocktail_id === cocktailId);
       source = creations;
@@ -129,7 +129,7 @@ class CocktailDetailPage extends Component {
     const { creations } = this.state;
     let id;
     if (boolean) {
-      id = DataInSessionStorage.cacheData[0].cocktail_id;
+      id = DataInSessionStorage.allRecipeData[0].cocktail_id;
     } else {
       id = creations[0].cocktail_id;
     }
@@ -183,7 +183,7 @@ class CollectButtonBase extends Component {
   componentDidMount() {
     const { userData, cocaktailId } = this.props;
     if (userData.authUser) {
-      const isCollected = userData.userCollections.findIndex((id) => id === cocaktailId) !== -1;
+      const isCollected = userData.member_collections.findIndex((id) => id === cocaktailId) !== -1;
       this.setState({
         isCollected
       });
@@ -194,7 +194,7 @@ class CollectButtonBase extends Component {
     e.preventDefault();
     const { DataInSessionStorage, firebase, userData } = this.props;
     const { isCollected } = this.state;
-    const targetDataObj = DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === itemId)[0];
+    const targetDataObj = DataInSessionStorage.allRecipeData.filter((item) => item.cocktail_id === itemId)[0];
     if (userData.authUser === null) {
       alert('Please Sign in!');
       return;
@@ -232,7 +232,7 @@ class CollectButtonBase extends Component {
     );
   }
 }
-const CollectButton = compose(withFirebase, cacheData, ifAuth)(CollectButtonBase);
+const CollectButton = compose(withFirebase, allRecipeData, ifAuth)(CollectButtonBase);
 class IngredientItemBase extends Component {
   constructor(props) {
     super(props);
@@ -250,10 +250,10 @@ class IngredientItemBase extends Component {
     const { DataInSessionStorage, userData } = this.props;
     const { ingredient } = this.props;
     const tagertIngredient = DataInSessionStorage.ingredientData.filter((item) => item.ingredient_name === ingredient)[0];
-    const IndexInUserData = userData.userIngredients.findIndex((item) => item.id === tagertIngredient.ingredient_id);
+    const IndexInUserData = userData.member_ingredients.findIndex((item) => item.id === tagertIngredient.ingredient_id);
     const ifOwned = IndexInUserData !== -1;
     let status;
-    ifOwned ? status = userData.userIngredients[IndexInUserData].status : status = -1;
+    ifOwned ? status = userData.member_ingredients[IndexInUserData].status : status = -1;
     this.setState({
       ifOwned,
       ingredientDetail: { ...tagertIngredient },
@@ -320,7 +320,7 @@ class IngredientItemBase extends Component {
   }
 }
 
-const IngredientItem = compose(withFirebase, cacheData, ifAuth)(IngredientItemBase);
+const IngredientItem = compose(withFirebase, allRecipeData, ifAuth)(IngredientItemBase);
 
 class ContentBase extends Component {
   constructor(props) {
@@ -356,7 +356,7 @@ class ContentBase extends Component {
     const { colorPlette } = this.state;
     let targetDetail;
     if (ifClassic) {
-      targetDetail = DataInSessionStorage.cacheData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
+      targetDetail = DataInSessionStorage.allRecipeData.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
     } else {
       targetDetail = creations.filter((cocktail) => cocktail.cocktail_id === cocaktailId);
     }
@@ -463,10 +463,10 @@ function GlassComponent(props) {
   }
 }
 
-const Content = compose(withFirebase, cacheData, ifAuth)(ContentBase);
+const Content = compose(withFirebase, allRecipeData, ifAuth)(ContentBase);
 
 export default compose(
   ifAuth,
   withFirebase,
-  cacheData
+  allRecipeData
 )(CocktailDetailPage);

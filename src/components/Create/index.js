@@ -467,7 +467,7 @@ export default class Create extends Component {
     const { name, value } = e.target;
     const { errors } = this.state;
     const { DataInSessionStorage } = this.props;
-    const ifRepeated = DataInSessionStorage.cacheData.findIndex((item) => this.noSpace(item.cocktail_name) === this.noSpace(value)) !== -1;
+    const ifRepeated = DataInSessionStorage.allRecipeData.findIndex((item) => this.noSpace(item.cocktail_name) === this.noSpace(value)) !== -1;
     switch (name) {
       case 'cocktailName':
         // 去除空白+變小寫

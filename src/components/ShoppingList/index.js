@@ -10,8 +10,8 @@ class ShoppingListItem extends Component {
 
   checkedItem = (e, id, statusNum) => {
     e.preventDefault();
-    const { changeUserIngredientsStatus } = this.props;
-    changeUserIngredientsStatus(e, id, statusNum);
+    const { changeIngredientsStatus } = this.props;
+    changeIngredientsStatus(e, id, statusNum);
     this.setState({
       isChecked: true
     });
@@ -34,7 +34,7 @@ class ShoppingListItem extends Component {
 
 const ShoppingList = (props) => {
   const {
-    tobuy, isShoppingListShown, showShoppingList, changeUserIngredientsStatus
+    tobuy, isShoppingListShown, showShoppingList, changeIngredientsStatus
   } = props;
   return (
     <>
@@ -64,7 +64,7 @@ const ShoppingList = (props) => {
                 <ShoppingListItem
                   index={i}
                   item={item}
-                  changeUserIngredientsStatus={changeUserIngredientsStatus}
+                  changeIngredientsStatus={changeIngredientsStatus}
                 />
                 <span className="checkmark" />
                 {item.ingredient_name}
@@ -73,7 +73,7 @@ const ShoppingList = (props) => {
                   src="../../imgs/delete.png"
                   alt=""
                   className="deleteBtn"
-                  onClick={(e) => changeUserIngredientsStatus(e, item.ingredient_id, -1)}
+                  onClick={(e) => changeIngredientsStatus(e, item.ingredient_id, -1)}
                 />
               </label>
             ))}

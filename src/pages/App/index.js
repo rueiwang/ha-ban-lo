@@ -11,6 +11,7 @@ import TaiwanBarPage from '../TaiwanBar';
 import CocktailDetailPage from '../CocktailDetail';
 import Navigation from '../../components/Navigation';
 import BackToTop from '../../components/BackToTop';
+import Loading from '../../components/Loading';
 
 import { withFirebase } from '../../components/Context/Firebase';
 import AuthUserContext from '../../components/Context/AuthUser';
@@ -21,232 +22,174 @@ import '../../css/reset.css';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.isCancel = true;
     this.state = {
       userData: {
         authUser: '',
-        userCollections: [],
-        userIngredients: [],
-        userCreations: [],
-        userShoplist: []
+        member_collections: [],
+        member_ingredients: [],
+        member_creations: []
       },
-      cacheData: [],
-      ingredientData: []
+      allRecipeData: [],
+      ingredientData: [],
+      isLoading: true
     };
 
-    this.isLoading = true;
+    // this.isLoading = true;
   }
 
   componentDidMount() {
     const { firebase } = this.props;
-    // set authcontext value
     this.listener = firebase.auth.onAuthStateChanged((authUser) => {
       console.log(authUser);
       if (authUser) {
-        firebase.db.collection('members').doc(authUser.uid).collection('member_collections')
-          .onSnapshot((query) => {
-            const collectionsAry = [];
-            query.forEach((doc) => {
-              collectionsAry.push(doc.data().cocktail_id);
-            });
-            this.setState((prevState) => ({
-              userData: {
-                authUser,
-                userCollections: [...collectionsAry],
-                userIngredients: prevState.userData.userIngredients,
-                userCreations: prevState.userData.userCreations
-              }
-            }));
-          });
-        firebase.db.collection('members').doc(authUser.uid).collection('member_ingredients')
-          .onSnapshot((query) => {
-            const IngredientsAry = [];
-            query.forEach((doc) => {
-              IngredientsAry.push({
-                id: doc.data().ingredient_id,
-                status: doc.data().status,
-                name: doc.data().ingredient_name
-              });
-            });
-            this.setState((prevState) => ({
-              userData: {
-                authUser,
-                userCollections: prevState.userData.userCollections,
-                userIngredients: [...IngredientsAry],
-                userCreations: prevState.userData.userCreations
-              }
-            }));
-          });
-        firebase.db.collection('members').doc(authUser.uid).collection('member_creations')
-          .onSnapshot((query) => {
-            const creationsAry = [];
-            query.forEach((doc) => {
-              creationsAry.push(doc.data().cocktail_id);
-            });
-            this.setState((prevState) => ({
-              userData: {
-                authUser,
-                userCollections: prevState.userData.userCollections,
-                userIngredients: prevState.userData.userIngredients,
-                userCreations: [...creationsAry]
-              }
-            }));
-          });
+        this.monitorUserDataFromFirestore('member_collections', authUser);
+        this.monitorUserDataFromFirestore('member_creations', authUser);
+        this.monitorUserDataFromFirestore('member_ingredients', authUser);
+        this.setState({ isLoading: false });
       } else {
         this.setState((prevState) => ({
           userData: {
-            authUser: null,
-            userCollections: [],
-            userIngredients: []
-          }
+            ...prevState.userData,
+            authUser
+          },
+          isLoading: false
         }));
       }
     });
 
-    this.putAllRecipeToSessionStorage();
-    this.putAllIngredientsToSessionStorage();
+    this.putDataInState('allRecipeData');
+    this.putDataInState('ingredientData');
   }
 
   componentWillUnmount() {
     this.listener();
   }
 
-  putAllIngredientsToSessionStorage = () => {
-    const { firebase } = this.props;
+  getDataFromSessionStorage = (dataType) => {
     let newAry = [];
-    const isDataInSessionStorage = sessionStorage.getItem('allIngredients') !== null;
-    console.log(isDataInSessionStorage);
-    if (isDataInSessionStorage) {
-      const processAry = sessionStorage.getItem('allIngredients').split('},').map((str, i) => {
-        if (i === (sessionStorage.getItem('allIngredients').split('},').length) - 1) {
-          return str;
-        }
-        return (`${str}}`);
-      });
-      newAry = processAry.map((item) => JSON.parse(item));
-      this.setState({
-        ingredientData: [...newAry]
-      });
-    } else {
-      firebase.db.collection('all_ingredient')
-        .get()
-        .then((docSnapshot) => {
-          docSnapshot.forEach((doc) => {
-            newAry.push(JSON.stringify(doc.data(), (key, value) => {
-              if (key !== 'ref') {
-                return value;
-              }
-            }));
-          });
-          sessionStorage.setItem('allIngredients', newAry.toString());
-          const dataAry = newAry.map((str) => JSON.parse(str));
-          this.setState({
-            ingredientData: dataAry
-          });
-        });
-    }
+    const processAry = sessionStorage.getItem(dataType).split('},').map((str, i) => {
+      if (i === (sessionStorage.getItem(dataType).split('},').length) - 1) {
+        return str;
+      }
+      return (`${str}}`);
+    });
+    newAry = processAry.map((item) => JSON.parse(item));
+    this.setState({ [dataType]: [...newAry] });
   }
 
-  putAllRecipeToSessionStorage = () => {
+  getConstantDataFromFirestore = (dataType) => {
     const { firebase } = this.props;
-    let newAry = [];
-    const isDataInSessionStorage = sessionStorage.getItem('allData') !== null;
-    console.log(isDataInSessionStorage);
-    if (isDataInSessionStorage) {
-      const processAry = sessionStorage.getItem('allData').split('},').map((str, i) => {
-        if (i === (sessionStorage.getItem('allData').split('},').length) - 1) {
-          return str;
-        }
-        return (`${str}}`);
-      });
-      newAry = processAry.map((item) => JSON.parse(item));
-      this.setState({
-        cacheData: [...newAry]
-      });
-    } else {
-      firebase.getAllCocktail()
-        .then((docSnapshot) => {
-          docSnapshot.forEach((doc) => {
-            newAry.push(JSON.stringify(doc.data(), (key, value) => {
-              if (key !== 'ref') {
-                return value;
-              }
-            }));
-          });
-          sessionStorage.setItem('allData', newAry.toString());
-          const dataAry = newAry.map((str) => JSON.parse(str));
-          this.setState({
-            cacheData: dataAry
-          });
+    const newAry = [];
+    const collectionName = dataType === 'allRecipeData' ? 'all_cocktail_recipe' : 'all_ingredient';
+    firebase.db.collection(collectionName)
+      .get()
+      .then((docSnapshot) => {
+        docSnapshot.forEach((doc) => {
+          newAry.push(JSON.stringify(doc.data(), (key, value) => {
+            if (key !== 'ref') {
+              return value;
+            }
+          }));
         });
+        sessionStorage.setItem(dataType, newAry.toString());
+        const dataAry = newAry.map((str) => JSON.parse(str));
+        this.setState({
+          [dataType]: dataAry
+        });
+      });
+  }
+
+  monitorUserDataFromFirestore = (dataType, authUser) => {
+    const { firebase } = this.props;
+    const ifIngredientData = dataType === 'member_ingredients';
+    firebase.db.collection('members').doc(authUser.uid).collection(dataType)
+      .onSnapshot((query) => {
+        const dataArray = [];
+        query.forEach((doc) => {
+          ifIngredientData
+            ? dataArray.push({
+              id: doc.data().ingredient_id,
+              status: doc.data().status,
+              name: doc.data().ingredient_name
+            })
+            : dataArray.push(doc.data().cocktail_id);
+        });
+        this.setState((prevState) => ({
+          userData: {
+            ...prevState.userData,
+            authUser,
+            [dataType]: [...dataArray]
+          }
+        }
+        ));
+      });
+  }
+
+  putDataInState = (dataType) => {
+    const isDataInSessionStorage = sessionStorage.getItem(dataType) !== null;
+    if (isDataInSessionStorage) {
+      this.getDataFromSessionStorage(dataType);
+    } else {
+      this.getConstantDataFromFirestore(dataType);
     }
   }
 
   render() {
-    const { userData, cacheData, ingredientData } = this.state;
-    return (
-      <AuthUserContext.Provider value={userData}>
-        <DataInSessionStorageContext.Provider value={{
-          cacheData,
-          ingredientData
-        }}
-        >
-          <BrowserRouter>
-            <Navigation />
-            {/* {this.isLoading ? <Loading /> : ''} */}
-            <Switch>
-              <Route
-                exact
-                path="/"
-                // component={LandingPage}
-                render={(props) => {
-                  if (userData.authUser === '') {
+    const {
+      userData, allRecipeData, ingredientData, isLoading
+    } = this.state;
+    return isLoading
+      ? (<Loading />)
+      : (
+        <AuthUserContext.Provider value={userData}>
+          <DataInSessionStorageContext.Provider value={{
+            allRecipeData,
+            ingredientData
+          }}
+          >
+            <BrowserRouter>
+              <Navigation />
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={(props) => (userData.authUser ? <Redirect to={`/account/${userData.authUser.uid}`} /> : <LandingPage {...props} />)}
+                />
+                <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
+                <Route
+                  path="/gallery"
+                  render={(props) => {
                     this.isLoading = false;
-                    return '';
-                  }
-                  if (userData.authUser === null) {
+                    return <GalleryPage {...props} />;
+                  }}
+                />
+                <Route
+                  path="/bartending-ideas"
+                  render={(props) => {
                     this.isLoading = false;
-                    return <LandingPage {...props} />;
-                  }
-                  this.isLoading = false;
-                  return <Redirect to={`/account/${userData.authUser.uid}`} />;
-                }}
-              />
-              <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
-              <Route
-                path="/gallery"
-                render={(props) => {
-                  this.isLoading = false;
-                  return <GalleryPage {...props} />;
-                }}
-              />
-              <Route
-                path="/bartending-ideas"
-                render={(props) => {
-                  this.isLoading = false;
-                  return <IdeasPage {...props} />;
-                }}
-              />
-              <Route
-                path="/cocktailDetail"
-                render={(props) => {
-                  this.isLoading = false;
-                  return <CocktailDetailPage {...props} />;
-                }}
-              />
-              <Route
-                path="/taiwanbar"
-                render={(props) => {
-                  this.isLoading = false;
-                  return <TaiwanBarPage {...props} />;
-                }}
-              />
-            </Switch>
-            <BackToTop />
-          </BrowserRouter>
-        </DataInSessionStorageContext.Provider>
-      </AuthUserContext.Provider>
-    );
+                    return <IdeasPage {...props} />;
+                  }}
+                />
+                <Route
+                  path="/cocktailDetail"
+                  render={(props) => {
+                    this.isLoading = false;
+                    return <CocktailDetailPage {...props} />;
+                  }}
+                />
+                <Route
+                  path="/taiwanbar"
+                  render={(props) => {
+                    this.isLoading = false;
+                    return <TaiwanBarPage {...props} />;
+                  }}
+                />
+              </Switch>
+              <BackToTop />
+            </BrowserRouter>
+          </DataInSessionStorageContext.Provider>
+        </AuthUserContext.Provider>
+      );
   }
 }
 

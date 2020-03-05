@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,9 +7,9 @@ import Footer from '../../components/Footer';
 
 import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
+import { allRecipeData } from '../../components/Context/DataInSessionStorage';
 
 import '../../css/gallery.css';
-import { cacheData } from '../../components/Context/DataInSessionStorage';
 
 class Item extends Component {
   constructor(props) {
@@ -18,26 +17,23 @@ class Item extends Component {
     this.state = {
       collected: false
     };
-    this.collect = this.collect.bind(this);
   }
 
   componentDidMount() {
     const { userData, recipe } = this.props;
     if (userData.authUser) {
-      const isCollected = userData.userCollections.findIndex((id) => id === recipe.cocktail_id) !== -1;
-      if (isCollected) {
-        this.setState({
-          collected: true
-        });
-      }
+      const isCollected = userData.member_collections.findIndex((id) => id === recipe.cocktail_id) !== -1;
+      this.setState({
+        collected: isCollected
+      });
     }
   }
 
-  collect(e, itemId) {
+  collectItem = (e, itemId) => {
     e.preventDefault();
     const { DataInSessionStorage, firebase, userData } = this.props;
     const { collected } = this.state;
-    const targetDataObj = DataInSessionStorage.cacheData.filter((item) => item.cocktail_id === itemId)[0];
+    const targetDataObj = DataInSessionStorage.allRecipeData.filter((item) => item.cocktail_id === itemId)[0];
     if (userData.authUser === null) {
       alert('Please Sign in!');
       return;
@@ -67,7 +63,6 @@ class Item extends Component {
   }
 
   render() {
-    console.log('render');
     const { recipe } = this.props;
     const { collected } = this.state;
     return (
@@ -102,7 +97,11 @@ class Item extends Component {
   Detail
               </Link>
             </button>
-            <button className="collect" type="button" onClick={(e) => this.collect(e, recipe.cocktail_id)}>
+            <button
+              className="collect"
+              type="button"
+              onClick={(e) => this.collectItem(e, recipe.cocktail_id)}
+            >
               {collected ? 'remove' : 'Collect'}
             </button>
           </div>
@@ -125,14 +124,11 @@ class GalleryPage extends Component {
       lastSearch: '',
       openFilter: false
     };
-
-    this.handleScroll = this.handleScroll.bind(this);
-    this.openMobileFilter = this.openMobileFilter.bind(this);
     this.categoryAry = ['All', 'Vodka', 'Brandy', 'Rum', 'Gin', 'Whisky', 'Tequila'];
   }
 
   componentDidMount() {
-    const { recipes, lastSearch } = this.state;
+    const { lastSearch } = this.state;
     const { firebase, location } = this.props;
 
     this.isCancel = false;
@@ -184,9 +180,8 @@ class GalleryPage extends Component {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('scroll', this.handleScroll);
-    this.isCancel = true;
   }
 
   getData() {
@@ -241,7 +236,7 @@ class GalleryPage extends Component {
     }
   }
 
-  handleScroll() {
+  handleScroll = () => {
     const { firebase, location } = this.props;
     const {
       filter, next, recipes, searchTarget
@@ -279,7 +274,7 @@ class GalleryPage extends Component {
     }
   }
 
-  changeFilter(e) {
+  changeFilter = (e) => {
     const { firebase, location } = this.props;
     const { next, recipes } = this.state;
     const category = e.target.textContent;
@@ -353,23 +348,17 @@ class GalleryPage extends Component {
     }
   }
 
-  openMobileFilter() {
+  openMobileFilter = () => {
     const { openFilter } = this.state;
-    if (openFilter) {
-      this.setState({
-        openFilter: false
-      });
-    } else {
-      this.setState({
-        openFilter: true
-      });
-    }
+    this.setState({
+      openFilter: !openFilter
+    });
   }
 
-  renderItem() {
+  renderItem = () => {
     const { recipes } = this.state;
     const itemAry = [];
-    const ItemWithData = compose(cacheData, withFirebase, ifAuth)(Item);
+    const ItemWithData = compose(allRecipeData, withFirebase, ifAuth)(Item);
     for (let i = 0; i < recipes.length; i += 1) {
       itemAry.push(<ItemWithData recipe={recipes[i]} key={recipes[i].cocktail_id} />);
     }
