@@ -31,7 +31,10 @@
         text-align: center;
     }
 }
- 
+
+.wrap-gallery>.main-gallery {
+    margin-bottom: 30px;
+}
 
 .wrap-gallery>.main-gallery>.filter {
     display: flex;
@@ -146,7 +149,7 @@
 
 .wrap-gallery>.main-gallery>.gallery-item>.item>.item-pic img {
     max-width: 100%;
-    border-radius: 3px;
+    border-radius: 3px 0 0 3px;
 }
 
 .wrap-gallery>.main-gallery>.gallery-item>.item>.item-description {

@@ -15,11 +15,9 @@ class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: 'signIn',
-      isLoading: false
+      form: 'signIn'
     };
   }
-
 
   changeForm = (e) => {
     e.preventDefault();

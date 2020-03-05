@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  BrowserRouter, Route, Switch, Redirect, useHistory
+  BrowserRouter, Route, Switch, Redirect
 } from 'react-router-dom';
 
 import LandingPage from '../Landing';
@@ -154,22 +154,10 @@ class App extends Component {
                   render={(props) => (userData.authUser ? <Redirect to={`/account/${userData.authUser.uid}`} /> : <LandingPage {...props} />)}
                 />
                 <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
-                <Route
-                  path="/gallery"
-                  render={(props) => <GalleryPage {...props} />}
-                />
-                <Route
-                  path="/bartending-ideas"
-                  render={(props) => <IdeasPage {...props} />}
-                />
-                <Route
-                  path="/cocktailDetail"
-                  render={(props) => <CocktailDetailPage {...props} />}
-                />
-                <Route
-                  path="/taiwanbar"
-                  render={(props) => <TaiwanBarPage {...props} />}
-                />
+                <Route path="/gallery" component={GalleryPage} />
+                <Route path="/bartending-ideas" component={IdeasPage} />
+                <Route path="/cocktailDetail" component={CocktailDetailPage} />
+                <Route path="/taiwanbar" component={TaiwanBarPage} />
               </Switch>
               <BackToTop />
             </BrowserRouter>

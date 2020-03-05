@@ -27,17 +27,15 @@ class Item extends Component {
   render() {
     console.log('render');
     const { recipe } = this.props;
-    const { collected } = this.state;
     return (
       <div className="item row">
         <div className="item-pic">
           <Link to={{
             pathname: '/cocktailDetail',
-            search: recipe.cocktail_id,
+            search: `search=${recipe.cocktail_id}&ifCreation=true`,
             state: {
-              cocktailID: recipe.cocktail_id,
-              isCollected: collected,
-              ifClassic: false
+              cocktailId: recipe.cocktail_id,
+              ifCreation: true
             }
           }}
           >

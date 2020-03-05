@@ -86,11 +86,10 @@ class Item extends Component {
             <button className="checkRecipe" type="button">
               <Link to={{
                 pathname: '/cocktailDetail',
-                search: recipe.cocktail_id,
+                search: `search=${recipe.cocktail_id}&ifCreation`,
                 state: {
-                  cocktailID: recipe.cocktail_id,
-                  isCollected: collected,
-                  ifClassic: true
+                  cocktailId: recipe.cocktail_id,
+                  ifCreation: false
                 }
               }}
               >
@@ -117,66 +116,19 @@ class GalleryPage extends Component {
     this.isCancel = true;
     this.state = {
       filter: 'All',
+      openMobileFilter: false,
       recipes: [],
       isLoading: false,
-      next: 0,
-      searchTarget: null,
-      lastSearch: '',
-      openFilter: false
+      next: 0
     };
     this.categoryAry = ['All', 'Vodka', 'Brandy', 'Rum', 'Gin', 'Whisky', 'Tequila'];
   }
 
   componentDidMount() {
-    const { lastSearch } = this.state;
-    const { firebase, location } = this.props;
-
     this.isCancel = false;
     if (this.isCancel === false) {
       window.addEventListener('scroll', this.handleScroll);
-
-      const newAry = [];
-      if (location.state.searchTarget === undefined && location.state.searchTarget !== lastSearch) {
-        this.getData();
-      } else {
-        firebase.searchCocktailByName(location.state.searchTarget)
-          .then((docSnapshot) => {
-            docSnapshot.forEach((doc) => {
-              newAry.push(doc.data());
-            });
-            this.setState({
-              recipes: [...newAry],
-              searchTarget: null,
-              lastSearch: location.state.searchTarget,
-              filter: 'searching',
-              isLoading: false
-            });
-          });
-      }
-    }
-  }
-
-  componentDidUpdate() {
-    const { firebase, location } = this.props;
-    const { searchTarget, lastSearch } = this.state;
-    const newAry = [];
-    if (searchTarget === null) {
-      if (location.state.searchTarget !== lastSearch && location.state.searchTarget !== undefined) {
-        firebase.searchCocktailByName(location.state.searchTarget)
-          .then((docSnapshot) => {
-            docSnapshot.forEach((doc) => {
-              newAry.push(doc.data());
-            });
-            this.setState({
-              recipes: [...newAry],
-              searchTarget: null,
-              lastSearch: location.state.searchTarget,
-              filter: 'searching',
-              isLoading: false,
-              next: 0
-            });
-          });
-      }
+      this.getData();
     }
   }
 
@@ -185,7 +137,7 @@ class GalleryPage extends Component {
   }
 
   getData() {
-    const { firebase, location } = this.props;
+    const { firebase } = this.props;
     const {
       recipes,
       isLoading,
@@ -203,16 +155,12 @@ class GalleryPage extends Component {
             docSnapshot.forEach((doc) => {
               newAry.push(doc.data());
             });
-            this.setState((prevState) => (
-              {
-                filter: 'All',
-                searchTarget: null,
-                lastSearch: location.state.searchTarget,
-                recipes: [...newAry],
-                isLoading: false,
-                next: lastVisible
-              }
-            ));
+            this.setState({
+              filter: 'All',
+              recipes: [...newAry],
+              isLoading: false,
+              next: lastVisible
+            });
           });
       } else {
         firebase.getNextCocktail(next)
@@ -221,25 +169,21 @@ class GalleryPage extends Component {
             docSnapshot.forEach((doc) => {
               newAry.push(doc.data());
             });
-            this.setState((prevState) => (
-              {
-                filter: 'All',
-                searchTarget: null,
-                lastSearch: location.state.searchTarget,
-                recipes: [...recipes, ...newAry],
-                isLoading: false,
-                next: lastVisible
-              }
-            ));
+            this.setState({
+              filter: 'All',
+              recipes: [...recipes, ...newAry],
+              isLoading: false,
+              next: lastVisible
+            });
           });
       }
     }
   }
 
   handleScroll = () => {
-    const { firebase, location } = this.props;
+    const { firebase } = this.props;
     const {
-      filter, next, recipes, searchTarget
+      filter, next, recipes
     } = this.state;
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1 && filter !== 'searching') {
       if (next === undefined) {
@@ -259,30 +203,25 @@ class GalleryPage extends Component {
             docSnapshot.forEach((doc) => {
               newAry.push(doc.data());
             });
-            this.setState((prevState) => (
-              {
-                filter: prevState.filter,
-                searchTarget: null,
-                lastSearch: location.state.searchTarget,
-                recipes: [...recipes, ...newAry],
-                isLoading: false,
-                next: lastVisible
-              }
-            ));
+            this.setState({
+              recipes: [...recipes, ...newAry],
+              isLoading: false,
+              next: lastVisible
+            });
           });
       }
     }
   }
 
   changeFilter = (e) => {
-    const { firebase, location } = this.props;
+    const { firebase } = this.props;
     const { next, recipes } = this.state;
     const category = e.target.textContent;
     this.setState({
       isLoading: true,
       next: 0,
       filter: category,
-      openFilter: false
+      openMobileFilter: false
     });
     const newAry = [];
     if (category === 'All') {
@@ -292,15 +231,11 @@ class GalleryPage extends Component {
           docSnapshot.forEach((doc) => {
             newAry.push(doc.data());
           });
-          this.setState((prevState) => (
-            {
-              searchTarget: null,
-              lastSearch: location.state.searchTarget,
-              recipes: [...newAry],
-              isLoading: false,
-              next: lastVisible
-            }
-          ));
+          this.setState({
+            recipes: [...newAry],
+            isLoading: false,
+            next: lastVisible
+          });
         });
       return;
     }
@@ -314,15 +249,11 @@ class GalleryPage extends Component {
           docSnapshot.forEach((doc) => {
             newAry.push(doc.data());
           });
-          this.setState((prevState) => (
-            {
-              searchTarget: null,
-              lastSearch: location.state.searchTarget,
-              recipes: [...newAry],
-              isLoading: false,
-              next: lastVisible
-            }
-          ));
+          this.setState({
+            recipes: [...newAry],
+            isLoading: false,
+            next: lastVisible
+          });
         });
     } else {
       firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
@@ -334,25 +265,19 @@ class GalleryPage extends Component {
           docSnapshot.forEach((doc) => {
             newAry.push(doc.data());
           });
-          this.setState((prevState) => (
-            {
-              filter: category,
-              searchTarget: null,
-              lastSearch: location.state.searchTarget,
-              recipes: [...recipes, ...newAry],
-              isLoading: false,
-              next: lastVisible
-            }
-          ));
+          this.setState({
+            filter: category,
+            recipes: [...recipes, ...newAry],
+            isLoading: false,
+            next: lastVisible
+          });
         });
     }
   }
 
   openMobileFilter = () => {
-    const { openFilter } = this.state;
-    this.setState({
-      openFilter: !openFilter
-    });
+    const { openMobileFilter } = this.state;
+    this.setState({ openMobileFilter: !openMobileFilter });
   }
 
   renderItem = () => {
@@ -366,7 +291,7 @@ class GalleryPage extends Component {
   }
 
   render() {
-    const { filter, isLoading, openFilter } = this.state;
+    const { filter, isLoading, openMobileFilter } = this.state;
     return (
       <>
         {isLoading ? <Loading /> : ''}
@@ -375,7 +300,7 @@ class GalleryPage extends Component {
             <h2>Classic Cocktail</h2>
           </div>
           <main className="main-gallery">
-            <ul className={`filter ${openFilter ? 'open' : ''}`}>
+            <ul className={`filter ${openMobileFilter ? 'open' : ''}`}>
               <button type="button" className="open-filter-list" onClick={this.openMobileFilter}>
                 <img src="./imgs/arrow-point-to-down.png" alt="open" />
               </button>

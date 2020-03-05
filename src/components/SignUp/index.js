@@ -63,6 +63,10 @@ class SignUpFormBase extends Component {
       });
   }
 
+  triggerLoading = (boolean) => {
+    this.setState({ isLoading: boolean });
+  }
+
   inputChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   render() {
@@ -106,7 +110,7 @@ class SignUpFormBase extends Component {
           />
 
           <div className="btn-area">
-            <SignInWithAccount />
+            <SignInWithAccount triggerLoading={this.triggerLoading} />
             <button id="sign-up" type="button" onClick={this.signUp}>Sign up</button>
           </div>
           {error && <p>{error}</p>}

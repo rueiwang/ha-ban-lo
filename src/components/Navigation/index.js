@@ -31,7 +31,8 @@ class Navigation extends Component {
     this.setState({
       isMenuOpen: false,
       isSuggestionShown: false,
-      value: ''
+      value: '',
+      searchTarget: ''
     });
   }
 
@@ -44,8 +45,10 @@ class Navigation extends Component {
   }
 
   clickSuggestion = (e) => {
+    const { dataset } = e.target;
     this.setState({
       isSuggestionShown: false,
+      searchTarget: dataset.id,
       value: e.target.textContent
     });
   }
@@ -65,7 +68,7 @@ class Navigation extends Component {
   render() {
     const { userData } = this.props;
     const {
-      value, isSuggestionShown, isMenuOpen, suggestionList
+      value, isSuggestionShown, isMenuOpen, suggestionList, searchTarget
     } = this.state;
     return (
       <nav className="scroll">
@@ -105,13 +108,22 @@ CLASSIC COCKTAIL
             </ul>
             <form className="search">
               <div className="search-auto-complete">
-                <input type="text" name="search" id="search" autoComplete="off" value={value} onChange={(e) => this.inputChange(e)} placeholder="Cocktail Name" />
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  autoComplete="off"
+                  value={value}
+                  onChange={(e) => this.inputChange(e)}
+                  placeholder="Cocktail Name"
+                />
                 <ul className={`search-suggestion ${isSuggestionShown ? 'down' : ''}`}>
                   {
                     suggestionList.map((item, i) => (
                       <li
                         className="item"
                         key={i}
+                        data-id={item.cocktail_id}
                         onClick={(e) => this.clickSuggestion(e)}
                       >
                         {item.cocktail_name}
@@ -126,9 +138,11 @@ CLASSIC COCKTAIL
                 <Link
                   onClick={this.closeMenu}
                   to={{
-                    pathname: '/gallery',
+                    pathname: '/cocktailDetail',
+                    search: `search=${searchTarget}&ifCreation`,
                     state: {
-                      searchTarget: value
+                      cocktailId: searchTarget,
+                      ifCreation: false
                     }
                   }}
                 >
