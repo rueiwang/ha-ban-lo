@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  BrowserRouter, Route, Switch, Redirect
+  BrowserRouter, Route, Switch, Redirect, useHistory
 } from 'react-router-dom';
 
 import LandingPage from '../Landing';
@@ -33,8 +33,6 @@ class App extends Component {
       ingredientData: [],
       isLoading: true
     };
-
-    // this.isLoading = true;
   }
 
   componentDidMount() {
@@ -45,7 +43,6 @@ class App extends Component {
         this.monitorUserDataFromFirestore('member_collections', authUser);
         this.monitorUserDataFromFirestore('member_creations', authUser);
         this.monitorUserDataFromFirestore('member_ingredients', authUser);
-        this.setState({ isLoading: false });
       } else {
         this.setState((prevState) => ({
           userData: {
@@ -119,7 +116,8 @@ class App extends Component {
             ...prevState.userData,
             authUser,
             [dataType]: [...dataArray]
-          }
+          },
+          isLoading: false
         }
         ));
       });
@@ -158,31 +156,19 @@ class App extends Component {
                 <Route path="/account" render={(props) => (userData.authUser ? <AccountPage {...props} /> : <Redirect to="/" />)} />
                 <Route
                   path="/gallery"
-                  render={(props) => {
-                    this.isLoading = false;
-                    return <GalleryPage {...props} />;
-                  }}
+                  render={(props) => <GalleryPage {...props} />}
                 />
                 <Route
                   path="/bartending-ideas"
-                  render={(props) => {
-                    this.isLoading = false;
-                    return <IdeasPage {...props} />;
-                  }}
+                  render={(props) => <IdeasPage {...props} />}
                 />
                 <Route
                   path="/cocktailDetail"
-                  render={(props) => {
-                    this.isLoading = false;
-                    return <CocktailDetailPage {...props} />;
-                  }}
+                  render={(props) => <CocktailDetailPage {...props} />}
                 />
                 <Route
                   path="/taiwanbar"
-                  render={(props) => {
-                    this.isLoading = false;
-                    return <TaiwanBarPage {...props} />;
-                  }}
+                  render={(props) => <TaiwanBarPage {...props} />}
                 />
               </Switch>
               <BackToTop />
