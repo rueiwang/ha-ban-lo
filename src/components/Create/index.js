@@ -855,11 +855,10 @@ Introduction for Cocktail
                         <img src="../../imgs/edit.png" alt="edit" className="edit" onClick={(e) => this.editCreations(e, item.cocktail_id)} />
                         <Link to={{
                           pathname: '/cocktailDetail',
-                          search: item.cocktail_id,
+                          search: `search=${item.cocktail_id}&ifCreation=true`,
                           state: {
-                            cocktailID: item.cocktail_id,
-                            ifClassic: false,
-                            isCollected: false
+                            cocktailId: item.cocktail_id,
+                            ifCreation: true
                           }
                         }}
                         >

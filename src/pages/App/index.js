@@ -9,6 +9,7 @@ import GalleryPage from '../Gallery';
 import IdeasPage from '../BartendingIdeas';
 import TaiwanBarPage from '../TaiwanBar';
 import CocktailDetailPage from '../CocktailDetail';
+
 import Navigation from '../../components/Navigation';
 import BackToTop from '../../components/BackToTop';
 import Loading from '../../components/Loading';
@@ -38,7 +39,6 @@ class App extends Component {
   componentDidMount() {
     const { firebase } = this.props;
     this.listener = firebase.auth.onAuthStateChanged((authUser) => {
-      console.log(authUser);
       if (authUser) {
         this.monitorUserDataFromFirestore('member_collections', authUser);
         this.monitorUserDataFromFirestore('member_creations', authUser);
@@ -48,8 +48,7 @@ class App extends Component {
           userData: {
             ...prevState.userData,
             authUser
-          },
-          isLoading: false
+          }
         }));
       }
     });
@@ -71,7 +70,10 @@ class App extends Component {
       return (`${str}}`);
     });
     newAry = processAry.map((item) => JSON.parse(item));
-    this.setState({ [dataType]: [...newAry] });
+    this.setState({
+      [dataType]: [...newAry],
+      isLoading: false
+    });
   }
 
   getConstantDataFromFirestore = (dataType) => {
@@ -91,7 +93,8 @@ class App extends Component {
         sessionStorage.setItem(dataType, newAry.toString());
         const dataAry = newAry.map((str) => JSON.parse(str));
         this.setState({
-          [dataType]: dataAry
+          [dataType]: dataAry,
+          isLoading: false
         });
       });
   }

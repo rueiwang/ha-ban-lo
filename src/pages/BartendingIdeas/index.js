@@ -9,7 +9,6 @@ import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
 
 import '../../css/ideas.css';
-// import { creationsData } from '../../components/Context/DataInSessionStorage';
 
 
 class Item extends Component {

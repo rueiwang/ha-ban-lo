@@ -79,10 +79,10 @@ class CollectionItem extends Component {
         />
         <Link to={{
           pathname: '/cocktailDetail',
-          search: item.cocktail_id,
+          search: `search=${item.cocktail_id}&ifCreation`,
           state: {
-            cocktailID: item.cocktail_id,
-            ifClassic: true
+            cocktailId: item.cocktail_id,
+            ifCreation: false
           }
         }}
         >

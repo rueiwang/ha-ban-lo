@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-pascal-case */
 import React, { Component } from 'react';
 import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
@@ -25,12 +24,12 @@ class CocktailDetailPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lastCocktailId : '',
+      lastCocktailId: '',
       cocktailId: '',
-      nextCocktailId : '',
+      nextCocktailId: '',
       index: 0,
       ifCreation: true,
-      creations: [],
+      creations: [''],
       isLoading: true
     };
   }
@@ -40,25 +39,50 @@ class CocktailDetailPage extends Component {
     const query = new URLSearchParams(location.search);
     const targetId = query.get('search');
     const ifCreation = query.get('ifCreation') !== '';
-
     firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
       .then((docSnapshot) => {
         const newAry = [];
         docSnapshot.forEach((doc) => {
           newAry.push(doc.data());
         });
-        const targetIndex = this.getCurrentCocktailIndex(targetId, ifCreation, newAry);
-        this.setState({
-          cocktailId: targetId,
-          ifCreation,
-          creations: [...newAry],
-          index: targetIndex,
-          isLoading: false
-        });
+        this.prepareState(targetId, ifCreation, newAry);
       });
   }
 
   componentDidUpdate() {
+    const { location, firebase } = this.props;
+    const {
+      cocktailId, creations
+    } = this.state;
+    if (location.state.cocktailId !== cocktailId) {
+      const query = new URLSearchParams(location.search);
+      const targetId = query.get('search');
+      const ifCreation = query.get('ifCreation') !== '';
+      ifCreation
+        ? this.prepareState(targetId, ifCreation, creations)
+        : firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
+          .then((docSnapshot) => {
+            const newAry = [];
+            docSnapshot.forEach((doc) => {
+              newAry.push(doc.data());
+            });
+            this.prepareState(targetId, ifCreation, newAry);
+          });
+    }
+  }
+
+  prepareState = (id, boolean, array) => {
+    const targetIndex = this.getCurrentCocktailIndex(id, boolean, array);
+    this.getLastCocktail(targetIndex, boolean);
+    this.getNextCocktail(targetIndex, boolean);
+    // eslint-disable-next-line react/no-did-update-set-state
+    this.setState({
+      cocktailId: id,
+      ifCreation: boolean,
+      index: targetIndex,
+      isLoading: false,
+      creations: [...array]
+    });
   }
 
   getCurrentCocktailIndex = (id, ifCreation, creations) => {
@@ -72,9 +96,9 @@ class CocktailDetailPage extends Component {
     return targetIndex;
   }
 
-  determineDataSource = () => {
+  determineDataSource = (ifCreation) => {
     const { DataInSessionStorage } = this.props;
-    const { creations, ifCreation } = this.state;
+    const { creations } = this.state;
     let source;
     if (ifCreation) {
       source = creations;
@@ -84,56 +108,31 @@ class CocktailDetailPage extends Component {
     return source;
   }
 
-  getLastCocktail = () => {
-    const { index } = this.state;
-    const source = this.determineDataSource();
-    console.log(source);
-    if (source[index - 1] === undefined) {
-      alert('There is no more cocktail');
-      return;
-    }
+  getNextCocktail = (index, ifCreation) => {
+    const source = this.determineDataSource(ifCreation);
+    const ifNext = source[index + 1] !== undefined;
+    const id = ifNext ? source[index + 1].cocktail_id : null;
     this.setState({
-      lastCocktailId: source[index - 1].cocktail_id,
-      index: index - 1
-    });
-  }
-
-  getNextCocktail = (e) => {
-    const { index } = this.state;
-    const source = this.determineDataSource();
-    if (source[index + 1] === undefined) {
-      alert('There is no more cocktail');
-      return;
-    }
-    this.setState({
-      nextCocktailId: source[index + 1].cocktail_id,
+      nextCocktailId: id,
       index: index + 1
     });
   }
 
-  switchContent = (e, boolean) => {
-    const { DataInSessionStorage, location } = this.props;
-    const { creations } = this.state;
-    let id;
-    if (boolean) {
-      id = DataInSessionStorage.allRecipeData[0].cocktail_id;
-    } else {
-      id = creations[0].cocktail_id;
-    }
-    location.state.cocktailID = id;
-    location.search = `?${id}`;
+  getLastCocktail = (index, ifCreation) => {
+    const source = this.determineDataSource(ifCreation);
+    const ifLast = source[index - 1] !== undefined;
+    const id = ifLast ? source[index - 1].cocktail_id : null;
     this.setState({
-      ifCreation: boolean,
-      cocktailId: id,
-      index: 0
+      lastCocktailId: id,
+      index: index - 1
     });
   }
 
   render() {
     const {
-      cocktailId, creations, ifCreation, isLoading
+      cocktailId, creations, ifCreation, isLoading, nextCocktailId, lastCocktailId
     } = this.state;
-    const { location } = this.props;
+    const { location, DataInSessionStorage } = this.props;
     const ifUndefined = location.state === undefined;
     return isLoading
       ? <Loading />
@@ -141,19 +140,44 @@ class CocktailDetailPage extends Component {
         <>
           <div className="wrap-detail">
             <div className="switchContent">
-              <button className={ifCreation ? '' : 'current'} type="button" onClick={(e) => this.switchContent(e, false)}>CLASSIC</button>
-              <button className={ifCreation ? 'current' : ''} type="button" onClick={(e) => this.switchContent(e, true)}>IDEAS</button>
+              <Link
+                className={ifCreation ? '' : 'current'}
+                type="button"
+                to={{
+                  pathname: '/cocktailDetail',
+                  search: `search=${DataInSessionStorage.allRecipeData[0].cocktail_id}&ifCreation`,
+                  state: {
+                    cocktailId: DataInSessionStorage.allRecipeData[0].cocktail_id,
+                    ifCreation: false
+                  }
+                }}
+              >
+CLASSIC
+              </Link>
+              <Link
+                className={ifCreation ? 'current' : ''}
+                type="button"
+                to={{
+                  pathname: '/cocktailDetail',
+                  search: `search=${creations[0].cocktail_id}&ifCreation=true`,
+                  state: {
+                    cocktailId: creations[0].cocktail_id,
+                    ifCreation: true
+                  }
+                }}
+              >
+IDEAS
+              </Link>
             </div>
             <main className="main-detail">
               <Link
-                className="last"
-                onClick={(e) => this.getLastCocktail(e)}
+                className={`last ${lastCocktailId ? '' : 'no-more'}`}
                 to={{
                   pathname: '/cocktailDetail',
-                  search: `search=${cocktailId}&ifCreation`,
+                  search: `search=${lastCocktailId}&ifCreation${ifCreation ? '=true' : ''}`,
                   state: {
-                    cocktailId,
-                    ifCreation: true
+                    cocktailId: lastCocktailId,
+                    ifCreation
                   }
                 }}
                 type="button"
@@ -171,15 +195,14 @@ class CocktailDetailPage extends Component {
                 />
               </div>
               <Link
-                className="next"
-                onClick={(e) => this.getNextCocktail(e)}
+                className={`next ${nextCocktailId ? '' : 'no-more'}`}
                 type="button"
                 to={{
                   pathname: '/cocktailDetail',
-                  search: `search=${cocktailId}&ifCreation`,
+                  search: `search=${nextCocktailId}&ifCreation${ifCreation ? '=true' : ''}`,
                   state: {
-                    cocktailId,
-                    ifCreation: true
+                    cocktailId: nextCocktailId,
+                    ifCreation
                   }
                 }}
               >
