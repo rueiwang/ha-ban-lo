@@ -14,7 +14,7 @@ import { allRecipeData } from '../../components/Context/DataInSessionStorage';
 import MyCollection from '../../components/MyCollection';
 import Note from '../../components/Note';
 import Create from '../../components/Create';
-import VerifiedEmail from '../../components/VerifiedEmail';
+import RemindVerifiedEmail from './RemindVerifiedEmail';
 import SignOut from '../../components/SignOut';
 
 import '../../css/account.css';
@@ -117,7 +117,7 @@ Hi!
             </main>
           </div>
         )
-          : <VerifiedEmail />
+          : <RemindVerifiedEmail />
       }
 
         </>

@@ -1,50 +1,19 @@
 /* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import photo from './assets/photo-camera.png';
-import correct from './assets/correct.png';
-import required from './assets/required.png';
+import APP from '../../lib';
 
+import InputText from './InputText';
+import InputTextarea from './InputTextarea';
+import InputFile from './InputFile';
+import InputIngredientsFieids from './InputIngredientsFieids';
+import Select from './Select';
+import MemberCreationsList from './MemberCreationsList';
+import { FORM_INITAIL_STATE } from './constant';
 import Loading from '../Loading';
 
 import '../../css/account-create.css';
 
-
-const generateKey = (pre) => `${pre}_${Date.now()}`;
-
-const FORM_INITAIL_STATE = {
-  inputing: false,
-  cocktailId: '',
-  cocktailName: '',
-  cocktailPic: '',
-  previewPic: '',
-  cocktailGlass: 'Brandy Glass',
-  cocktailGlassType: 'GlassOfBrandy',
-  cocktailCategory: '',
-  cocktailIntro: '',
-  cocktailTags: [],
-  errors: {
-    cocktailName: '',
-    cocktailPic: 'Only accept jpg file.',
-    cocktailCategory: 'Shot, Party Drink, Ordinary Drink etc.',
-    cocktailIngredients: [{
-      ingredient: 'Choose a ingredient name.'
-    }],
-    cocktailMeasures: [{
-      measure: '1 oz or 1mL etc.'
-    }],
-    cocktailIntro: 'Steps for making your cocktail.',
-    cocktailTags: 'Use blank space to divide your input:Sour Sweet etc.'
-  },
-  ingredientsInputFields: [{
-    ingredientValue: '',
-    measureValue: '',
-    cocktailIngredientsType: '',
-    key: generateKey('ingredient')
-  }]
-};
-
-const formKey = generateKey('form');
+const formKey = APP.generateKey('form');
 export default class Create extends Component {
   constructor(props) {
     super(props);
@@ -79,7 +48,7 @@ export default class Create extends Component {
         ingredientValue: item,
         measureValue: targetCreation[0].cocktail_measures[i],
         cocktailIngredientsType: targetCreation[0].cocktail_ingredients_type[i],
-        key: generateKey(`ingredient${i}`)
+        key: APP.generateKey(`ingredient${i}`)
       };
       ingredientsInputFields.push(obj);
       errors.cocktailIngredients.push({
@@ -115,7 +84,6 @@ export default class Create extends Component {
   getCreations = () => {
     const { firebase, userData } = this.props;
     const { creations } = this.state;
-    console.log(userData.authUser.uid);
     firebase.db.collection('members_creations').where('cocktail_creator_id', '==', userData.authUser.uid)
       .get()
       .then((dosSnapshot) => {
@@ -398,7 +366,7 @@ export default class Create extends Component {
       cocktailIngredientsType: '',
       ingredientValue: '',
       measureValue: '',
-      key: generateKey('ingredient')
+      key: APP.generateKey('ingredient')
     });
     this.setState({
       ...FORM_INITAIL_STATE,
@@ -594,12 +562,11 @@ export default class Create extends Component {
       ingredientValue: '',
       measureValue: '',
       cocktailIngredientsType: '',
-      key: generateKey('ingredient')
+      key: APP.generateKey('ingredient')
     });
     this.setState({
       errors,
-      ingredientsInputFields: [...ingredientsInputFields],
-      inputing: true
+      ingredientsInputFields: [...ingredientsInputFields]
     });
   }
 
@@ -668,106 +635,62 @@ export default class Create extends Component {
           <form className="create-form" key={formKey}>
             <div className="top">
               <div className="text-area">
-                <label htmlFor="create-cocktail-name">
-Cocktail Name
-                </label>
-                <label className="input-icon">
-                  <input
-                    name="cocktailName"
-                    onChange={(e) => this.onInputChangeStr(e)}
-                    value={cocktailName}
-                    autoComplete="off"
-                    type="text"
-                    id="create-cocktail-name"
-                    className={`${this.validStatus(errors.cocktailName)}`}
-                  />
-                  <img src={this.validStatus(errors.cocktailName) === 'correct' ? correct : required} className="correct" alt="" />
-                </label>
-                <p className="create-remind">{errors.cocktailName}</p>
-                <label htmlFor="create-cocktail-category">
-Cocktail Category
-                </label>
-                <label className="input-icon">
-                  <input
-                    name="cocktailCategory"
-                    onChange={(e) => this.onInputChangeStr(e)}
-                    value={cocktailCategory}
-                    autoComplete="off"
-                    type="text"
-                    id="create-cocktail-category"
-                    className={`${this.validStatus(errors.cocktailCategory)}`}
-                  />
-                  <img src={this.validStatus(errors.cocktailCategory) === 'correct' ? correct : required} className="correct" alt="" />
-                </label>
-                <p className="create-remind">{errors.cocktailCategory}</p>
-                <label htmlFor="create-cocktail-tag">
-Flavor of Cocktail
-                </label>
-                <label className="input-icon">
-                  <input
-                    name="cocktailTags"
-                    onChange={(e) => this.onInputChangeStr(e)}
-                    value={cocktailTags}
-                    autoComplete="off"
-                    type="text"
-                    id="create-cocktail-tag"
-                    className={`${this.validStatus(errors.cocktailTags)}`}
-                  />
-                  <img src={this.validStatus(errors.cocktailTags) === 'correct' ? correct : required} className="correct" alt="" />
-                </label>
-                <p className="create-remind">{errors.cocktailTags}</p>
-                <label htmlFor="create-cocktail-glass">
-Glass for Cocktail
-                </label>
-                <label className="input-icon">
-                  <select
-                    name="cocktailGlassType"
-                    className="drop-down-menu-input"
-                    id="create-cocktail-glass"
-                    onChange={(e) => this.onInputChangeStr(e)}
-                    value={cocktailGlass}
-                  >
-                    <option id="GlassOfBrandy" value="Brandy Glass">Brandy Glass</option>
-                    <option id="GlassOfChampagne" value="Champagne Glass">Champagne Glass</option>
-                    <option id="GlassOfHighball" value="Highball Glass">Highball Glass</option>
-                    <option id="GlassOfMartini" value="Martini Glass">Martini Glass</option>
-                    <option id="GlassOfShot" value="Shot Glass">Shot Glass</option>
-                    <option id="GlassOfUFO" value="UFO Glass">UFO Glass</option>
-                    <option id="GlassOfWhisky" value="Whisky Glass">Whisky Glass</option>
-                  </select>
-                </label>
-                <p className="create-remind">{errors.cocktailGlassType}</p>
+                <InputText
+                  id="name"
+                  name="cocktailName"
+                  value={cocktailName}
+                  event={this.onInputChangeStr}
+                  errors={errors.cocktailName}
+                  validation={this.validStatus}
+                  label="Cocktail Name"
+                />
+                <InputText
+                  id="category"
+                  name="cocktailCategory"
+                  value={cocktailCategory}
+                  event={this.onInputChangeStr}
+                  errors={errors.cocktailCategory}
+                  validation={this.validStatus}
+                  label="Cocktail Category"
+                />
+                <InputText
+                  id="tag"
+                  name="cocktailTags"
+                  value={cocktailTags}
+                  event={this.onInputChangeStr}
+                  errors={errors.cocktailTags}
+                  validation={this.validStatus}
+                  label="Flavor of Cocktail"
+                />
+                <Select
+                  id="glass"
+                  name="cocktailGlassType"
+                  value={cocktailGlass}
+                  event={this.onInputChangeStr}
+                  errors={errors.cocktailGlass}
+                  label="Glass for Cocktail"
+                />
               </div>
-              <div className="upload-pic">
-                <label htmlFor="create-cocktail-pic" className={`${this.validStatus(errors.cocktailPic)}`}>
-                  <div className="preview-pic">
-                    <img src={previewPic} alt="" ref={this.img} />
-                  </div>
-                  <img src={photo} alt="Upload Area" />
-                  <input
-                    type="file"
-                    id="create-cocktail-pic"
-                    accept=".jpg, .jpeg"
-                    onChange={(e) => this.previewPic(e)}
-                  />
-                  <p className="create-remind">{errors.cocktailPic}</p>
-                </label>
-              </div>
+              <InputFile
+                id="pic"
+                file={this.img}
+                previewSrc={previewPic}
+                event={this.previewPic}
+                errors={errors.cocktailPic}
+                validation={this.validStatus}
+              />
             </div>
             <div className="bottom">
               <div className="intro-area">
-                <label htmlFor="create-cocktail-intro">
-Introduction for Cocktail
-                </label>
-                <textarea
+                <InputTextarea
+                  id="intro"
                   name="cocktailIntro"
-                  onChange={(e) => this.onInputChangeStr(e)}
                   value={cocktailIntro}
-                  id="create-cocktail-intro"
-                  resize="none"
-                  className={`${this.validStatus(errors.cocktailIntro)}`}
+                  event={this.onInputChangeStr}
+                  errors={errors.cocktailIntro}
+                  validation={this.validStatus}
+                  label="Introduction for Cocktail"
                 />
-                <p className="create-remind">{errors.cocktailIntro}</p>
               </div>
               <div className="ingredients-area">
                 <label htmlFor="create-cocktail-ingredient">
@@ -779,7 +702,7 @@ Introduction for Cocktail
                 </label>
                 {
                 ingredientsInputFields.map((item, i) => (
-                  <Ingredients
+                  <InputIngredientsFieids
                     index={i}
                     key={item.key}
                     ingredientValue={item.ingredientValue}
@@ -812,193 +735,10 @@ Introduction for Cocktail
               <button className="clear" type="button" onClick={(e) => this.clearAllInput(e)}>Clear</button>
             </div>
           </form>
-          <div className="creations">
-            <h2>Your Creation</h2>
-            <div className="slide-box">
-              <button className="goBackward" type="button" data-target="creationsLi" onClick={(e) => this.slideBackward(e, creations.length)}>
-                <img src="/imgs/backward.png" alt="backward" data-target="creationsLi" />
-              </button>
-              <ul className="creations-list" ref={this.ulWidth}>
-                { creations === []
-                  ? <li>LOADING</li>
-                  : creations.map((item) => {
-                    let category;
-                    const condition = item.cocktail_ingredients_type[item.cocktail_ingredients_type.findIndex((ingredient) => ingredient !== 'other')];
-                    switch (condition) {
-                      case 'vodka':
-                        category = 'vodka';
-                        break;
-                      case 'gin':
-                        category = 'gin';
-                        break;
-                      case 'rum':
-                        category = 'rum';
-                        break;
-                      case 'tequila':
-                        category = 'tequila';
-                        break;
-                      case 'whisky':
-                        category = 'whisky';
-                        break;
-                      case 'liqueur':
-                        category = 'liqueur';
-                        break;
-                      case 'brandy':
-                        category = 'brandy';
-                        break;
-                      default:
-                        category = 'all';
-                        break;
-                    }
-                    return (
-                      <li key={item.cocktail_id}>
-                        <img src="../../imgs/edit.png" alt="edit" className="edit" onClick={(e) => this.editCreations(e, item.cocktail_id)} />
-                        <Link to={{
-                          pathname: '/cocktailDetail',
-                          search: `search=${item.cocktail_id}&ifCreation=true`,
-                          state: {
-                            cocktailId: item.cocktail_id,
-                            ifCreation: true
-                          }
-                        }}
-                        >
-                          <img src={`../../imgs/${category}.png`} alt="icon" />
-                          <h5>{item.cocktail_name}</h5>
-                        </Link>
-                      </li>
-                    );
-                  })}
-              </ul>
-              <button className="goForward" type="button" data-target="creationsLi" onClick={(e) => this.slideForward(e, creations.length)}>
-                <img src="/imgs/forward.png" alt="forward" data-target="creationsLi" />
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </>
-    );
-  }
-}
-
-class Ingredients extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isFocused: false,
-      ingredientInputValue: '',
-      updateSuggestion: []
-    };
-  }
-
-  componentDidMount() {
-    this.renderOptions();
-  }
-
-  // 輸入的值在 state 中存為陣列
-  onChange = (e, index) => {
-    e.preventDefault();
-    const { onInputChangeAry } = this.props;
-    const { name, value } = e.target;
-    onInputChangeAry(name, value, index);
-    if (name === 'cocktailIngredients') {
-      this.setState({
-        isFocused: true,
-        ingredientInputValue: value
-      });
-      this.renderOptions();
-    }
-  }
-
-  // 點擊選擇建議
-  chooseSuggestion = (e) => {
-    const { onInputChangeAry } = this.props;
-    const { dataset } = e.target;
-    onInputChangeAry('cocktailIngredients', dataset.value, Number(dataset.index), dataset.type);
-    this.setState({
-      isFocused: false
-    });
-  }
-
-  renderOptions = () => {
-    const { ingredientsData } = this.props;
-    const { ingredientInputValue } = this.state;
-    const updateData = ingredientsData
-      .filter((item) => item.ingredient_name.toLowerCase().indexOf(ingredientInputValue.toLowerCase()) !== -1);
-    this.setState({
-      updateSuggestion: [...updateData]
-    });
-    if (updateData.length === 0) {
-      this.setState({
-        updateSuggestion: [...ingredientsData],
-        isFocused: false
-      });
-    }
-  }
-
-  anotherField = (e, index) => {
-    const { removeIngredientInput } = this.props;
-    removeIngredientInput(index);
-  }
-
-  render() {
-    const {
-      index,
-      measureValue,
-      ingredientValue,
-      ingredientErrorMessage,
-      measureErrorMessage,
-      ingredientIsValid,
-      measureIsValid
-    } = this.props;
-    const { isFocused, updateSuggestion } = this.state;
-    return (
-      <>
-        <div className="create-cocktail-ingredient-field">
-          <div className="field">
-            <label className="input-icon">
-              <input
-                name="cocktailIngredients"
-                onChange={(e) => this.onChange(e, index)}
-                className={`auto-complete-input create-cocktail-ingredient ${ingredientIsValid}`}
-                autoComplete="off"
-                type="text"
-                value={ingredientValue}
-              />
-              <ul className={`auto-complete-list ${isFocused ? 'down' : ''}`}>
-                {
-                  updateSuggestion.map((updateItem) => (
-                    <li
-                      data-value={updateItem.ingredient_name}
-                      data-type={updateItem.ingredient_type}
-                      data-index={index}
-                      key={updateItem.ingredient_id}
-                      onClick={(e) => this.chooseSuggestion(e)}
-                    >
-                      {updateItem.ingredient_name}
-                    </li>
-                  ))
-                }
-              </ul>
-              <img src={ingredientIsValid === 'correct' ? correct : required} className="correct" alt="" />
-            </label>
-            <p className="create-remind">{ingredientErrorMessage[index].ingredient}</p>
-          </div>
-          <div className="field">
-            <label className="input-icon">
-              <input
-                name="cocktailMeasures"
-                onChange={(e) => this.onChange(e, index)}
-                autoComplete="off"
-                type="text"
-                className={`create-cocktail-ingredient-measure ${measureIsValid}`}
-                value={measureValue}
-              />
-              <img src={measureIsValid === 'correct' ? correct : required} className="correct" alt="" />
-            </label>
-            <p className="create-remind">{measureErrorMessage[index].measure}</p>
-          </div>
-          <button className="minus" data-index={index} type="button" onClick={(e) => this.anotherField(e, index)}>-</button>
+          <MemberCreationsList
+            creations={creations}
+            edit={this.editCreations}
+          />
         </div>
       </>
     );

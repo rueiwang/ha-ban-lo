@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import '../../css/account-note.css';
+import APP from '../../lib';
 
 import ShoppingList from '../ShoppingList';
+import EmptyItem from '../EmptyItem';
+import { ForwardBtn, BackwardBtn } from '../SlideBtn';
+
+import '../../css/account-note.css';
 
 export default class Note extends Component {
   constructor(props) {
@@ -126,15 +130,22 @@ export default class Note extends Component {
       <div className={type}>
         <h3>{type}</h3>
         <div className="slide-box">
-          <button className="goBackward" type="button" data-target={type} onClick={(e) => this.slideBackward(e, arr.length)}>
-            <img src="/imgs/arrow-left.png" alt="backward" data-target={type} />
-          </button>
+          <BackwardBtn
+            length={arr.length}
+            event={this.slideBackward}
+            target={type}
+          />
           <ul className={`${type}-list`} ref={this.ulWidth}>
             { arr.length === 0
-              ? <li>LOADING</li>
+              ? (
+                <EmptyItem
+                  message="ingredients"
+                  destination="Gallery"
+                />
+              )
               : arr.map((item, i) => (
                 <li
-                  key={i}
+                  key={APP.generateKey(i)}
                   ref={this.liWidth}
                   className={type}
                   style={slideTarget === type
@@ -157,9 +168,11 @@ export default class Note extends Component {
                 </li>
               ))}
           </ul>
-          <button className="goForward" type="button" data-target={type} onClick={(e) => this.slideForward(e)}>
-            <img src="/imgs/arrow-right.png" alt="forward" data-target={type} />
-          </button>
+          <ForwardBtn
+            length={arr.length}
+            event={this.slideForward}
+            target={type}
+          />
         </div>
       </div>
     );

@@ -326,6 +326,7 @@
 .ingredients-wrap>div>.slide-box>ul {
     display: flex;
     overflow-x: scroll;
+    height: 180px;
 }
 
 .ingredients-wrap>div>.slide-box>ul>li {

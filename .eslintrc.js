@@ -48,6 +48,7 @@ module.exports = {
         "prefer-destructuring": "off",
         "react/sort-comp": "off",
         "no-alert": "off",
-        "max-classes-per-file": "off"
+        "max-classes-per-file": "off",
+        "jsx-a11y/mouse-events-have-key-events": "off"
   },
 };
