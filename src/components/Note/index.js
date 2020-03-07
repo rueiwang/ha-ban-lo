@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import APP from '../../lib';
 
 import ShoppingList from '../ShoppingList';
-import EmptyItem from '../EmptyItem';
-import { ForwardBtn, BackwardBtn } from '../SlideBtn';
+import SlideBox from '../SlideBox';
 
 import '../../css/account-note.css';
 
@@ -15,14 +13,8 @@ export default class Note extends Component {
       liqueur: [],
       other: [],
       tobuy: [],
-      translateDistance: 0,
-      slideTarget: 'baseWine',
-      randomSuggestions: [],
       isShoppingListShown: true
     };
-
-    this.ulWidth = React.createRef();
-    this.liWidth = React.createRef();
   }
 
   componentDidMount() {
@@ -63,47 +55,6 @@ export default class Note extends Component {
     });
   }
 
-  slideBackward = (e, itemNum) => {
-    const { target } = e.target.dataset;
-    const { translateDistance } = this.state;
-    const differenceBetweenUlAndLi = (this.ulWidth.current.offsetWidth - (this.liWidth.current.offsetWidth * itemNum));
-    if (differenceBetweenUlAndLi > 0) {
-      this.setState({
-        translateDistance: 0
-      });
-      return;
-    }
-    if (differenceBetweenUlAndLi > translateDistance) {
-      this.setState({
-        translateDistance: 0
-      });
-      return;
-    }
-    this.setState((prevState) => (
-      {
-        slideTarget: target,
-        translateDistance: prevState.translateDistance - 100
-      }
-    ));
-  }
-
-  slideForward = (e) => {
-    const { target } = e.target.dataset;
-    const { translateDistance } = this.state;
-    if (translateDistance <= 0) {
-      this.setState({
-        translateDistance: 0
-      });
-      return;
-    }
-    this.setState((prevState) => (
-      {
-        slideTarget: target,
-        translateDistance: prevState.translateDistance + 100
-      }
-    ));
-  }
-
   changeIngredientsStatus = (e, id, statusNum) => {
     e.preventDefault();
     const { firebase, userData } = this.props;
@@ -124,60 +75,6 @@ export default class Note extends Component {
     });
   }
 
-  renderSlideBoxByIngredientsType = (arr, type) => {
-    const { slideTarget, translateDistance } = this.state;
-    return (
-      <div className={type}>
-        <h3>{type}</h3>
-        <div className="slide-box">
-          <BackwardBtn
-            length={arr.length}
-            event={this.slideBackward}
-            target={type}
-          />
-          <ul className={`${type}-list`} ref={this.ulWidth}>
-            { arr.length === 0
-              ? (
-                <EmptyItem
-                  message="ingredients"
-                  destination="Gallery"
-                />
-              )
-              : arr.map((item, i) => (
-                <li
-                  key={APP.generateKey(i)}
-                  ref={this.liWidth}
-                  className={type}
-                  style={slideTarget === type
-                    ? {
-                      transform: `translateX(${translateDistance}px)`
-                    }
-                    : {
-                      transform: 'translateX(0px)'
-                    }}
-                >
-                  <input
-                    type="image"
-                    src="../../imgs/delete.png"
-                    alt=""
-                    className="deleteBtn"
-                    onClick={(e) => this.changeIngredientsStatus(e, item.ingredient_id, 2)}
-                  />
-                  <img src={item.ingredient_pic} alt="icon" />
-                  <h5>{item.ingredient_name}</h5>
-                </li>
-              ))}
-          </ul>
-          <ForwardBtn
-            length={arr.length}
-            event={this.slideForward}
-            target={type}
-          />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       baseWine, liqueur, other, tobuy, isShoppingListShown
@@ -192,9 +89,22 @@ export default class Note extends Component {
             changeIngredientsStatus={this.changeIngredientsStatus}
           />
 
-          {this.renderSlideBoxByIngredientsType(baseWine, 'baseWine')}
-          {this.renderSlideBoxByIngredientsType(liqueur, 'liqueur')}
-          {this.renderSlideBoxByIngredientsType(other, 'other')}
+          <SlideBox
+            type="baseWine"
+            arr={baseWine}
+            event={this.changeIngredientsStatus}
+          />
+          <SlideBox
+            type="liqueur"
+            arr={liqueur}
+            event={this.changeIngredientsStatus}
+          />
+          <SlideBox
+            type="other"
+            arr={other}
+            event={this.changeIngredientsStatus}
+          />
+
         </div>
       </>
 

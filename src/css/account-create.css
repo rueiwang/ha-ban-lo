@@ -5,17 +5,18 @@
     flex-wrap: wrap; */
 }
 .create-wrap>h2,
-.create-wrap>.creations>h2 {
+.create-wrap>.creations>h3 {
     font-size: 30px;
     font-weight: 900;
     margin-bottom: 20px;
     padding-bottom: 10px;
     width: 100%;
     position: relative;
+    text-transform: capitalize;
 }
 
 .create-wrap>h2:after,
-.create-wrap>.creations>h2:after {
+.create-wrap>.creations>h3:after {
     position: absolute;
     background-color: #000000;
     height: 5px;

@@ -31,9 +31,7 @@ class SignInFormBase extends Component {
     this.setState({ isLoading: true });
     firebase
       .doSignInWithEmailAndPassword(email, password)
-      .then((authUser) => {
-        this.setState({ ...INITIAL_STATE });
-      })
+      .then(() => { this.setState({ ...INITIAL_STATE }); })
       .catch((error) => {
         this.setState({
           error: error.message,

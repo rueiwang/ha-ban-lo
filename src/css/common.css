@@ -1,5 +1,6 @@
 html {
     scroll-behavior: smooth;
+    letter-spacing: 2px;
   }
   
 
@@ -355,11 +356,61 @@ footer>.footer-container>.copyright a>img{
 #empty-item>.empty-description a{
     text-decoration: none;
     display: inline-block;
-    padding: 5px;
+    padding: 10px 0 5px 0;
     color: #cdcdcd;
     border-bottom: 2px solid transparent;
 }
 #empty-item>.empty-description a:hover{
     color: #000000;
     border-bottom: 2px solid #000000;
+}
+
+/* Dialog */
+.dialog-wrap {
+    position: fixed;
+    z-index: 200;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dialog-wrap>div {
+    background-color: #F0AD5F;
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: 2px;
+    border: 2px solid #000000;
+}
+.dialog-wrap>div>* {
+    margin: 0 0 10px 0 !important;
+}
+.dialog-wrap>div>img {
+    width: 50px;
+}
+.dialog-wrap>div>h3 {
+    font-size: 20px;
+    font-weight: 900;
+}
+.dialog-wrap>div>p {
+    margin-bottom: 20px;
+}
+.dialog-wrap>div button {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    padding: 10px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.dialog-wrap>div button:nth-child(2) {
+    margin-left: 10px;
+    background-color: #000000;
+    color: #ffffff;
 }

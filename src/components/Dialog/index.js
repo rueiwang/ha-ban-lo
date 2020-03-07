@@ -1,26 +1,40 @@
 import React, { Component } from 'react';
+import '../../css/common.css';
 
 export default class Dialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: null,
-      response: {
-        ifExist: 'Are you sure to leave the page?',
-        updateSuccess: 'Update Successfully!',
-        addSuccess: 'Add a new cocktail!'
-      }
+      isShown: true
     };
   }
 
-  componentDidMount() {
-    const { type, response } = this.state;
-  }
-
   render() {
-    const { tpye, response } = this.state;
+    const {
+      type,
+      head,
+      text,
+      confirm,
+      reject
+    } = this.props;
     return (
-      <h1>Loading</h1>
+      <>
+        <div className="dialog-wrap">
+          <div className="dialog-box">
+            <img src={`../../imgs/${type === 'alert' ? 'cheers' : 'broken-heart'}.png`} alt="" />
+            <h3>{head}</h3>
+            <p>{text}</p>
+            <div className="dialog-btn-area">
+              <button type="button" onClick={(e) => confirm(e, true)}>OK</button>
+              {
+                type === 'alert'
+                  ? ''
+                  : <button type="button" onClick={(e) => reject(e, false)}>NO</button>
+              }
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 }

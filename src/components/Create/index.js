@@ -7,7 +7,8 @@ import InputTextarea from './InputTextarea';
 import InputFile from './InputFile';
 import InputIngredientsFieids from './InputIngredientsFieids';
 import Select from './Select';
-import MemberCreationsList from './MemberCreationsList';
+import SlideBox from '../SlideBox';
+import Dialog from '../Dialog';
 import { FORM_INITAIL_STATE } from './constant';
 import Loading from '../Loading';
 
@@ -22,7 +23,11 @@ export default class Create extends Component {
       isLoading: false,
       creations: [],
       filter: 'creating-mode',
-      isShown: false
+      isShown: false,
+      isDialodShow: false,
+      dialogType: '',
+      dialogHead: '',
+      dialogText: ''
     };
     this.img = React.createRef();
   }
@@ -130,7 +135,7 @@ export default class Create extends Component {
       isShown
     } = this.state;
 
-    if (!this.validateForm(errors) || !isShown) {
+    if (!this.validateForm(errors) || isShown) {
       alert('Please complete the form.');
       this.setState({
         isShown: !isShown
@@ -143,18 +148,11 @@ export default class Create extends Component {
     });
     // 照片上傳到 storage
     const docRef = firebase.db.collection('members_creations').doc();
-    const uploadTask = firebase.storageRef.child(`user-recipe-images/${docRef.id}`).put(cocktailPic);
-    uploadTask.on('state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(`Upload is ${progress}% done`);
-      }, (error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        console.log(error);
-      }, () => {
-        // Upload completed successfully, now we can get the download URL
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+    firebase.storageRef.child(`user-recipe-images/${docRef.id}`)
+      .put(cocktailPic)
+      .then((snapshot) => {
+      // Upload completed successfully, now we can get the download URL
+        snapshot.ref.getDownloadURL().then((downloadURL) => {
           const picUrl = downloadURL;
           const timestamp = Date.now();
           const tagsArray = cocktailTags.split(' ');
@@ -222,7 +220,7 @@ export default class Create extends Component {
       isShown
     } = this.state;
 
-    if (!this.validateForm(errors) || !isShown) {
+    if (!this.validateForm(errors) || isShown) {
       alert('Please complete the form.');
       this.setState({
         isShown: !isShown
@@ -327,7 +325,12 @@ export default class Create extends Component {
   deleteDatabase = (e) => {
     const { firebase, userData } = this.props;
     const { cocktailId } = this.state;
-
+    this.setState({
+      isDialodShow: true,
+      dialogType: 'alert',
+      dialogHead: 'DELETED',
+      dialogText: 'Try create another recipe!'
+    });
     this.setState({
       isLoading: true
     });
@@ -547,11 +550,8 @@ export default class Create extends Component {
   }
 
   // 點擊按鈕新增原料輸入框，最多六項
-  addNewIngredientInput = (index) => {
+  addNewIngredientInput = () => {
     const { ingredientsInputFields, errors } = this.state;
-    if (ingredientsInputFields.length > 5) {
-      return;
-    }
     errors.cocktailIngredients.push({
       ingredient: 'Choose a ingredient name.'
     });
@@ -611,6 +611,14 @@ export default class Create extends Component {
     return 'wrong';
   }
 
+  closeDialog = (e, boolean) => {
+    this.setState({
+      isDialodShow: false,
+      dialogResult: boolean
+    });
+    return boolean;
+  }
+
   render() {
     const {
       isLoading,
@@ -624,12 +632,25 @@ export default class Create extends Component {
       previewPic,
       creations,
       filter,
-      isShown
+      isShown,
+      isDialodShow,
+      dialogType,
+      dialogHead,
+      dialogText
     } = this.state;
     const { DataInSessionStorage } = this.props;
     return (
       <>
         { isLoading ? <Loading /> : ''}
+        { isDialodShow ? (
+          <Dialog
+            type={dialogType}
+            head={dialogHead}
+            text={dialogText}
+            confirm={this.closeDialog}
+            reject={this.closeDialog}
+          />
+        ) : ''}
         <div className="create-wrap">
           <h2>Let&lsquo;s create your own cocktail recipe!</h2>
           <form className="create-form" key={formKey}>
@@ -698,7 +719,11 @@ export default class Create extends Component {
                   <div className={`two-ingredient-prompt ${isShown ? 'show' : ''}`}>
                     <p>at least 2 items!</p>
                   </div>
-                  <button className="plus" type="button" onClick={(e) => this.addNewIngredientInput()}>+</button>
+                  {
+                    ingredientsInputFields.length > 5
+                      ? ''
+                      : (<button className="plus" type="button" onClick={(e) => this.addNewIngredientInput()}>+</button>)
+                  }
                 </label>
                 {
                 ingredientsInputFields.map((item, i) => (
@@ -735,9 +760,10 @@ export default class Create extends Component {
               <button className="clear" type="button" onClick={(e) => this.clearAllInput(e)}>Clear</button>
             </div>
           </form>
-          <MemberCreationsList
-            creations={creations}
-            edit={this.editCreations}
+          <SlideBox
+            type="creations"
+            arr={creations}
+            event={this.editCreations}
           />
         </div>
       </>

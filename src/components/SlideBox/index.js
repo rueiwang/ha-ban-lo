@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import APP from '../../lib';
 
-import { ForwardBtn, BackwardBtn } from '../SlideBtn';
+import { ForwardBtn, BackwardBtn } from './SlideBtn';
 import EmptyItem from '../EmptyItem';
+import CreationsList from './CreationsList';
+import IngredientsList from './IngredientsList';
 
-export default class MemberCreationsList extends Component {
+export default class SlideBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +47,9 @@ export default class MemberCreationsList extends Component {
       return;
     }
     if (differenceBetweenUlAndLi > translateDistance) {
-      this.setState({ translateDistance: 0 });
+      this.setState({
+        translateDistance: 0
+      });
       return;
     }
     this.setState((prevState) => (
@@ -70,62 +74,55 @@ export default class MemberCreationsList extends Component {
     ));
   }
 
-
   render() {
-    const { creations, edit } = this.props;
+    const {
+      type,
+      arr,
+      event
+    } = this.props;
     const { translateDistance } = this.state;
     return (
-      <div className="creations">
-        <h2>Your Creation</h2>
+      <div className={type}>
+        <h3>{type}</h3>
         <div className="slide-box">
           <BackwardBtn
-            length={creations.length}
+            length={arr.length}
             event={this.slideBackward}
-            target="creationsLi"
           />
-          <ul className="creations-list" ref={this.ulWidth}>
-            { creations.length === 0
+          <ul className={`${type}-list`} ref={this.ulWidth}>
+            { arr.length === 0
               ? (
                 <EmptyItem
-                  message="creations"
-                  destination="bartending-ideas"
+                  message="ingredients"
+                  destination="Gallery"
                 />
               )
-              : creations.map((item) => {
-                const condition = item.cocktail_ingredients_type[item.cocktail_ingredients_type.findIndex((ingredient) => ingredient !== 'other')];
-                const category = this.filterCategory(condition);
-                return (
-                  <li
-                    key={item.cocktail_id}
-                    ref={this.liWidth}
-                    style={{
-                      transform: `translateX(${translateDistance}px)`
-                    }}
-                  >
-                    <img src="../../imgs/edit.png" alt="edit" className="edit" onClick={(e) => edit(e, item.cocktail_id)} />
-                    <Link to={{
-                      pathname: '/cocktailDetail',
-                      search: `search=${item.cocktail_id}&ifCreation=true`,
-                      state: {
-                        cocktailId: item.cocktail_id,
-                        ifCreation: true
-                      }
-                    }}
-                    >
-                      <img src={`../../imgs/${category}.png`} alt="icon" />
-                      <h5>{item.cocktail_name}</h5>
-                    </Link>
-                  </li>
-                );
-              })}
+              : arr.map((item, i) => (type === 'creations'
+                ? (
+                  <CreationsList
+                    key={APP.generateKey(type + i)}
+                    item={item}
+                    filt={this.filterCategory}
+                    liRef={this.liWidth}
+                    edit={event}
+                    translateDistance={translateDistance}
+                  />
+                )
+                : (
+                  <IngredientsList
+                    key={APP.generateKey(type + i)}
+                    item={item}
+                    liRef={this.liWidth}
+                    event={event}
+                    translateDistance={translateDistance}
+                  />
+                )))}
           </ul>
           <ForwardBtn
-            length={creations.length}
+            length={arr.length}
             event={this.slideForward}
-            target="creationsLi"
           />
         </div>
-
       </div>
     );
   }
