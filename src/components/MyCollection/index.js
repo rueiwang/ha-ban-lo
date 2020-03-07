@@ -42,8 +42,8 @@ class CollectionItem extends Component {
 
   showModal = (e, ingredients) => {
     const { isShown } = this.state;
-    const { member_ingredients } = this.props;
-    const userAlreadyHave = member_ingredients.filter((item) => item.status === 1);
+    const { memberIngredients } = this.props;
+    const userAlreadyHave = memberIngredients.filter((item) => item.status === 1);
     const matchArray = [];
     ingredients.filter((name) => {
       userAlreadyHave.map((ingredient) => {
@@ -156,7 +156,7 @@ export default class MyCollection extends Component {
                     key={item.cocktail_id}
                     item={item}
                     category={category}
-                    member_ingredients={userData.member_ingredients}
+                    memberIngredients={userData.member_ingredients}
                   />
                 );
               })

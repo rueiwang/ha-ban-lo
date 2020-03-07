@@ -38,7 +38,8 @@ class App extends Component {
 
   componentDidMount() {
     const { firebase } = this.props;
-    this.listener = firebase.auth.onAuthStateChanged((authUser) => {
+    this.unSubscribe = firebase.auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
       if (authUser) {
         this.monitorUserDataFromFirestore('member_collections', authUser);
         this.monitorUserDataFromFirestore('member_creations', authUser);
@@ -58,7 +59,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this.listener();
+    this.unSubscribe();
   }
 
   getDataFromSessionStorage = (dataType) => {

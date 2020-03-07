@@ -18,6 +18,7 @@ import VerifiedEmail from '../../components/VerifiedEmail';
 import SignOut from '../../components/SignOut';
 
 import '../../css/account.css';
+import Loading from '../../components/Loading';
 
 const AccountPage = () => {
   const { path } = useRouteMatch();
@@ -34,23 +35,36 @@ class AccountPageBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: ''
+      filter: '',
+      isLoading: true,
+      authUser: ''
     };
   }
 
-  changeFilter = (e, filter) => {
+  componentDidMount() {
+    const { userData } = this.props;
     this.setState({
-      filter
+      authUser: userData.authUser,
+      isLoading: false
     });
   }
 
+  componentDidUpdate() {
+
+  }
+
+  changeFilter = (e, filter) => this.setState({ filter });
+
   render() {
     const { match, userData } = this.props;
-    const { filter } = this.state;
+    const { filter, isLoading } = this.state;
     const ifVerified = userData.authUser.emailVerified;
-    return (
-      <>
-        {
+
+    return isLoading
+      ? (<Loading />)
+      : (
+        <>
+          {
         ifVerified ? (
           <div className="wrap-accounting">
             <div className="side-bar">
@@ -106,8 +120,8 @@ Hi!
           : <VerifiedEmail />
       }
 
-      </>
-    );
+        </>
+      );
   }
 }
 

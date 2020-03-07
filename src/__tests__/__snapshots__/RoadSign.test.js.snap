@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<footer>
+  <div
+    className="footer-container"
+  >
+    <div
+      className="copyright"
+    >
+      <p>
+        © 2020 hā-pan | Ruei-Tian Wang
+      </p>
+       
+      <a
+        href="mailto:want2813@gmail.com&subject=About hā-pan"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <img
+          alt=""
+          src="./imgs/email.png"
+        />
+      </a>
+      <a
+        href="https://github.com/Ruei-Tian"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <img
+          alt=""
+          src="./imgs/github.png"
+        />
+      </a>
+    </div>
+  </div>
+</footer>
+`;

@@ -240,39 +240,20 @@ class GalleryPage extends Component {
       return;
     }
 
-    if (category !== 'All') {
-      firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
-        .limit(20)
-        .get()
-        .then((docSnapshot) => {
-          const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
-          docSnapshot.forEach((doc) => {
-            newAry.push(doc.data());
-          });
-          this.setState({
-            recipes: [...newAry],
-            isLoading: false,
-            next: lastVisible
-          });
+    firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
+      .limit(20)
+      .get()
+      .then((docSnapshot) => {
+        const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
+        docSnapshot.forEach((doc) => {
+          newAry.push(doc.data());
         });
-    } else {
-      firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
-        .startAfter(next)
-        .limit(20)
-        .get()
-        .then((docSnapshot) => {
-          const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
-          docSnapshot.forEach((doc) => {
-            newAry.push(doc.data());
-          });
-          this.setState({
-            filter: category,
-            recipes: [...recipes, ...newAry],
-            isLoading: false,
-            next: lastVisible
-          });
+        this.setState({
+          recipes: [...newAry],
+          isLoading: false,
+          next: lastVisible
         });
-    }
+      });
   }
 
   openMobileFilter = () => {

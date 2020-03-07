@@ -7,18 +7,18 @@ const RoadSign = () => {
     <div className="image">
       {
       countryArray.map((item, i) => (
-        <div key={i}>
-          <div className="road-sign">
-            <div className="item right">
-              <Link className="sign-link" to="/taiwanbar">{item[1]}</Link>
-              <div className="right-arrow" />
-            </div>
-            <div className="item left">
-              <Link className="sign-link" to="/taiwanbar">{item[0]}</Link>
-              <div className="left-arrow" />
+          <div key={i}>
+            <div className="road-sign">
+              <div className="item right">
+                <Link className="sign-link" to="/taiwanbar">{item[1]}</Link>
+                <div className="right-arrow" />
+              </div>
+              <div className="item left">
+                <Link className="sign-link" to="/taiwanbar">{item[0]}</Link>
+                <div className="left-arrow" />
+              </div>
             </div>
           </div>
-        </div>
       ))
     }
     </div>

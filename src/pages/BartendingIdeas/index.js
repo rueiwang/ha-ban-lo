@@ -66,17 +66,14 @@ class IdeasPage extends Component {
       isLoading: false,
       next: 0
     };
-
-    // this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
-    //   window.addEventListener('scroll', this.handleScroll);
     this.getData();
   }
 
   getData() {
-    const { firebase, location } = this.props;
+    const { firebase } = this.props;
     const {
       recipes,
       isLoading,
@@ -94,13 +91,11 @@ class IdeasPage extends Component {
             docSnapshot.forEach((doc) => {
               newAry.push(doc.data());
             });
-            this.setState((prevState) => (
-              {
-                recipes: [...newAry],
-                isLoading: false,
-                next: lastVisible
-              }
-            ));
+            this.setState({
+              recipes: [...newAry],
+              isLoading: false,
+              next: lastVisible
+            });
           });
       } else {
         firebase.db.collection('members_creations').startAfter(next).limit(20).get()
@@ -109,13 +104,11 @@ class IdeasPage extends Component {
             docSnapshot.forEach((doc) => {
               newAry.push(doc.data());
             });
-            this.setState((prevState) => (
-              {
-                recipes: [...recipes, ...newAry],
-                isLoading: false,
-                next: lastVisible
-              }
-            ));
+            this.setState({
+              recipes: [...recipes, ...newAry],
+              isLoading: false,
+              next: lastVisible
+            });
           });
       }
     }
