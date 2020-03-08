@@ -6,6 +6,7 @@ import ColorThief from 'colorthief';
 
 import IngredientItem from './IngredientItem';
 import CollectButton from './CollectButton';
+import Explanation from './Explanation';
 
 import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
@@ -86,7 +87,10 @@ class Content extends Component {
             <p>{item.cocktail_category}</p>
             <div className="ingredient-content">
               <div className="ingredient-description">
-                <h3>Ingredients</h3>
+                <h3>
+Ingredients
+                  <Explanation />
+                </h3>
                 <ul className="ingredient-list">
                   {
                   item.cocktail_ingredients.map((ingredient, i) => (
@@ -128,7 +132,7 @@ class Content extends Component {
     }
 }
 
-function GlassComponent(props) {
+const GlassComponent = (props) => {
   const { glassType, colors } = props;
   let glassSVG = null;
   if (glassType === 'GlassOfBrandy') {

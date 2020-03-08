@@ -263,6 +263,58 @@
     font-size: 28px;
     margin: 50px 0;
 }
+.ingredient-description h3>.explanation-modal-wrap {
+    position: absolute;
+    left: 160px;
+    top: 50px;
+}
+.ingredient-description h3>.explanation-modal-wrap>.explanation-modal{
+    position: absolute;
+    background-color: #ffffff;
+    left: 50px;
+    top: 0px;
+    z-index: 50;
+    width: 240px;
+    border-radius: 8px;
+    padding: 5px;
+    border: 2px solid #000000;
+}
+.ingredient-description h3>.explanation-modal-wrap>.explanation-modal::before{
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-width: 6px 18px;
+    border-style: solid;
+    border-color: transparent #000000 transparent transparent;
+    top: 10px;
+    left: -36px;       
+}
+.ingredient-description h3>.explanation-modal-wrap>.explanation-modal::after{
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-width: 6px 18px;
+    border-style: solid;
+    border-color: transparent #ffffff transparent transparent;/*白色的倒三角*/
+    top: 10px;
+    left: -30px;     
+}
+
+.ingredient-description h3>.explanation-modal-wrap>.explanation-modal p{
+    font-size: 12px;
+    line-height: 24px !important;
+    background-color: #ffffff;
+    min-width: unset !important;
+    border-radius: 8px;
+}
+.ingredient-description h3>.explanation-modal-wrap>.explanation-modal p>span{
+    margin: 3px;
+}
+.ingredient-description h3>.explanation-modal-wrap img {
+    width: 18px;
+}
 
 @media (max-width: 950px) {
     .main-detail>.detail-box>.content>.ingredient-content>div {
@@ -311,6 +363,36 @@
     }
     .wrap-detail>.switchContent {
         left: 15%;
+    }
+    .ingredient-description h3>.explanation-modal-wrap {
+        top: 20px;
+        left: 160px;
+    }
+    .ingredient-description h3>.explanation-modal-wrap>.explanation-modal{
+        top: 50px;
+        left: -155px;
+    }
+    .ingredient-description h3>.explanation-modal-wrap>.explanation-modal::before{
+        position: absolute;
+        content: '';
+        width: 0;
+        height: 0;
+        border-width: 18px 6px;
+        border-style: solid;
+        border-color: transparent transparent #000000;
+        top: -36px;
+        left: 160px;       
+    }
+    .ingredient-description h3>.explanation-modal-wrap>.explanation-modal::after{
+        position: absolute;
+        content: '';
+        width: 0;
+        height: 0;
+        border-width: 18px 6px;
+        border-style: solid;
+        border-color: transparent transparent #fff;/*白色的倒三角*/
+        top: -30px;
+        left: 160px;     
     }
 }
 

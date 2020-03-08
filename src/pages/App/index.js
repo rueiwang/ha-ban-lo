@@ -81,7 +81,7 @@ class App extends Component {
     const { firebase } = this.props;
     const newAry = [];
     const collectionName = dataType === 'allRecipeData' ? 'all_cocktail_recipe' : 'all_ingredient';
-    firebase.getDataFromDB(collectionName)
+    firebase.getPublicDataFromDB(collectionName)
       .then((docSnapshot) => {
         docSnapshot.forEach((doc) => {
           newAry.push(JSON.stringify(doc.data(), (key, value) => {
