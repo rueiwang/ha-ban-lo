@@ -35,21 +35,15 @@ class SignUpFormBase extends Component {
     this.setState({ isLoading: true });
     firebase.doCreateUserWithEmailAndPassword(memberEmail, memberPassword)
       .then((authUser) => {
-        const actionCodeSettings = {
-          url: `https://ha-ban-lo.firebaseapp.com/#member`,
-          handleCodeInApp: false
-        };
-        authUser.user.sendEmailVerification(actionCodeSettings).then(() => {
+        authUser.user.sendEmailVerification(firebase.actionCodeSettings).then(() => {
           authUser.user.updateProfile({
             displayName: memberName
           });
-          const documentRefString = firebase.db.collection('members').doc(`${authUser.user.uid}`);
-          const recipeRef = firebase.db.doc(documentRefString.path);
           firebase.member(authUser.user.uid).set({
             memberName,
             memberEmail,
             memberId: authUser.user.uid,
-            ref: recipeRef
+            ref: firebase.memberDBRef(authUser.user.uid)
           });
         }).catch((error) => {
           this.setState({ error: error.message });

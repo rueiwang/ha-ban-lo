@@ -89,8 +89,7 @@ export default class Create extends Component {
   getCreations = () => {
     const { firebase, userData } = this.props;
     const { creations } = this.state;
-    firebase.db.collection('members_creations').where('cocktail_creator_id', '==', userData.authUser.uid)
-      .get()
+    firebase.searchMemberCreations(userData.authUser.uid)
       .then((dosSnapshot) => {
         dosSnapshot.forEach((doc) => creations.push(doc.data()));
         this.setState({
@@ -146,10 +145,9 @@ export default class Create extends Component {
     this.setState({
       isLoading: true
     });
+    const ref = firebase.creationDocRef();
     // 照片上傳到 storage
-    const docRef = firebase.db.collection('members_creations').doc();
-    firebase.storageRef.child(`user-recipe-images/${docRef.id}`)
-      .put(cocktailPic)
+    firebase.putFileInStorage(ref.id, cocktailPic)
       .then((snapshot) => {
       // Upload completed successfully, now we can get the download URL
         snapshot.ref.getDownloadURL().then((downloadURL) => {
@@ -173,8 +171,8 @@ export default class Create extends Component {
             cocktail_create_date: timestamp,
             cocktail_glass: cocktailGlass,
             cocktail_glass_type: cocktailGlassType,
-            cocktail_id: docRef.id,
-            ref: firebase.db.doc(docRef.path),
+            cocktail_id: ref.id,
+            ref: firebase.db.doc(ref.path),
             cocktail_ingredients: [...ingredientsArray],
             cocktail_ingredients_type: [...cocktailIngredientsTypeArray],
             cocktail_measures: [...measuresArray],
@@ -187,18 +185,7 @@ export default class Create extends Component {
             cocktail_creator_name: userData.authUser.displayName
           };
           this.clearAllInput();
-          docRef.set(fieldObj)
-            .then((docref) => {
-              firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(docRef.id)
-                .set(fieldObj)
-                .then((doc) => {
-                  this.setState({
-                    isLoading: false,
-                    isShown: false
-                  });
-                })
-                .catch((error) => console.log(error));
-            });
+          firebase.setMemberCreation(ref, fieldObj, userData.authUser.uid);
         });
       });
   }
@@ -232,13 +219,12 @@ export default class Create extends Component {
       isLoading: true
     });
     // 如果照片更新要先刪除 storage 舊有的照片再重新上傳
+
     if (typeof (cocktailPic) !== 'string') {
       const targetCreation = creations.filter((creation) => creation.cocktail_id === cocktailId);
-      firebase.storageRef.child(`user-recipe-images/${targetCreation[0].cocktail_id}`)
-        .delete()
+      firebase.deleteFileInStorage(targetCreation[0].cocktail_id)
         .then(() => {
-          firebase.storageRef.child(`user-recipe-images/${cocktailId}`)
-            .put(cocktailPic)
+          firebase.putFileInStorage(cocktailId, cocktailPic)
             .then((snapshot) => {
               snapshot.ref.getDownloadURL().then((downloadURL) => {
                 const picUrl = downloadURL;
@@ -266,18 +252,14 @@ export default class Create extends Component {
                   cocktail_prefix: this.upperCaseFirstLetter(cocktailName),
                   cocktail_tag: [...tagsArray]
                 };
-                firebase.db.collection('members_creations').doc(cocktailId).update(fieldObj)
-                  .then((docref) => {
-                    firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
-                      .update(fieldObj)
-                      .then((doc) => {
-                        this.setState({
-                          isLoading: false,
-                          isShown: false
-                        });
-                      })
-                      .catch((updateError) => console.log('updateError', updateError));
-                  });
+                firebase.updateMemberCreation(cocktailId, fieldObj, userData.authUser.uid)
+                  .then(() => {
+                    this.setState({
+                      isLoading: false,
+                      isShown: false
+                    });
+                  })
+                  .catch((updateError) => console.log('updateError', updateError));
               });
             })
             .catch((uploadError) => console.log('uploadError', uploadError));
@@ -308,17 +290,14 @@ export default class Create extends Component {
         cocktail_prefix: this.upperCaseFirstLetter(cocktailName),
         cocktail_tag: [...tagsArray]
       };
-      firebase.db.collection('members_creations').doc(cocktailId).update(fieldObj)
-        .then(() => {
-          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
-            .update(fieldObj)
-            .then(() => {
-              this.setState({
-                isLoading: false
-              });
-            })
-            .catch((updateError) => console.log('updateError', updateError));
-        });
+      firebase.updateMemberCreation(cocktailId, fieldObj, userData.authUser.uid)
+        .then((doc) => {
+          this.setState({
+            isLoading: false,
+            isShown: false
+          });
+        })
+        .catch((error) => console.log(error));
     }
   }
 
@@ -326,28 +305,16 @@ export default class Create extends Component {
     const { firebase, userData } = this.props;
     const { cocktailId } = this.state;
     this.setState({
-      isDialodShow: true,
-      dialogType: 'alert',
-      dialogHead: 'DELETED',
-      dialogText: 'Try create another recipe!'
-    });
-    this.setState({
       isLoading: true
     });
     this.clearAllInput();
-    firebase.storageRef.child(`user-recipe-images/${cocktailId}`)
-      .delete()
+    firebase.deleteFileInStorage(cocktailId)
       .then(() => {
-        firebase.db.collection('members_creations').doc(cocktailId)
-          .delete()
+        firebase.deleteMemberCreation(cocktailId, userData.authUser.uid)
           .then(() => {
-            firebase.db.collection('members').doc(userData.authUser.uid).collection('member_creations').doc(cocktailId)
-              .delete()
-              .then(() => {
-                this.setState({
-                  isLoading: false
-                });
-              });
+            this.setState({
+              isLoading: false
+            });
           });
       })
       .catch((delError) => console.log('delError', delError));

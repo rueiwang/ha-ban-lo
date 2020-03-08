@@ -19,10 +19,6 @@ class Item extends Component {
     };
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
     console.log('render');
     const { recipe } = this.props;
@@ -74,43 +70,24 @@ class IdeasPage extends Component {
 
   getData() {
     const { firebase } = this.props;
-    const {
-      recipes,
-      isLoading,
-      next
-    } = this.state;
+    const { isLoading } = this.state;
     const newAry = [];
     if (isLoading === false) {
       this.setState({
         isLoading: true
       });
-      if (next === 0) {
-        firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').limit(20).get()
-          .then((docSnapshot) => {
-            const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
-            docSnapshot.forEach((doc) => {
-              newAry.push(doc.data());
-            });
-            this.setState({
-              recipes: [...newAry],
-              isLoading: false,
-              next: lastVisible
-            });
+      firebase.getAllMemberCreations()
+        .then((docSnapshot) => {
+          const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
+          docSnapshot.forEach((doc) => {
+            newAry.push(doc.data());
           });
-      } else {
-        firebase.db.collection('members_creations').startAfter(next).limit(20).get()
-          .then((docSnapshot) => {
-            const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
-            docSnapshot.forEach((doc) => {
-              newAry.push(doc.data());
-            });
-            this.setState({
-              recipes: [...recipes, ...newAry],
-              isLoading: false,
-              next: lastVisible
-            });
+          this.setState({
+            recipes: [...newAry],
+            isLoading: false,
+            next: lastVisible
           });
-      }
+        });
     }
   }
 

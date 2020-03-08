@@ -22,9 +22,13 @@ class Firebase {
     this.db = app.firestore();
     this.storage = app.storage();
     this.storageRef = this.storage.ref();
+    this.actionCodeSettings = {
+      url: 'https://ha-ban-lo.firebaseapp.com/#member',
+      handleCodeInApp: false
+    };
   }
 
-  //  *** Auth API ***
+  //  *** Auth ***
 
   doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
 
@@ -34,24 +38,60 @@ class Firebase {
 
   doSignOut = () => this.auth.signOut();
 
-  doPasswordReset = (email) => this.auth.sendPasswordResetEmail(email);
+  sendPasswordResetEmail = (email) => this.auth.sendPasswordResetEmail(email, this.actionCodeSettings);
 
-  doPasswordUpdate = (password) => this.auth.currentUser.updatePassword(password);
+  // *** Ref ***
 
+  memberDBRef = (uid) => this.db.doc(this.db.collection('members').doc(`${uid}`).path);
 
-  // *** User API ***
+  creationDocRef = () => this.db.collection('members_creations').doc();
+
+  // *** Member only ***
 
   member = (uid) => this.db.collection('members').doc(uid);
 
-  memberCocktail = (uid) => this.db.collection('member_cocktail_recipe').doc(uid);
+  memberIngredients = (uid) => this.db.collection('members').doc(uid).collection('member_ingredients');
 
-  memberIngredient = (uid) => this.db.collection('member_ingredient').doc(uid);
+  memberCollections = (uid) => this.db.collection('members').doc(uid).collection('member_collections');
 
-  //  *** Gallery item ***
+  memberDataFromDB = (uid, dataType) => this.db.collection('members').doc(uid).collection(dataType);
+
+  searchMemberCreations = (uid) => this.db.collection('members_creations').where('cocktail_creator_id', '==', uid).get();
+
+  deleteMemberCreation = (creationId, uid) => (
+    this.db.collection('members_creations').doc(creationId).delete()
+      .then(() => this.db.collection('members').doc(uid).collection('member_creations').doc(creationId)
+        .delete())
+  )
+
+  setMemberCreation = (ref, content, uid) => (
+    ref.set(content)
+      .then(() => this.db.collection('members').doc(uid).collection('member_creations').doc(ref.id)
+        .set(content))
+  )
+
+  updateMemberCreation = (creationId, content, uid) => (
+    this.db.collection('members_creations').doc(creationId).update(content)
+      .then(() => {
+        this.db.collection('members').doc(uid).collection('member_creations').doc(creationId)
+          .update(content);
+      })
+  )
+  // *** DB Storage ***
+
+  putFileInStorage = (docName, file) => this.storageRef.child(`user-recipe-images/${docName}`).put(file);
+
+  deleteFileInStorage = (docName) => this.storageRef.child(`user-recipe-images/${docName}`).delete();
+
+  //  *** Public ***
+
+  getPublicDataFromDB = (collectionName) => this.db.collection(collectionName).get();
+
+  getAllMemberCreations = () => this.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get();
 
   getAllCocktail = () => this.db.collection('all_cocktail_recipe').get();
 
-  getCocktail = () => this.db.collection('all_cocktail_recipe').limit(20).get();
+  getCocktail = (num) => this.db.collection('all_cocktail_recipe').limit(num).get();
 
   getNextCocktail = (next) => this.db.collection('all_cocktail_recipe').startAfter(next).limit(20).get();
 
@@ -59,6 +99,7 @@ class Firebase {
 
   searchCocktailById = (id) => this.db.collection('all_cocktail_recipe').where('cocktail_id', '==', id).get();
 
+  searchCocktailByIngredientsType = (type) => this.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', type)
 }
 
 export default Firebase;

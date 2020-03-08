@@ -46,25 +46,21 @@ class SignInFormBase extends Component {
     e.preventDefault();
     const { email } = this.state;
     const { firebase } = this.props;
-    const actionCodeSettings = {
-      url: 'https://ha-ban-lo.firebaseapp.com/',
-      handleCodeInApp: false
-    };
+
     this.setState({ isLoading: true });
-    firebase.auth.sendPasswordResetEmail(email, actionCodeSettings).then(
-      () => {
+    firebase.sendPasswordResetEmail(email)
+      .then(() => {
         this.setState({
           error: 'Mail is send to your mail address, please check it!',
           isLoading: false
         });
-      },
-      (error) => {
+      })
+      .catch((error) => {
         this.setState({
           error: error.message,
           isLoading: false
         });
-      }
-    );
+      });
   };
 
   render() {

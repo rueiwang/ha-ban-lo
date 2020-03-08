@@ -49,7 +49,8 @@ class IngredientItem extends Component {
       }
       if (ifOwned) {
         if (status === statusNum) {
-          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientDetail.ingredient_id)
+          firebase.memberIngredients(userData.authUser.uid)
+            .doc(ingredientDetail.ingredient_id)
             .delete()
             .then(() => {
               this.setState({
@@ -58,7 +59,8 @@ class IngredientItem extends Component {
               });
             });
         } else {
-          firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientDetail.ingredient_id)
+          firebase.memberIngredients(userData.authUser.uid)
+            .doc(ingredientDetail.ingredient_id)
             .update({ status: statusNum })
             .then(() => {
               this.setState({
@@ -67,7 +69,8 @@ class IngredientItem extends Component {
             });
         }
       } else {
-        firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(ingredientDetail.ingredient_id)
+        firebase.memberIngredients(userData.authUser.uid)
+          .doc(ingredientDetail.ingredient_id)
           .set({
             ...ingredientDetail,
             status: statusNum

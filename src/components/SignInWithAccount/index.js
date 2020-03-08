@@ -15,14 +15,12 @@ const signInWithAccount = (firebase, provider, account) => {
   firebase.doSignInWithAccount(provider)
     .then((result) => {
       const { user } = result;
-      const documentRefString = firebase.db.collection('members').doc(`${user.uid}`);
-      const recipeRef = firebase.db.doc(documentRefString.path);
       const token = `${account}Token`;
       firebase.member(user.uid).set({
         memberName: user.displayName,
         memberEmail: user.email,
         memberId: user.uid,
-        ref: recipeRef,
+        ref: firebase.memberDBRef(user.uid),
         [token]: result.credential.accessToken
       });
     })

@@ -47,7 +47,8 @@ class CollectButton extends Component {
         if (!question) {
           return;
         }
-        firebase.db.collection('members').doc(userData.authUser.uid).collection('member_collections').doc(itemId)
+        firebase.memberCollections(userData.authUser.uid)
+          .doc(itemId)
           .delete()
           .then(() => {
             this.setState({
@@ -55,7 +56,8 @@ class CollectButton extends Component {
             });
           });
       } else {
-        firebase.db.collection('members').doc(userData.authUser.uid).collection('member_collections').doc(itemId)
+        firebase.memberCollections(userData.authUser.uid)
+          .doc(itemId)
           .set(targetDataObj)
           .then(() => {
             this.setState({

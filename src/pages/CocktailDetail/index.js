@@ -30,7 +30,7 @@ class CocktailDetailPage extends Component {
     const query = new URLSearchParams(location.search);
     const targetId = query.get('search');
     const ifCreation = query.get('ifCreation') !== '';
-    firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
+    firebase.getAllMemberCreations()
       .then((docSnapshot) => {
         const newAry = [];
         docSnapshot.forEach((doc) => {
@@ -51,7 +51,7 @@ class CocktailDetailPage extends Component {
       const ifCreation = query.get('ifCreation') !== '';
       ifCreation
         ? this.prepareState(targetId, ifCreation, creations)
-        : firebase.db.collection('members_creations').orderBy('cocktail_create_date', 'desc').get()
+        : firebase.getAllMemberCreations()
           .then((docSnapshot) => {
             const newAry = [];
             docSnapshot.forEach((doc) => {

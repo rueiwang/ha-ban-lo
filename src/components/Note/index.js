@@ -60,10 +60,12 @@ export default class Note extends Component {
     const { firebase, userData } = this.props;
     // status -1: user doesn't need it
     if (statusNum === -1) {
-      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(id)
+      firebase.memberIngredients(userData.authUser.uid)
+        .doc(id)
         .delete();
     } else {
-      firebase.db.collection('members').doc(userData.authUser.uid).collection('member_ingredients').doc(id)
+      firebase.memberIngredients(userData.authUser.uid)
+        .doc(id)
         .update({ status: statusNum });
     }
   }

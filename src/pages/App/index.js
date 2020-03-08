@@ -41,9 +41,9 @@ class App extends Component {
     this.unSubscribe = firebase.auth.onAuthStateChanged((authUser) => {
       console.log(authUser);
       if (authUser) {
-        this.monitorUserDataFromFirestore('member_collections', authUser);
-        this.monitorUserDataFromFirestore('member_creations', authUser);
-        this.monitorUserDataFromFirestore('member_ingredients', authUser);
+        this.monitorUserDataFromDB('member_collections', authUser);
+        this.monitorUserDataFromDB('member_creations', authUser);
+        this.monitorUserDataFromDB('member_ingredients', authUser);
       } else {
         this.setState((prevState) => ({
           userData: {
@@ -81,8 +81,7 @@ class App extends Component {
     const { firebase } = this.props;
     const newAry = [];
     const collectionName = dataType === 'allRecipeData' ? 'all_cocktail_recipe' : 'all_ingredient';
-    firebase.db.collection(collectionName)
-      .get()
+    firebase.getDataFromDB(collectionName)
       .then((docSnapshot) => {
         docSnapshot.forEach((doc) => {
           newAry.push(JSON.stringify(doc.data(), (key, value) => {
@@ -100,10 +99,10 @@ class App extends Component {
       });
   }
 
-  monitorUserDataFromFirestore = (dataType, authUser) => {
+  monitorUserDataFromDB = (dataType, authUser) => {
     const { firebase } = this.props;
     const ifIngredientData = dataType === 'member_ingredients';
-    firebase.db.collection('members').doc(authUser.uid).collection(dataType)
+    firebase.memberDataFromDB(authUser.uid, dataType)
       .onSnapshot((query) => {
         const dataArray = [];
         query.forEach((doc) => {

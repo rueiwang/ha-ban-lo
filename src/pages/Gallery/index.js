@@ -49,7 +49,7 @@ class GalleryPage extends Component {
         isLoading: true
       });
       if (next === 0) {
-        firebase.getCocktail()
+        firebase.getCocktail(20)
           .then((docSnapshot) => {
             const lastVisible = docSnapshot.docs[docSnapshot.docs.length - 1];
             docSnapshot.forEach((doc) => {
@@ -94,7 +94,7 @@ class GalleryPage extends Component {
       if (filter === 'All') {
         this.getData();
       } else {
-        firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', filter.toLowerCase())
+        firebase.searchCocktailByIngredientsType(filter.toLowerCase())
           .startAfter(next)
           .limit(20)
           .get()
@@ -115,7 +115,6 @@ class GalleryPage extends Component {
 
   changeFilter = (e) => {
     const { firebase } = this.props;
-    const { next, recipes } = this.state;
     const category = e.target.textContent;
     this.setState({
       isLoading: true,
@@ -140,7 +139,7 @@ class GalleryPage extends Component {
       return;
     }
 
-    firebase.db.collection('all_cocktail_recipe').where('cocktail_ingredients_type', 'array-contains', category.toLowerCase())
+    firebase.searchCocktailByIngredientsType(category.toLowerCase())
       .limit(20)
       .get()
       .then((docSnapshot) => {
