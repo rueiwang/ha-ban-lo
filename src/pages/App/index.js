@@ -45,12 +45,14 @@ class App extends Component {
         this.monitorUserDataFromDB('member_creations', authUser);
         this.monitorUserDataFromDB('member_ingredients', authUser);
       } else {
-        this.setState((prevState) => ({
+        this.setState({
           userData: {
-            ...prevState.userData,
-            authUser
+            authUser,
+            member_collections: [],
+            member_ingredients: [],
+            member_creations: []
           }
-        }));
+        });
       }
     });
 
@@ -103,9 +105,9 @@ class App extends Component {
     const { firebase } = this.props;
     const ifIngredientData = dataType === 'member_ingredients';
     firebase.memberDataFromDB(authUser.uid, dataType)
-      .onSnapshot((query) => {
+      .onSnapshot((snapshot) => {
         const dataArray = [];
-        query.forEach((doc) => {
+        snapshot.forEach((doc) => {
           ifIngredientData
             ? dataArray.push({
               id: doc.data().ingredient_id,

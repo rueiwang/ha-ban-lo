@@ -15,7 +15,8 @@ export default class Dialog extends Component {
       head,
       text,
       confirm,
-      reject
+      close,
+      param
     } = this.props;
     return (
       <>
@@ -25,11 +26,15 @@ export default class Dialog extends Component {
             <h3>{head}</h3>
             <p>{text}</p>
             <div className="dialog-btn-area">
-              <button type="button" onClick={(e) => confirm(e, true)}>OK</button>
               {
                 type === 'alert'
-                  ? ''
-                  : <button type="button" onClick={(e) => reject(e, false)}>NO</button>
+                  ? <button type="button" onClick={(e) => close(e, true)}>OK</button>
+                  : (
+                    <>
+                      <button type="button" onClick={(e) => confirm(e, param)}>YES</button>
+                      <button type="button" onClick={(e) => close(e, false)}>NO</button>
+                    </>
+                  )
               }
             </div>
           </div>

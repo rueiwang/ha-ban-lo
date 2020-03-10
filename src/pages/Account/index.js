@@ -45,12 +45,9 @@ class AccountPageBase extends Component {
     const { userData } = this.props;
     this.setState({
       authUser: userData.authUser,
-      isLoading: false
+      isLoading: false,
+      filter: ''
     });
-  }
-
-  componentDidUpdate() {
-
   }
 
   changeFilter = (e, filter) => this.setState({ filter });
@@ -77,13 +74,13 @@ Hi!
               </div>
               <ul className="menu">
                 <li className={filter === '' ? 'current' : ''}>
-                  <Link to={`${match.url}`} onClick={(e) => this.changeFilter(e, '')}>My Collection</Link>
+                  <Link to={`${match.url}`} onClick={(e) => this.changeFilter(e, '')}>Collection</Link>
                 </li>
                 <li className={filter === 'IngredientsNote' ? 'current' : ''}>
-                  <Link to={`${match.url}/IngredientsNote`} onClick={(e) => this.changeFilter(e, 'IngredientsNote')}>Ingredients Note</Link>
+                  <Link to={`${match.url}/IngredientsNote`} onClick={(e) => this.changeFilter(e, 'IngredientsNote')}>Note</Link>
                 </li>
                 <li className={filter === 'Create' ? 'current' : ''}>
-                  <Link to={`${match.url}/Create`} onClick={(e) => this.changeFilter(e, 'Create')}>Create Recipe</Link>
+                  <Link to={`${match.url}/Create`} onClick={(e) => this.changeFilter(e, 'Create')}>Creation</Link>
                 </li>
               </ul>
               <ul className="menu-mobile">

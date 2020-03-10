@@ -1,5 +1,3 @@
-import SvgGlassOfSyrah from './GlassOfSyrah';
-import GlassOfMontrachet from './GlassOfMontrachet';
 import GlassOfBrandy from './GlassOfBrandy';
 import GlassOfChampagne from './GlassOfChampagne';
 import GlassOfHighball from './GlassOfHighball';
@@ -11,8 +9,6 @@ import LoadingIcon from './LoadingIcon';
 
 
 export {
-  SvgGlassOfSyrah,
-  GlassOfMontrachet,
   GlassOfBrandy,
   GlassOfChampagne,
   GlassOfHighball,

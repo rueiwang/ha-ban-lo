@@ -93,7 +93,7 @@ export default class SlideBox extends Component {
             { arr.length === 0
               ? (
                 <EmptyItem
-                  message="ingredients"
+                  message={type}
                   destination="Gallery"
                 />
               )

@@ -1,10 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import RoadSign from '../components/RoadSign';
+import Footer from '../components/Footer';
 
 it('renders correctly', () => {
   const tree = renderer
-    .create(<RoadSign />)
+    .create(<Footer />)
     .toJSON();
   expect(tree).toMatchSnapshot();
 });

@@ -326,14 +326,13 @@
 .ingredients-wrap>div>.slide-box>ul {
     display: flex;
     overflow-x: scroll;
-    height: 180px;
+    min-height: 180px;
 }
 
 .ingredients-wrap>div>.slide-box>ul>li {
     text-align: center;
     padding: 30px;
-    transition: ease .5s;
-    /* transform: translateX(100px); */
+    transition:all 0.5s ease-in-out;
     position: relative;
 }
 

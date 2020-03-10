@@ -12,7 +12,11 @@ class GalleryItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collected: false
+      isCollected: false,
+      isDialodShow: false,
+      dialogType: '',
+      dialogHead: '',
+      dialogText: ''
     };
   }
 
@@ -21,11 +25,7 @@ class GalleryItem extends Component {
     if (userData.authUser) {
       const isCollected = userData.member_collections.findIndex((id) => id === recipe.cocktail_id) !== -1;
       this.setState({
-        collected: isCollected,
-        isDialodShow: false,
-        dialogType: '',
-        dialogHead: '',
-        dialogText: ''
+        isCollected
       });
     }
   }
@@ -33,7 +33,7 @@ class GalleryItem extends Component {
     collectItem = (e, itemId) => {
       e.preventDefault();
       const { DataInSessionStorage, firebase, userData } = this.props;
-      const { collected } = this.state;
+      const { isCollected } = this.state;
       const targetDataObj = DataInSessionStorage.allRecipeData.filter((item) => item.cocktail_id === itemId)[0];
       if (userData.authUser === null) {
         this.setState({
@@ -44,48 +44,54 @@ class GalleryItem extends Component {
         });
         return;
       }
-      if (collected) {
-        const question = window.confirm('Are you sure to remove this from your collection?');
-        if (!question) {
-          return;
-        }
-        firebase.memberCollections(userData.authUser.uid)
-          .doc(itemId)
-          .delete()
-          .then(() => {
-            console.log('Document successfully deleted!');
-            this.setState({
-              collected: false
-            });
-          });
+      if (isCollected) {
+        this.setState({
+          isDialodShow: true,
+          dialogType: 'confirm',
+          dialogHead: 'REMOVE',
+          dialogText: 'Are you sure to remove this collection?',
+          param: itemId
+        });
       } else {
         firebase.memberCollections(userData.authUser.uid)
           .doc(itemId)
           .set(targetDataObj)
           .then(() => {
             this.setState({
-              collected: true
+              isCollected: true
             });
           });
       }
     }
 
-    closeDialog = (e, boolean) => {
+    cancelCollect = (e, param) => {
+      const { firebase, userData } = this.props;
+      firebase.memberCollections(userData.authUser.uid)
+        .doc(param)
+        .delete()
+        .then(() => {
+          this.setState({
+            isCollected: false
+          });
+          this.closeDialog();
+        });
+    }
+
+    closeDialog = (e) => {
       this.setState({
-        isDialodShow: false,
-        dialogResult: boolean
+        isDialodShow: false
       });
-      return boolean;
     }
 
     render() {
       const { recipe } = this.props;
       const {
-        collected,
+        isCollected,
         isDialodShow,
         dialogType,
         dialogHead,
-        dialogText
+        dialogText,
+        param
       } = this.state;
       return (
         <>
@@ -94,8 +100,9 @@ class GalleryItem extends Component {
               type={dialogType}
               head={dialogHead}
               text={dialogText}
-              confirm={this.closeDialog}
-              reject={this.closeDialog}
+              param={param}
+              close={this.closeDialog}
+              confirm={this.cancelCollect}
             />
           ) : ''}
           <div className="item row">
@@ -104,9 +111,9 @@ class GalleryItem extends Component {
             </div>
             <div className="item-description">
               {
-              collected ? (
+              isCollected ? (
                 <div className="collect-sign">
-                  <img src="./imgs/hearts.png" alt="collected" />
+                  <img src="./imgs/hearts.png" alt="isCollected" />
                 </div>
               )
                 : ''
@@ -133,7 +140,7 @@ class GalleryItem extends Component {
                   type="button"
                   onClick={(e) => this.collectItem(e, recipe.cocktail_id)}
                 >
-                  {collected ? 'remove' : 'Collect'}
+                  {isCollected ? 'remove' : 'Collect'}
                 </button>
               </div>
             </div>

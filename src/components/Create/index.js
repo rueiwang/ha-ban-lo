@@ -135,8 +135,11 @@ export default class Create extends Component {
     } = this.state;
 
     if (!this.validateForm(errors) || isShown) {
-      alert('Please complete the form.');
       this.setState({
+        isDialodShow: true,
+        dialogType: 'alert',
+        dialogHead: 'INVALID FORM',
+        dialogText: 'Please complete the form properly!',
         isShown: !isShown
       });
       return;
@@ -208,8 +211,12 @@ export default class Create extends Component {
     } = this.state;
 
     if (!this.validateForm(errors) || isShown) {
-      alert('Please complete the form.');
+
       this.setState({
+        isDialodShow: true,
+        dialogType: 'alert',
+        dialogHead: 'INVALID FORM',
+        dialogText: 'Please complete the form properly!',
         isShown: !isShown
       });
       return;
@@ -299,6 +306,15 @@ export default class Create extends Component {
         })
         .catch((error) => console.log(error));
     }
+  }
+
+  confirmIfDelete = () => {
+    this.setState({
+      isDialodShow: true,
+      dialogType: 'confirm',
+      dialogHead: 'DELETING',
+      dialogText: 'Are you sure to delete this recipe?'
+    });
   }
 
   deleteDatabase = (e) => {
@@ -614,8 +630,8 @@ export default class Create extends Component {
             type={dialogType}
             head={dialogHead}
             text={dialogText}
-            confirm={this.closeDialog}
-            reject={this.closeDialog}
+            close={this.closeDialog}
+            confirm={this.deleteDatabase}
           />
         ) : ''}
         <div className="create-wrap">
@@ -720,7 +736,7 @@ export default class Create extends Component {
                   : (
                     <>
                       <button className="update" type="button" onClick={(e) => this.updateDatabase(e)}>Update</button>
-                      <button className="delete" type="button" onClick={(e) => this.deleteDatabase(e)}>Delete</button>
+                      <button className="delete" type="button" onClick={(e) => this.confirmIfDelete(e)}>Delete</button>
                     </>
                   )
               }

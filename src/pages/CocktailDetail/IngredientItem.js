@@ -107,8 +107,7 @@ class IngredientItem extends Component {
               type={dialogType}
               head={dialogHead}
               text={dialogText}
-              confirm={this.closeDialog}
-              reject={this.closeDialog}
+              close={this.closeDialog}
             />
           ) : ''}
           <li className={`item ${ifOwned ? '' : 'showIcon'}`}>

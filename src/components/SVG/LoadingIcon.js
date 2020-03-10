@@ -1,5 +1,3 @@
-/* eslint-disable react/no-did-update-set-state */
-/* eslint-disable no-tabs */
 import React, { Component } from 'react';
 
 class LoadingIcon extends Component {

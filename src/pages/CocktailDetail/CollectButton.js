@@ -14,7 +14,8 @@ class CollectButton extends Component {
       isDialodShow: false,
       dialogType: '',
       dialogHead: '',
-      dialogText: ''
+      dialogText: '',
+      param: ''
     };
   }
 
@@ -28,7 +29,7 @@ class CollectButton extends Component {
     }
   }
 
-    collect = (e, itemId) => {
+    collectItem = (e, itemId) => {
       e.preventDefault();
       const { DataInSessionStorage, firebase, userData } = this.props;
       const { isCollected } = this.state;
@@ -43,18 +44,13 @@ class CollectButton extends Component {
         return;
       }
       if (isCollected) {
-        const question = window.confirm('Are you sure to remove this from your collection?');
-        if (!question) {
-          return;
-        }
-        firebase.memberCollections(userData.authUser.uid)
-          .doc(itemId)
-          .delete()
-          .then(() => {
-            this.setState({
-              isCollected: false
-            });
-          });
+        this.setState({
+          isDialodShow: true,
+          dialogType: 'confirm',
+          dialogHead: 'REMOVE',
+          dialogText: 'Are you sure to remove this collection?',
+          param: itemId
+        });
       } else {
         firebase.memberCollections(userData.authUser.uid)
           .doc(itemId)
@@ -67,12 +63,23 @@ class CollectButton extends Component {
       }
     }
 
-    closeDialog = (e, boolean) => {
+    cancelCollect = (e, param) => {
+      const { firebase, userData } = this.props;
+      firebase.memberCollections(userData.authUser.uid)
+        .doc(param)
+        .delete()
+        .then(() => {
+          this.setState({
+            isCollected: false
+          });
+          this.closeDialog();
+        });
+    }
+
+    closeDialog = (e) => {
       this.setState({
-        isDialodShow: false,
-        dialogResult: boolean
+        isDialodShow: false
       });
-      return boolean;
     }
 
     render() {
@@ -81,7 +88,8 @@ class CollectButton extends Component {
         isDialodShow,
         dialogType,
         dialogHead,
-        dialogText
+        dialogText,
+        param
       } = this.state;
       const { cocktailId } = this.props;
       return (
@@ -91,11 +99,12 @@ class CollectButton extends Component {
               type={dialogType}
               head={dialogHead}
               text={dialogText}
-              confirm={this.closeDialog}
-              reject={this.closeDialog}
+              param={param}
+              close={this.closeDialog}
+              confirm={this.cancelCollect}
             />
           ) : ''}
-          <button className="collect" type="button" onClick={(e) => this.collect(e, cocktailId)}>
+          <button className="collect" type="button" onClick={(e) => this.collectItem(e, cocktailId)}>
             <img src={isCollected ? '../imgs/hearts.png' : '../imgs/heart.png'} alt="plus" />
           </button>
         </>
