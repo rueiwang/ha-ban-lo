@@ -7,19 +7,11 @@ import ColorThief from 'colorthief';
 import IngredientItem from './IngredientItem';
 import CollectButton from './CollectButton';
 import Explanation from './Explanation';
+import GlassComponent from './GlassComponent';
 
 import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
 import { allRecipeData } from '../../components/Context/DataInSessionStorage';
-import {
-  GlassOfBrandy,
-  GlassOfChampagne,
-  GlassOfHighball,
-  GlassOfMartini,
-  GlassOfShot,
-  GlassOfUFO,
-  GlassOfWhisky
-} from '../../components/SVG';
 
 
 class Content extends Component {
@@ -130,39 +122,6 @@ Ingredients
           </div>
         )));
     }
-}
-
-const GlassComponent = (props) => {
-  const { glassType, colors } = props;
-  let glassSVG = null;
-  if (glassType === 'GlassOfBrandy') {
-    glassSVG = <GlassOfBrandy mainColor={colors} />;
-    return glassSVG;
-  }
-  if (glassType === 'GlassOfChampagne') {
-    glassSVG = <GlassOfChampagne mainColor={colors} />;
-    return glassSVG;
-  }
-  if (glassType === 'GlassOfHighball') {
-    glassSVG = <GlassOfHighball mainColor={colors} />;
-    return glassSVG;
-  }
-  if (glassType === 'GlassOfMartini') {
-    glassSVG = <GlassOfMartini mainColor={colors} />;
-    return glassSVG;
-  }
-  if (glassType === 'GlassOfShot') {
-    glassSVG = <GlassOfShot mainColor={colors} />;
-    return glassSVG;
-  }
-  if (glassType === 'GlassOfUFO') {
-    glassSVG = <GlassOfUFO mainColor={colors} />;
-    return glassSVG;
-  }
-  if (glassType === 'GlassOfWhisky') {
-    glassSVG = <GlassOfWhisky mainColor={colors} />;
-    return glassSVG;
-  }
 }
 
 export default compose(withFirebase, allRecipeData, ifAuth)(Content);

@@ -7,7 +7,6 @@ import { ifAuth } from '../../components/Context/AuthUser';
 import { withFirebase } from '../../components/Context/Firebase';
 import { allRecipeData } from '../../components/Context/DataInSessionStorage';
 
-
 class GalleryItem extends Component {
   constructor(props) {
     super(props);

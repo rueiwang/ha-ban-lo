@@ -1,22 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import { compose } from 'recompose';
 
 import { ifAuth } from '../Context/AuthUser';
-import { withFirebase } from '../Context/Firebase';
-import { allRecipeData } from '../Context/DataInSessionStorage';
 
 import '../../css/common.css';
+import SearchField from './SearchField';
 
 class Navigation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
-      isSuggestionShown: false,
-      isMenuOpen: false,
-      suggestionList: []
+      isMenuOpen: false
     };
   }
 
@@ -29,47 +24,14 @@ class Navigation extends Component {
 
   closeMenu = (e) => {
     this.setState({
-      isMenuOpen: false,
-      isSuggestionShown: false,
-      value: '',
-      searchTarget: ''
+      isMenuOpen: false
     });
   }
 
-  inputChange = (e) => {
-    this.setState({
-      isSuggestionShown: true,
-      value: e.target.value
-    });
-    this.renderSuggestionsList();
-  }
-
-  clickSuggestion = (e) => {
-    const { dataset } = e.target;
-    this.setState({
-      isSuggestionShown: false,
-      searchTarget: dataset.id,
-      value: e.target.textContent
-    });
-  }
-
-  renderSuggestionsList = () => {
-    const { DataInSessionStorage } = this.props;
-    const { value } = this.state;
-    const updataData = DataInSessionStorage.allRecipeData
-      .filter((item) => item.cocktail_name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-    const ifSuggestions = updataData.length > 0;
-    this.setState({
-      isSuggestionShown: ifSuggestions,
-      suggestionList: [...updataData]
-    });
-  }
 
   render() {
     const { userData } = this.props;
-    const {
-      value, isSuggestionShown, isMenuOpen, suggestionList, searchTarget
-    } = this.state;
+    const { isMenuOpen } = this.state;
     return (
       <nav className="scroll">
         <div className={`click-to-close-nav-menu ${isMenuOpen ? 'open' : ''}`} onClick={(e) => this.closeMenu(e)} />
@@ -106,58 +68,12 @@ CLASSIC COCKTAIL
                 <Link to="/taiwanbar">TAIWAN BAR</Link>
               </li>
             </ul>
-            <form className="search">
-              <div className="search-auto-complete">
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  autoComplete="off"
-                  value={value}
-                  onChange={(e) => this.inputChange(e)}
-                  placeholder="Cocktail Name"
-                />
-                <ul className={`search-suggestion ${isSuggestionShown ? 'down' : ''}`}>
-                  {
-                    suggestionList.map((item, i) => (
-                      <li
-                        className="item"
-                        key={i}
-                        data-id={item.cocktail_id}
-                        onClick={(e) => this.clickSuggestion(e)}
-                      >
-                        {item.cocktail_name}
-                      </li>
-                    ))
-                  }
-                </ul>
-              </div>
-              <button
-                type="button"
-              >
-                <Link
-                  onClick={this.closeMenu}
-                  to={{
-                    pathname: '/cocktailDetail',
-                    search: `search=${searchTarget}&ifCreation`,
-                    state: {
-                      cocktailId: searchTarget,
-                      ifCreation: false
-                    }
-                  }}
-                >
-search
-                </Link>
-              </button>
-            </form>
+            <SearchField closeMenu={this.closeMenu} />
           </div>
         </div>
       </nav>
     );
   }
 }
-export default compose(
-  ifAuth,
-  withFirebase,
-  allRecipeData
-)(Navigation);
+
+export default ifAuth(Navigation);

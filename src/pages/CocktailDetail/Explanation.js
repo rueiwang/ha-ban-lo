@@ -22,6 +22,7 @@ export default class Explanation extends Component {
             alt="question"
             onMouseOver={this.toggleModal}
             onMouseOut={this.toggleModal}
+            onClick={this.toggleModal}
           />
           {
               isModalShow

@@ -1,4 +1,5 @@
 import React from 'react';
+import LinearGradient from './LinearGradient';
 
 const GlassOfBrandy = (props) => {
   const { mainColor } = props;
@@ -14,29 +15,7 @@ const GlassOfBrandy = (props) => {
       xmlns="http://www.w3.org/2000/svg"
       xlink="http://www.w3.org/1999/xlink"
     >
-      <defs>
-        <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.8">
-
-          {mainColor !== [] ? (
-            mainColor.map((rgbAry, i) => {
-              const percent = (i / mainColor.length).toFixed(1);
-
-              return (
-                <stop
-                  key={percent}
-                  offset={percent}
-                  style={{
-                    stopColor: `rgb(${mainColor[i][0]}, ${mainColor[i][1]}, ${mainColor[i][2]})`,
-                    stopOpacity: 1
-                  }}
-                />
-              );
-            })
-          )
-            : ''}
-          <animate attributeName="y1" from="1" to="0" dur="2s" />
-        </linearGradient>
-      </defs>
+      <LinearGradient mainColor={mainColor} />
       <rect x="76.652" y="380.103" fill="none" stroke="#070001" strokeWidth="5" strokeMiterlimit="10" width="183.549" height="6.766" />
       <rect x="76.652" y="393.935" fill="none" stroke="#070001" strokeWidth="5" strokeMiterlimit="10" width="183.549" height="3.045" />
       <line fill="none" stroke="#070001" strokeWidth="40" strokeMiterlimit="10" x1="168.427" y1="281.966" x2="168.427" y2="380.103" />
