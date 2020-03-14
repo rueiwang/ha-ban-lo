@@ -10,9 +10,9 @@ A platform which is full of bars and cocktails information.
 > Moreover you can know more about the classic cocktails, collect it and make your own special one at home. Enjoy your night! 
 
 #### Test Account
-Website: https://ha-ban-lo.firebaseapp.com/
-E-mail: kas33044@bcaoo.com
-Password: 123456
+- Website: https://ha-ban-lo.firebaseapp.com/
+- E-mail: kas33044@bcaoo.com
+- Password: 123456
 
 ## Table of Content
 * [Technologies](#Technologies)
