@@ -39,7 +39,6 @@ class App extends Component {
   componentDidMount() {
     const { firebase } = this.props;
     this.unSubscribe = firebase.auth.onAuthStateChanged((authUser) => {
-      console.log(authUser);
       if (authUser) {
         this.monitorUserDataFromDB('member_collections', authUser);
         this.monitorUserDataFromDB('member_creations', authUser);
