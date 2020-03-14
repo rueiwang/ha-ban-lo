@@ -60,6 +60,8 @@ A platform which is full of bars and cocktails information.
 
 #### Member System
 * Supported Google, FB and E-mail&Password Login
+* Members need to verify their email.
+* If members forgot the password, they could change it via email.
 
 ![Login](https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Fauth.gif?alt=media&token=9bf6ce86-b923-4f4a-8e16-7b8564d3e9cc)
 * Member can collect the recipes they like and record which ingredients they have and which they don't. 
