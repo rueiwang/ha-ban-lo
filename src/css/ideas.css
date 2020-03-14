@@ -12,6 +12,7 @@
 }
 @media (max-width: 768px) {
     .wrap-ideas>.intro-area {
+        height: 300px;
         background-image: url('/imgs/bg-account-mobile.png');
     }
 }
@@ -23,9 +24,15 @@
     color: #ffffff;
 }
 
+@media (max-width: 1250px) {
+    .wrap-ideas>.intro-area>h2 {
+        font-size: 3em;
+    }
+}
 @media (max-width: 650px) {
     .wrap-ideas>.intro-area {
         height: 400px;
+        margin-bottom: 30px;
     }
     .wrap-ideas>.intro-area>h2 {
         text-align: center;

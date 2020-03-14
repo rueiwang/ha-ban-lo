@@ -11,6 +11,7 @@
 }
 @media (max-width: 768x) {
     .wrap-gallery>.intro-area {
+        height: 300px;
         background-image: url('/imgs/bg-classic-mobile.png');
     }
 }
@@ -21,6 +22,11 @@
     font-size: 5em;
     text-shadow: black 0.1em 0.1em 0.2em;
     margin: auto;
+}
+@media (max-width: 1250px) {
+    .wrap-gallery>.intro-area>h2 {
+        font-size: 3em;
+    }
 }
 
 @media (max-width: 650px) {
@@ -48,6 +54,7 @@
     position: absolute;
     background-color: transparent;
     border: none;
+    top: -10px;
     right: 20px;
     height: 75px;
     display: flex;
@@ -58,7 +65,7 @@
 }
 
 .wrap-gallery>.main-gallery>.filter>.open-filter-list img{
-    width: 32px;
+    width: 25px;
 }
 
 .wrap-gallery>.main-gallery>.filter>.item {
@@ -88,16 +95,17 @@
 @media (max-width: 650px) {
     .wrap-gallery>.main-gallery>.filter {
         position: relative;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         display: block;
-        height: 75px;
+        height: 50px;
     }
     
     .wrap-gallery>.main-gallery>.filter>.item {
         width: 100%;
         position: absolute;
+        padding: 15px 2%;
         top: 0;
-        font-size: 25px;
+        font-size: 20px;
     }
 
     .wrap-gallery>.main-gallery>.filter>.open-filter-list {
@@ -105,7 +113,7 @@
     }
 
     .wrap-gallery>.main-gallery>.filter.open {
-        height: 588px;
+        height: 350px;
     }
 
     .wrap-gallery>.main-gallery>.filter.open>.item {

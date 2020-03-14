@@ -6,9 +6,8 @@ const LinearGradient = (props) => {
     <defs>
       <linearGradient spreadMethod="pad" id="color-gradient" x1="0" y1="0" x2="0" y2="0.8">
         {mainColor !== [] ? (
-          mainColor.reverse().map((rgbAry, i) => {
+          mainColor.map((rgbAry, i) => {
             const percent = (i / mainColor.length).toFixed(1);
-
             return (
               <stop
                 key={percent}
@@ -22,7 +21,7 @@ const LinearGradient = (props) => {
           })
         )
           : ''}
-        <animate attributeName="y1" from="1" to="0" dur="2s" />
+        <animate attributeName="y1" from="0.8" to="0" dur="1.5s" />
       </linearGradient>
     </defs>
   );

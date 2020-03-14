@@ -160,7 +160,7 @@
     }
     .wrap-bar>.results-list>.title>h2{
         font-size: 18px;
-        padding: 0 15px;
+        padding: 0;
         line-height: 20px;
     }
 }

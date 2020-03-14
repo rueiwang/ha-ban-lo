@@ -517,6 +517,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-height: 250px;
 }
 .main-detail>.detail-box>.content> img {
     display: none;
@@ -527,107 +528,30 @@
 }
 
 .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg svg{
-    animation-name: hideGlass;
-    animation-duration: 1.5s;
-    animation-iteration-count: 1;
-    animation-timing-function: ease;
     opacity: 1;
 }
 .main-detail>.detail-box>.content>.ingredient-content>.ingedient-info>.svg img{
     width: 64px;
     background-color: #ffffff;
-    position: absolute;
     animation-name: shakeGlass;
-    animation-duration: 1.5s;
-    animation-iteration-count: 1;
+    animation-iteration-count: infinite;
     animation-timing-function: linear;
-    top: 86px;
+    animation-duration: .3s;
     left: calc(50% - 32px);
-    opacity: 0;
 }
-
-@keyframes hideGlass {
-    0%{
-        opacity: 0;
-    }
-    100%{
-        opacity: 0;
-    }
-}
-
 
 @keyframes shakeGlass {
-    0%{
-        transform: rotate(0.03turn);
-        opacity: 1;
-    }
-    6%{
-        transform: rotate(0turn);
-        opacity: 1;
-    }
-    12%{
+    25%{
         transform: rotate(-0.03turn);
-        opacity: 1;
     }
-    18%{
-        transform: rotate(0.03turn);
-        opacity: 1;
-    }
-    24%{
+    50%{
         transform: rotate(0turn);
-        opacity: 1;
     }
-    30%{
-        transform: rotate(-0.03turn);
-        opacity: 1;
-    }
-    36%{
+    75%{
         transform: rotate(0.03turn);
-        opacity: 1;
-    }
-    42%{
-        transform: rotate(0turn);
-        opacity: 1;
-    }
-    48%{
-        transform: rotate(-0.03turn);
-        opacity: 1;
-    }
-    54%{
-        transform: rotate(0.03turn);
-        opacity: 1;
-    }
-    60%{
-        transform: rotate(0turn);
-        opacity: 1;
-    }
-    66%{
-        transform: rotate(-0.03turn);
-        opacity: 1;
-    }
-    72%{
-        transform: rotate(0.03turn);
-        opacity: 1;
-    }
-    78%{
-        transform: rotate(0turn);
-        opacity: 1;
-    }
-    84%{
-        transform: rotate(-0.03turn);
-        opacity: 1;
-    }
-    90%{
-        transform: rotate(0turn);
-        opacity: 1;
-    }
-    96%{
-        transform: rotate(0.03turn);
-        opacity: 1;
     }
     100%{
         transform: rotate(0turn);
-        opacity: 1;
     }
 }
 

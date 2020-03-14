@@ -1,68 +1,82 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# [hā-pan](https://ha-ban-lo.firebaseapp.com/)
 
-## Available Scripts
+A platform which is full of bars and cocktails information.
 
-In the project directory, you can run:
+![](https://i.imgur.com/Yu5SkTe.gif)
 
-### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> Are you tired after a long time work? 
+> Open this website to discover the bars in Taiwan. Moreover you can know more about the classic cocktails, collect it and make your own special one at home. Enjoy your night! 
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+#### Test Account
+Website: https://ha-ban-lo.firebaseapp.com/
+E-mail: kas33044@bcaoo.com
+Password: 123456
 
-### `npm test`
+## Table of Content
+* [Technologies](#Technologies)
+* [Features and Demo](#Features-and-Demo)
+* [Contact](#Contact)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
+## Technologies
 
-### `npm run build`
+#### React
+* React Router
+* React Context API
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Intergrated the third party service
+* Google Maps and Places API
+* Firebase Firestore NoSQL Database
+* Firebase Storage / Firebase Authentication / Firebase Hoisting
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### User Interface
+* RWD
+* CSS animation
+* SVG gradient effect
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
+## [Features and Demo](https://ha-ban-lo.firebaseapp.com/)
+#### Customize Map Of Taiwan
+* Integrated Google Maps and Places API for searching bars in Taiwan.
 
-### `npm run eject`
+![Google Maps](https://i.imgur.com/4SzIHNc.gif)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Recipes Gallery
+* Achieved conditional search and Infinite Scroll.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Recipes Gallery](https://i.imgur.com/3IRQ5Q5.gif)
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### Auto-complete Search and SVG gradient effect 
 
-## Learn More
+* Auto-complete Search
+* Display Ingredients of cocktails with SVG gradient effect.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![Auto-complete Search](https://i.imgur.com/CTalSp5.gif)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+#### Member System
+* Supported Google, FB and E-mail&Password Login
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+![Login](https://i.imgur.com/e8hZzMU.gif)
+* Member can collect the recipes they like and record which ingredients they have and which they don't. 
 
-### Analyzing the Bundle Size
+![collect](https://i.imgur.com/pqz37yE.gif)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+* Member can crete their own recipes and edit or delete the creations.
+* Provided Instant Form Validation.
 
-### Making a Progressive Web App
+![crete](https://i.imgur.com/HmAWhIx.gif)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### RWD 
 
-### Advanced Configuration
+* Take IphoneX size for demo.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+![RWD](https://firebasestorage.googleapis.com/v0/b/ha-ban-lo.appspot.com/o/assets%2Fha-ban-lo%2Fmobile.gif?alt=media&token=ef43a3fc-14cd-47ce-a854-5b28655aebec)
 
-### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+--- 
+## Contact
+Author: Ruei Tian, Wang
+E-mail: [want2813@gmail.com](mailto:want2813@gmail.com)

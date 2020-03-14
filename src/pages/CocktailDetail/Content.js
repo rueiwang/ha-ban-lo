@@ -32,7 +32,7 @@ class Content extends Component {
         const img = this.img.current;
         const colorPletteRGB = colorThief.getPalette(img, length);
         this.setState({
-          colorPlette: [...colorPletteRGB],
+          colorPlette: [...colorPletteRGB.reverse()],
           currentId: id
         });
       }
@@ -95,8 +95,11 @@ Ingredients
 
               <div className="ingedient-info">
                 <div className="svg">
-                  <img src="./imgs/shaker.png" alt="" className="cover-shaker" />
-                  <GlassComponent glassType={item.cocktail_glass_type} colors={colorPlette} />
+                  {
+                  colorPlette.length === 0
+                    ? <img src="./imgs/shaker.png" alt="" className="cover-shaker" />
+                    : <GlassComponent glassType={item.cocktail_glass_type} colors={colorPlette} />
+                }
                 </div>
                 <div className="glass">
                   <p>{item.cocktail_glass}</p>
