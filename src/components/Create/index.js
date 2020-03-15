@@ -211,7 +211,6 @@ export default class Create extends Component {
     } = this.state;
 
     if (!this.validateForm(errors) || isShown) {
-
       this.setState({
         isDialodShow: true,
         dialogType: 'alert',

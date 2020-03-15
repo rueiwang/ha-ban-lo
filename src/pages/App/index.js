@@ -8,6 +8,7 @@ import AccountPage from '../Account';
 import GalleryPage from '../Gallery';
 import IdeasPage from '../BartendingIdeas';
 import TaiwanBarPage from '../TaiwanBar';
+import Error from '../Error';
 import CocktailDetailPage from '../CocktailDetail';
 
 import Navigation from '../../components/Navigation';
@@ -25,14 +26,13 @@ class App extends Component {
     super(props);
     this.state = {
       userData: {
-        authUser: '',
+        authUser: 'unKnown',
         member_collections: [],
         member_ingredients: [],
         member_creations: []
       },
       allRecipeData: [],
-      ingredientData: [],
-      isLoading: true
+      ingredientData: []
     };
   }
 
@@ -73,8 +73,7 @@ class App extends Component {
     });
     newAry = processAry.map((item) => JSON.parse(item));
     this.setState({
-      [dataType]: [...newAry],
-      isLoading: false
+      [dataType]: [...newAry]
     });
   }
 
@@ -94,8 +93,7 @@ class App extends Component {
         sessionStorage.setItem(dataType, newAry.toString());
         const dataAry = newAry.map((str) => JSON.parse(str));
         this.setState({
-          [dataType]: dataAry,
-          isLoading: false
+          [dataType]: dataAry
         });
       });
   }
@@ -120,8 +118,7 @@ class App extends Component {
             ...prevState.userData,
             authUser,
             [dataType]: [...dataArray]
-          },
-          isLoading: false
+          }
         }
         ));
       });
@@ -138,9 +135,9 @@ class App extends Component {
 
   render() {
     const {
-      userData, allRecipeData, ingredientData, isLoading
+      userData, allRecipeData, ingredientData
     } = this.state;
-    return isLoading
+    return userData.authUser === 'unKnown'
       ? (<Loading />)
       : (
         <AuthUserContext.Provider value={userData}>
@@ -162,6 +159,8 @@ class App extends Component {
                 <Route path="/bartending-ideas" component={IdeasPage} />
                 <Route path="/cocktailDetail" component={CocktailDetailPage} />
                 <Route path="/taiwanbar" component={TaiwanBarPage} />
+                <Route path="/error" component={Error} />
+                <Route path="*" component={LandingPage} />
               </Switch>
               <BackToTop />
             </BrowserRouter>

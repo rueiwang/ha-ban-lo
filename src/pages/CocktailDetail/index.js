@@ -26,9 +26,13 @@ class CocktailDetailPage extends Component {
   }
 
   componentDidMount() {
-    const { location, firebase } = this.props;
+    const { location, firebase, history } = this.props;
     const query = new URLSearchParams(location.search);
     const targetId = query.get('search');
+    if (targetId.toString() === 'undefined') {
+      history.push('/error');
+      return;
+    }
     const ifCreation = query.get('ifCreation') !== '';
     firebase.getAllMemberCreations()
       .then((docSnapshot) => {
@@ -41,10 +45,14 @@ class CocktailDetailPage extends Component {
   }
 
   componentDidUpdate() {
-    const { location, firebase } = this.props;
+    const { location, firebase, history } = this.props;
     const {
-      cocktailId, creations
+      cocktailId, creations, index
     } = this.state;
+    if (location.state === undefined) {
+      history.push('/error');
+      return;
+    }
     if (location.state.cocktailId !== cocktailId) {
       const query = new URLSearchParams(location.search);
       const targetId = query.get('search');
@@ -60,6 +68,10 @@ class CocktailDetailPage extends Component {
             this.prepareState(targetId, ifCreation, newAry);
           });
     }
+  }
+
+  componentWillUnmount() {
+    this.setState = (state, callback) => '';
   }
 
   prepareState = (id, boolean, array) => {

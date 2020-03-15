@@ -26,7 +26,6 @@ export default class MyCollection extends Component {
   render() {
     const { matchData } = this.state;
     const { userData } = this.props;
-    const ifNoCollection = matchData.length === 0;
     return (
       <>
         <div className="collection-wine-cabinet">

@@ -35,7 +35,7 @@ module.exports = {
         "no-unused-expressions" : "off",
         "no-unused-vars": "warn",
         "no-nested-ternary": "off",
-        "max-len": ["error", { "code": 150 }],
+        "max-len": ["error", { "code": 200 }],
         "jsx-a11y/anchor-is-valid": "off",
         "react/jsx-props-no-spreading": "off",
         "class-methods-use-this": "off",
@@ -49,6 +49,7 @@ module.exports = {
         "react/sort-comp": "off",
         "no-alert": "off",
         "max-classes-per-file": "off",
-        "jsx-a11y/mouse-events-have-key-events": "off"
+        "jsx-a11y/mouse-events-have-key-events": "off",
+        "array-callback-return": "off"
   },
 };

@@ -1,5 +1,4 @@
 import React from 'react';
-import APP from '../../lib'
 
 const AutoComplete = (props) => {
   const {

@@ -121,6 +121,7 @@
     letter-spacing: 2px;
     color: #ffffff;
     font-weight: 900;
+    text-decoration: none;
 }
 .wrap-landing>.main-landing>.intro-classic>.intro-classic-container>.intro-classic-list li:nth-child(odd)>.cover a {
     color: #282828;
